@@ -1,0 +1,284 @@
+#' Create a RelTableModel object
+#'
+#' @param l the list with the following elements:\itemize{
+#' \item{tableName: a character vector of length one}
+#' \item{fields: a tibble with the follwoing columns:\itemize{
+#'    \item{name: character}
+#'    \item{type: character}
+#'    \item{nullable: logical}
+#'    \item{comment:  character}
+#' }}
+#' \item{primaryKey: a character vector of any length. All
+#' values should be in fields$name}
+#' \item{foreignKeys: a list of foreign keys. Each foreigned key is defined
+#' as a list with the following elements: \itemize{
+#'    \item{refTable: a character vector of lenght one (the referenced table)}
+#'    \item{key: a tibble with a "from" and a "to" columns}
+#' }}
+#' \item{indexes: a list of indexes. Each index is defined by
+#' 3 columns:\itemize{
+#'     \item{field: character (all in fields$name)}
+#'     \item{order: character}
+#'     \item{unique: logical}
+#' }}
+#' }
+#'
+#' @return A RelTableModel object.
+#'
+RelTableModel <- function(l){
+
+   ############################################################################@
+   ## Checks ----
+
+   ## * Simple checks ----
+   tableInfo <- c(
+      # "dbName",
+      "tableName", "fields",
+      "primaryKey", "foreignKeys", "indexes",
+      "display"
+   )
+   fieldInfo <- c("name", "type", "nullable", "comment")
+   stopifnot(
+      all(tableInfo %in% names(l)),
+      all(names(l) %in% tableInfo),
+
+      # is.character(l$dbName),
+      # length(l$dbName)==1,
+      # !is.na(l$dbName),
+
+      is.character(l$tableName),
+      length(l$tableName)==1,
+      !is.na(l$tableName),
+
+      is.data.frame(l$fields),
+      all(fieldInfo %in% colnames(l$fields)),
+      all(colnames(l$fields) %in% fieldInfo),
+      nrow(l$fields) > 0,
+      is.character(l$fields$name),
+      all(!is.na(l$fields$name)),
+      is.character(l$fields$type),
+      all(!is.na(l$fields$type)),
+      is.logical(l$fields$nullable),
+      all(!is.na(l$fields$nullable)),
+      is.character(l$fields$comment),
+
+      is.null(l$primaryKey) || is.character(l$primaryKey),
+      all(l$primaryKey %in% l$fields$name)
+   )
+   l$fields <- as_tibble(l$fields)
+
+   ## * Field types ----
+   checkTypes(l$field$type)
+
+   ## * Foreign keys ----
+   if(!is.null(l$foreignKeys)){
+      stopifnot(is.list(l$foreignKeys))
+      fkn <- c("refTable", "key")
+      l$foreignKeys <- lapply(
+         l$foreignKeys,
+         function(fk){
+            fk <- fk[fkn]
+            stopifnot(
+               all(names(fk) %in% fkn),
+               all(fkn %in% names(fk)),
+               !is.na(fk$refTable),
+               is.character(fk$refTable),
+               length(fk$refTable)==1,
+               !is.na(fk$refTable),
+               is.data.frame(fk$key),
+               all(c("from", "to") %in% names(fk$key)),
+               all(names(fk$key) %in% c("from", "to")),
+               is.character(fk$key$from),
+               all(!is.na(fk$key$from)),
+               is.character(fk$key$to),
+               all(!is.na(fk$key$to)),
+               all(fk$key$from %in% l$fields$name)
+            )
+            fk$key <- as_tibble(fk$key)
+            return(fk)
+         }
+      )
+      names(l$foreignKeys) <- NULL
+   }
+
+   ## * Indexes ----
+   if(!is.null(l$indexes)){
+      stopifnot(is.list(l$indexes))
+      idn <- c("field", "unique")
+      l$indexes <- lapply(
+         l$indexes,
+         function(ind){
+            stopifnot(
+               is.data.frame(ind),
+               all(names(ind) %in% idn),
+               all(idn %in% names(ind)),
+               is.character(ind$field),
+               all(!is.na(ind$field)),
+               is.logical(ind$unique),
+               all(!is.na(ind$unique)),
+               all(ind$field %in% l$fields$name)
+            )
+            return(as_tibble(ind))
+         }
+      )
+   }
+
+   ## * Display ----
+   if(!is.null(l$display)){
+      stopifnot(is.list(l$display))
+      dn <- c("x", "y", "color", "comment")
+      stopifnot(
+         all(names(l$display) %in% dn),
+         all(dn %in% names(l$display)),
+         is.numeric(l$display$x),
+         is.numeric(l$display$y),
+         is.character(l$display$color),
+         is.character(l$display$comment),
+         all(unlist(lapply(l$display, length))==1)
+      )
+   }
+
+   ############################################################################@
+   ## Creating the object ----
+   toRet <- l
+   class(toRet) <- c("RelTableModel", class(toRet))
+   return(toRet)
+
+}
+
+###############################################################################@
+#' @export
+#'
+is.RelTableModel <- function(x) inherits(x, "RelTableModel")
+
+###############################################################################@
+#' @export
+#'
+format.RelTableModel <- function(x){
+   f <- x$fields
+   pk <- x$primaryKey
+   it <- indexTable(x)
+   ind <- NULL
+   uq <- NULL
+   if(!is.null(it)){
+      it <- it %>% filter(index!=0)
+      ind <- unique(it$field)
+      uq <- unique(it$field[which(it$unique)])
+   }
+   f$i <- unlist(lapply(
+      f$name,
+      function(n){
+         paste(sort(it$index[which(it$field==n)]), collapse=",")
+      }
+   ))
+   toRet <- paste0(
+      # sprintf("Database: %s", x$dbName), "\n",
+      sprintf("Table name: %s", x$tableName), "\n",
+      paste(
+         apply(
+            f, 1,
+            function(y){
+               toRet <- "   "
+               toRet <- paste0(
+                  toRet,
+                  ifelse(y[1] %in% pk, "*", " "),
+                  ifelse(y[1] %in% uq, "+ ", "  "),
+                  y[1]
+               )
+               toRet <- paste0(
+                  toRet, " (",
+                  y[2],
+                  ifelse(
+                     y[1] %in% ind,
+                     paste0(", idx.", y[5]),
+                     ""
+                  ),
+                  ifelse(y[3]=="FALSE", ", not", ","),
+                  " nullable",
+                  ")"
+               )
+               return(toRet)
+            }
+         ),
+         collapse="\n"
+      )
+   )
+   if(length(x$foreignKeys)>0){
+      toRet <- paste0(
+         toRet, "\n",
+         "Referenced tables:\n",
+         paste(unlist(lapply(
+            x$foreignKeys,
+            function(y){
+               y$refTable
+            }
+         )), collapse="\n")
+      )
+   }
+   return(toRet)
+}
+
+###############################################################################@
+#' @export
+#'
+print.RelTableModel <- function(x, ...){
+   cat(format(x, ...), "\n")
+}
+
+###############################################################################@
+#' @export
+#'
+indexTable.RelTableModel <- function(x){
+   pk <- x$primaryKey
+   ind <- x$indexes
+   toRet <- NULL
+   i <- 0
+   if(length(pk)>0){
+      toRet <- tibble(
+         index=i,
+         field=pk,
+         unique=length(pk)==1
+      )
+   }
+   for(ci in ind){
+      i <- i+1
+      toRet <- bind_rows(
+         toRet,
+         tibble(
+            index=i,
+            field=ci$field,
+            unique=ci$unique
+         )
+      )
+   }
+   return(toRet)
+}
+
+###############################################################################@
+#' @export
+#'
+#' @importFrom readr cols col_character col_double col_integer col_logical
+#' @importFrom readr col_date col_datetime
+#'
+col_types.RelTableModel <- function(x){
+   do.call(
+      cols,
+      structure(
+         lapply(
+            x$fields$type,
+            function(y){
+               switch(
+                  y,
+                  "integer"=col_integer(),
+                  "numeric"=col_double(),
+                  "logical"=col_logical(),
+                  "character"=col_character(),
+                  "Date"=col_date(),
+                  "POSIXct"=col_datetime()
+               )
+            }
+         ),
+         .Names=x$fields$name
+      )
+   )
+}
