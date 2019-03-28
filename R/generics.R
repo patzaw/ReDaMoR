@@ -24,3 +24,12 @@ indexTable <- function(x){
 col_types <- function(x){
    UseMethod("col_types", x)
 }
+
+###############################################################################@
+#' Interactive exploration of an object
+#'
+#' @export
+#'
+explore <- function(x, ...){
+   UseMethod("explore", x)
+}

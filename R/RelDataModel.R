@@ -499,8 +499,8 @@ plot.RelDataModel <- function(x, ...){
             damping=1
          )
       ) %>%
-      visLayout(randomSeed=2) %>%
-      visOptions(selectedBy="tableName", highlightNearest=TRUE) %>%
-      visIgraphLayout(smooth=TRUE, type="full", randomSeed=2)
+      visLayout(randomSeed=2) #%>%
+      # visOptions(selectedBy="tableName", highlightNearest=TRUE) %>%
+      # visIgraphLayout(smooth=TRUE, type="full", randomSeed=2)
 
 }
