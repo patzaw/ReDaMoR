@@ -113,12 +113,14 @@ length.RelDataModel <- function(x){
       l <- lapply(
          l,
          function(tm){
-            tm$foreignKeys <- tm$foreignKeys[which(unlist(lapply(
-               tm$foreignKeys,
-               function(fk){
-                  fk$refTable %in% names(l)
-               }
-            )))]
+            if(!is.null(tm$foreignKeys)){
+               tm$foreignKeys <- tm$foreignKeys[which(unlist(lapply(
+                  tm$foreignKeys,
+                  function(fk){
+                     fk$refTable %in% names(l)
+                  }
+               )))]
+            }
             return(tm)
          }
       )
