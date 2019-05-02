@@ -162,6 +162,13 @@ length.RelDataModel <- function(x){
 ###############################################################################@
 #' @export
 #'
+names.RelDataModel <- function(x){
+   names(unclass(x))
+}
+
+###############################################################################@
+#' @export
+#'
 'names<-.RelDataModel' <- function(x, value, ...){
    stopifnot(
       is.character(value),
@@ -369,6 +376,10 @@ fromDBM <- function(dbm){
 }
 
 ###############################################################################@
+#' Plot a [RelDataModel] object
+#'
+#' This function draw a visNetwork of the model.
+#'
 #' @importFrom visNetwork visNetwork visPhysics visLayout visOptions
 #' @importFrom magrittr %>%
 #' @export
