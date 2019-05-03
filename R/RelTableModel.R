@@ -1,29 +1,28 @@
+###############################################################################@
 #' Create a RelTableModel object
 #'
-#' @param l the list with the following elements:\itemize{
-#' \item{tableName: a character vector of length one}
-#' \item{fields: a tibble with the follwoing columns:\itemize{
-#'    \item{name: character}
-#'    \item{type: character}
-#'    \item{nullable: logical}
-#'    \item{comment:  character}
-#' }}
-#' \item{primaryKey: a character vector of any length. All
-#' values should be in fields$name}
-#' \item{foreignKeys: a list of foreign keys. Each foreigned key is defined
-#' as a list with the following elements: \itemize{
-#'    \item{refTable: a character vector of lenght one (the referenced table)}
-#'    \item{key: a tibble with a "from" and a "to" columns}
-#' }}
-#' \item{indexes: a list of indexes. Each index is defined by
-#' 3 columns:\itemize{
-#'     \item{field: character (all in fields$name)}
-#'     \item{order: character}
-#'     \item{unique: logical}
-#' }}
-#' }
+#' @param l the list with the following elements
+#' - **tableName**: a character vector of length one
+#' - **fields**: a tibble with the follwoing columns:
+#'    + *name*: character
+#'    + *type*: character
+#'    + *nullable*: logical
+#'    + *comment*:  character
+#' - **primaryKey**: a character vector of any length. All
+#' values should be in fields$name
+#' - **foreignKeys**: a list of foreign keys. Each foreigned key is defined
+#' as a list with the following elements:
+#'    + *refTable*: a character vector of lenght one (the referenced table)
+#'    + *key*: a tibble with a "from" and a "to" columns
+#' - **indexes**: a list of indexes. Each index is defined by
+#' 3 columns:
+#'    + *field*: character (all in fields$name)
+#'    + *order*: character
+#'    + *unique*: logical
 #'
 #' @return A RelTableModel object.
+#'
+#' @export
 #'
 RelTableModel <- function(l){
 
@@ -147,11 +146,25 @@ RelTableModel <- function(l){
 }
 
 ###############################################################################@
+#' Check the object is  a [RelTableModel] object
+#'
+#' @param x any object
+#'
+#' @return A single logical: TRUE if x is a [RelTableModel] object
+#'
 #' @export
 #'
-is.RelTableModel <- function(x) inherits(x, "RelTableModel")
+is.RelTableModel <- function(x){
+   inherits(x, "RelTableModel")
+}
 
 ###############################################################################@
+#' Format a [RelTableModel] object for printing
+#'
+#' @param x a [RelTableModel] object
+#'
+#' @return A single character
+#'
 #' @export
 #'
 format.RelTableModel <- function(x){
@@ -226,6 +239,15 @@ print.RelTableModel <- function(x, ...){
 }
 
 ###############################################################################@
+#' List indexes of a [RelTableModel] object
+#'
+#' @param x a [RelTableModel] object
+#'
+#' @return A tibble with the following columns:
+#' - **index**: an integer corresponding to the index number
+#' - **field**: a character corresponding to field belonging to the index
+#' - **unique**: a logical indicating the uniqueness of the field
+#'
 #' @export
 #'
 indexTable.RelTableModel <- function(x){
@@ -255,10 +277,15 @@ indexTable.RelTableModel <- function(x){
 }
 
 ###############################################################################@
-#' @export
+#' Get the types of the columns of a [RelTableModel] object
+#'
+#' @param x a [RelTableModel] object
+#' @return A col_spec object with the type of each column
 #'
 #' @importFrom readr cols col_character col_double col_integer col_logical
 #' @importFrom readr col_date col_datetime
+#'
+#' @export
 #'
 col_types.RelTableModel <- function(x){
    do.call(

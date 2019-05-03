@@ -2,9 +2,9 @@
 #'
 #' @param f the SQL file to read
 #' @param typeRef the reference for type conversion
-#' (Default: "MySQLWB"; \code{\link{listTypeRef}})
+#' (Default: "MySQLWB"; see [listTypeRef()])
 #'
-#' @return A \code{\link{RelDataModel}} object
+#' @return A [RelDataModel] object
 #'
 #' @export
 #'

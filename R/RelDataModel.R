@@ -1,9 +1,13 @@
+###############################################################################@
 #' Create a RelDataModel object
 #'
-#' @param l the list of table models (\code{\link{RelTableModel}} objects)
+#' @param l the list of table models ([RelTableModel] objects)
 #' @param checkFK a logical indicating if foreign keys should be checked
+#' (default: TRUE)
 #'
 #' @return A RelDataModel object.
+#'
+#' @export
 #'
 RelDataModel <- function(l, checkFK=TRUE){
 
@@ -39,6 +43,12 @@ RelDataModel <- function(l, checkFK=TRUE){
 }
 
 ###############################################################################@
+#' Check if the object is  a [RelDataModel] object
+#'
+#' @param x any object
+#'
+#' @return A single logical: TRUE if x is a [RelDataModel] object
+#'
 #' @export
 #'
 is.RelDataModel <- function(x){
@@ -46,6 +56,11 @@ is.RelDataModel <- function(x){
 }
 
 ###############################################################################@
+#' Check the availability of foreign keys
+#'
+#' @return Nothing. The function throws an error if there is an issue with
+#' foreign keys.
+#'
 #' @export
 #'
 checkForeignKeys.RelDataModel <- function(x){
@@ -88,6 +103,8 @@ checkForeignKeys.RelDataModel <- function(x){
 }
 
 ###############################################################################@
+#' Get the number of tables in a [RelDataModel] object
+#'
 #' @export
 #'
 length.RelDataModel <- function(x){
@@ -95,9 +112,9 @@ length.RelDataModel <- function(x){
 }
 
 ###############################################################################@
-#' Extract from RelDataModel
+#' Subset a [RelDataModel]
 #'
-#' @param x the RelDataModel objct
+#' @param x the [RelDataModel] objcet
 #' @param i the index or the names of the elements to extract
 #' @param rmForeignKeys if TRUE, remove foreign keys which are not
 #' available after extraction. If FALSE (default) the function will throw an
@@ -140,10 +157,6 @@ length.RelDataModel <- function(x){
       }
    }
 }
-
-###############################################################################@
-#' @export
-#'
 
 ###############################################################################@
 #' @export
@@ -196,6 +209,14 @@ names.RelDataModel <- function(x){
 
 
 ###############################################################################@
+#' Merge [RelDataModel] objects
+#'
+#' @param ... [RelDataModel] objects
+#' @param checkFK a logical indicating if foreign keys should be checked
+#' (default: TRUE)
+#'
+#' @return A [RelDataModel] objects
+#'
 #' @export
 #'
 c.RelDataModel <- function(..., checkFK=TRUE){
@@ -217,8 +238,51 @@ c.RelDataModel <- function(..., checkFK=TRUE){
 }
 
 ###############################################################################@
+#' Convert a [RelDataModel] object in a list of 5 normalized tibbles
+#'
+#' @param rdm a [RelDataModel] object
+#'
+#' @return A list with the following tibbles:
+#'
+#' - **tables**: The tables in the model with the following information
+#'    + **name**: the name of the table
+#'    + **x**: the x coordinate of the table in the model drawing
+#'    (NA ==> position undefined)
+#'    + **y**: the y coordinate of the table in the model drawing
+#'    (NA ==> position undefined)
+#'    + **color**: the color of the table in the model drawing
+#'    (NA ==> undefined)
+#'    + **comment**: comment about the table
+#'
+#' - **fields**: The fields in the model with the following information
+#'    + **name**: the name of the field
+#'    + **type**: the type of the field
+#'    + **nullable**: a logical indicating if the field can be null
+#'    + **comment**: comment about the field
+#'    + **table**: the name of the table to which the field belongs
+#'
+#' - **primaryKeys**: The primary keys in the model with the
+#' following information
+#'    + **table**: the name of the relevant table
+#'    + **field**: the name of the field participating to the primary key
+#'
+#' - **foreignKeys**: The foreign keys in the model with the
+#' following information
+#'    + **table**: the name of the referring table
+#'    + **fki**: the identifier of the foreign key (by referring table)
+#'    + **field**: the name of the referring field
+#'    + **refTable**: the name of the referred table
+#'    + **refField**: the name of the referred field
+#'
+#' - **indexes**: The indexes in the model with the following information
+#'    + **table**: the name of the relevant table
+#'    + **idx**: the identifier of the index (by table)
+#'    + **field**: the name of the field participating to the index
+#'    + **unique**: a logical indicating if the field is unique
+#'
 #' @export
 toDBM <- function(rdm){
+   stopifnot(is.RelDataModel(rdm))
    toRet <- lapply(
       rdm,
       function(tm){
@@ -314,7 +378,50 @@ toDBM <- function(rdm){
 }
 
 ###############################################################################@
+#' Convert a list of 5 normalized tibbles in a [RelDataModel] object
+#'
+#' @param dbm a list with the following tibbles:
+#'
+#' - **tables**: The tables in the model with the following information
+#'    + **name**: the name of the table
+#'    + **x**: the x coordinate of the table in the model drawing
+#'    (NA ==> position undefined)
+#'    + **y**: the y coordinate of the table in the model drawing
+#'    (NA ==> position undefined)
+#'    + **color**: the color of the table in the model drawing
+#'    (NA ==> undefined)
+#'    + **comment**: comment about the table
+#'
+#' - **fields**: The fields in the model with the following information
+#'    + **name**: the name of the field
+#'    + **type**: the type of the field
+#'    + **nullable**: a logical indicating if the field can be null
+#'    + **comment**: comment about the field
+#'    + **table**: the name of the table to which the field belongs
+#'
+#' - **primaryKeys**: The primary keys in the model with the
+#' following information
+#'    + **table**: the name of the relevant table
+#'    + **field**: the name of the field participating to the primary key
+#'
+#' - **foreignKeys**: The foreign keys in the model with the
+#' following information
+#'    + **table**: the name of the referring table
+#'    + **fki**: the identifier of the foreign key (by referring table)
+#'    + **field**: the name of the referring field
+#'    + **refTable**: the name of the referred table
+#'    + **refField**: the name of the referred field
+#'
+#' - **indexes**: The indexes in the model with the following information
+#'    + **table**: the name of the relevant table
+#'    + **idx**: the identifier of the index (by table)
+#'    + **field**: the name of the field participating to the index
+#'    + **unique**: a logical indicating if the field is unique
+#'
+#' @return A [RelDataModel] object
+#'
 #' @export
+#'
 fromDBM <- function(dbm){
    toRet <- list()
    for(tn in dbm$tables$name){
@@ -382,9 +489,10 @@ fromDBM <- function(dbm){
 #'
 #' @importFrom visNetwork visNetwork visPhysics visLayout visOptions
 #' @importFrom magrittr %>%
+#'
 #' @export
 #'
-plot.RelDataModel <- function(x, ...){
+plot.RelDataModel <- function(x){
 
    modelToVn <- function(model){
       nodes <- do.call(rbind, lapply(

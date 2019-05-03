@@ -7,9 +7,10 @@
 RelDataModel(l, checkFK = TRUE)
 }
 \arguments{
-\item{l}{the list of table models (\code{\link{RelTableModel}} objects)}
+\item{l}{the list of table models (\link{RelTableModel} objects)}
 
-\item{checkFK}{a logical indicating if foreign keys should be checked}
+\item{checkFK}{a logical indicating if foreign keys should be checked
+(default: TRUE)}
 }
 \value{
 A RelDataModel object.

@@ -7,27 +7,31 @@
 RelTableModel(l)
 }
 \arguments{
-\item{l}{the list with the following elements:\itemize{
-\item{tableName: a character vector of length one}
-\item{fields: a tibble with the follwoing columns:\itemize{
-   \item{name: character}
-   \item{type: character}
-   \item{nullable: logical}
-   \item{comment:  character}
-}}
-\item{primaryKey: a character vector of any length. All
-values should be in fields$name}
-\item{foreignKeys: a list of foreign keys. Each foreigned key is defined
-as a list with the following elements: \itemize{
-   \item{refTable: a character vector of lenght one (the referenced table)}
-   \item{key: a tibble with a "from" and a "to" columns}
-}}
-\item{indexes: a list of indexes. Each index is defined by
-3 columns:\itemize{
-    \item{field: character (all in fields$name)}
-    \item{order: character}
-    \item{unique: logical}
-}}
+\item{l}{the list with the following elements
+\itemize{
+\item \strong{tableName}: a character vector of length one
+\item \strong{fields}: a tibble with the follwoing columns:
+\itemize{
+\item \emph{name}: character
+\item \emph{type}: character
+\item \emph{nullable}: logical
+\item \emph{comment}:  character
+}
+\item \strong{primaryKey}: a character vector of any length. All
+values should be in fields$name
+\item \strong{foreignKeys}: a list of foreign keys. Each foreigned key is defined
+as a list with the following elements:
+\itemize{
+\item \emph{refTable}: a character vector of lenght one (the referenced table)
+\item \emph{key}: a tibble with a "from" and a "to" columns
+}
+\item \strong{indexes}: a list of indexes. Each index is defined by
+3 columns:
+\itemize{
+\item \emph{field}: character (all in fields$name)
+\item \emph{order}: character
+\item \emph{unique}: logical
+}
 }}
 }
 \value{

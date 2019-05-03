@@ -2,9 +2,9 @@
 % Please edit documentation in R/RelDataModel.R
 \name{plot.RelDataModel}
 \alias{plot.RelDataModel}
-\title{Plot a [RelDataModel] object}
+\title{Plot a \link{RelDataModel} object}
 \usage{
-\method{plot}{RelDataModel}(x, ...)
+\method{plot}{RelDataModel}(x)
 }
 \description{
 This function draw a visNetwork of the model.

@@ -21,5 +21,5 @@ x should be a set of supported R types (SUPPTYPES).}
 Convert a set of types from or to R supported types
 }
 \details{
-Only from XOR to should be set
+Only \code{from} XOR \code{to} should be set
 }

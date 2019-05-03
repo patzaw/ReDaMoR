@@ -66,7 +66,7 @@ normTypeRef <- function(x, typeRef){
 #' @param to a character vector of length one: the targeted type reference
 #' (\code{\link{listTypeRef}})
 #'
-#' @details Only from XOR to should be set
+#' @details Only `from` XOR `to` should be set
 #'
 #' @export
 #'

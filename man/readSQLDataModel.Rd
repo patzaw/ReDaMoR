@@ -10,10 +10,10 @@ readSQLDataModel(f, typeRef = "MySQLWB")
 \item{f}{the SQL file to read}
 
 \item{typeRef}{the reference for type conversion
-(Default: "MySQLWB"; \code{\link{listTypeRef}})}
+(Default: "MySQLWB"; see \code{\link[=listTypeRef]{listTypeRef()}})}
 }
 \value{
-A \code{\link{RelDataModel}} object
+A \link{RelDataModel} object
 }
 \description{
 Read a data model from an SQL file from the MySQL Workbench

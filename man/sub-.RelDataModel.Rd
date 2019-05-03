@@ -2,12 +2,12 @@
 % Please edit documentation in R/RelDataModel.R
 \name{[.RelDataModel}
 \alias{[.RelDataModel}
-\title{Extract from RelDataModel}
+\title{Subset a \link{RelDataModel}}
 \usage{
 \method{[}{RelDataModel}(x, i, rmForeignKeys = FALSE, ...)
 }
 \arguments{
-\item{x}{the RelDataModel objct}
+\item{x}{the \link{RelDataModel} objcet}
 
 \item{i}{the index or the names of the elements to extract}
 
@@ -18,5 +18,5 @@ error if any foreign keys does not exist in the extracted RelDataModel.}
 \item{...}{additional arguments for the \code{\link{RelDataModel}} function.}
 }
 \description{
-Extract from RelDataModel
+Subset a \link{RelDataModel}
 }
