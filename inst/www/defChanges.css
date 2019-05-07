@@ -1,0 +1,33 @@
+.navbar-nav > li > a{
+   height: 80px;
+}
+
+.container-fluid {
+   margin-left: 15px;
+}
+
+.nav-tabs {
+    border-bottom: 3px solid #dddddd;
+}
+
+.nav-tabs > li {
+    float: left;
+    margin-bottom: -3px;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  border: 3px solid #dddddd;
+  border-bottom-color: transparent;
+}
+
+.modal-lg {
+  width: 95%;
+}
+
+.modal-header{
+  display: none;
+}
+
+.modal-footer{
+  display: none;
+}
