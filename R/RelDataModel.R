@@ -87,13 +87,28 @@ checkForeignKeys.RelDataModel <- function(x){
                   ))
                }
                ft <- x[[ft]]
-               misRefFields <- setdiff(fks$key$to, ft$fields$name)
-               if(length(misRefFields)>0){
-                  stop(sprintf(
-                     "Cannot find the following fields in the %s table: %s",
-                     fks$refTable,
-                     paste(misRefFields, collapse=", ")
-                  ))
+               for(i in 1:nrow(fk$key)){
+                  from <- fk$key[i,]$from
+                  to <- fk$key[i,]$to
+                  if(!to %in% ft$fields$name){
+                     stop(sprintf(
+                        "Cannot find the %s field in the %s table",
+                        to,
+                        fk$refTable
+                     ))
+                  }
+                  fromt <- tm$fields$type[which(tm$fields$name==from)]
+                  tot <- ft$fields$type[which(ft$fields$name==to)]
+                  if(fromt != tot){
+                     stop(sprintf(
+                        paste(
+                           "The %s field in the %s table and",
+                           "the %s field in the %s table",
+                           "are not of the same type"
+                        ),
+                        from, tm$tableName, to, ft$tableName
+                     ))
+                  }
                }
             }
          )
@@ -483,145 +498,277 @@ fromDBM <- function(dbm){
 }
 
 ###############################################################################@
-#' Plot a [RelDataModel] object
+#' Rename a table in a [RelDataModel]
 #'
-#' This function draw a visNetwork of the model.
+#' @param x a [RelDataModel] object
+#' @param old a single character corresponding to the table name to change
+#' @param new the new table name
 #'
-#' @importFrom visNetwork visNetwork visPhysics visLayout visOptions
-#' @importFrom magrittr %>%
+#' @return A [RelDataModel]
 #'
 #' @export
 #'
-plot.RelDataModel <- function(x){
-
-   modelToVn <- function(model){
-      nodes <- do.call(rbind, lapply(
-         model,
-         function(m){
-            f <- m$fields
-            pk <- m$primaryKey
-            it <- indexTable(m)
-            ind <- NULL
-            uq <- NULL
-            if(!is.null(it)){
-               it <- it %>% filter(index!=0)
-               ind <- unique(it$field)
-               uq <- unique(it$field[which(it$unique)])
-            }
-            f$i <- unlist(lapply(
-               f$name,
-               function(n){
-                  paste(sort(it$index[which(it$field==n)]), collapse=",")
-               }
-            ))
-            flab <- paste(sprintf(
-               '    - %s%s%s%s%s {%s%s}%s',
-               ifelse(f$nullable, "(", ""),
-               ifelse(f$name %in% pk, "<b>", ""),
-               ifelse(f$name %in% uq, "*", ""),
-               f$name,
-               ifelse(f$name %in% pk, "</b>", ""),
-               f$type,
-               ifelse(
-                  f$name %in% ind,
-                  paste0(" - idx.", f$i),
-                  ""
-               ),
-               ifelse(f$nullable, ")", "")
-            ), collapse="\n")
-            label <- paste(
-               sprintf('<b>%s</b>', m$tableName),
-               flab,
-               sep="\n"
-            )
-            ftit <- paste(sprintf(
-               ' - %s%s%s',
-               f$name,
-               ifelse(is.na(f$comment)|f$comment=="", "", ": "),
-               ifelse(is.na(f$comment)|f$comment=="", "", f$comment)
-            ), collapse="<br>")
-            title <- paste(
-               sprintf('<b>%s</b>', m$tableName),
-               ftit,
-               sep="<br>"
-            )
-            return(tibble(
-               tableName=m$tableName,
-               label=label,
-               title=title,
-               shape="box",
-               font.multi=TRUE,
-               font.align="left"
-            ))
-         }
-      ))
-      nodes$id <- names(model)
-
-      edges <- do.call(rbind, lapply(
-         model,
-         function(m){
-            mn <- m$tableName
-            mt <- m$tableName
-            fk <- m$foreignKeys
-            if(is.null(fk)){
-               return(NULL)
-            }
-            toRet <- do.call(rbind, lapply(
-               fk,
-               function(k){
-                  to <- k$refTable
-                  title <- paste0(
-                     '<tr style="border: 1px solid black">',
-                     '<td style="border: 1px solid black">', k$key$from,
-                     '</td>',
-                     '<td style="border: 1px solid black">', k$key$to,
-                     '</td>',
-                     '</tr>'
-                  )
-                  title <- paste0(
-                     '<table style="border: 1px solid black">',
-                     '<tr style="border: 1px solid black">',
-                     sprintf(
-                        '<th style="border: 1px solid black">%s</th>', mt
-                     ),
-                     sprintf(
-                        '<th style="border: 1px solid black">%s</th>',
-                        k$refTable
-                     ),
-                     '</tr>',
-                     paste(title, collapse=""),
-                     '</table>'
-                  )
-                  return(tibble(to=to, title=title))
-               }
-            ))
-            toRet$from <- mn
-            toRet$arrows <- "to"
-            toRet$font.align <- "bottom"
-            return(toRet)
-         }
-      ))
-      if(is.null(edges)){
-         edges <- tibble(from=character(), to=character())
-      }
-
-      return(list(nodes=nodes, edges=edges))
-   }
-
-   toPlot <- modelToVn(x)
-
-   visNetwork(nodes=toPlot$nodes, edges=toPlot$edges) %>%
-      visPhysics(
-         solver="repulsion",
-         repulsion=list(
-            nodeDistance=100,
-            springLength=100,
-            springConstant=0.001,
-            damping=1
-         )
-      ) %>%
-      visLayout(randomSeed=2) #%>%
-      # visOptions(selectedBy="tableName", highlightNearest=TRUE) %>%
-      # visIgraphLayout(smooth=TRUE, type="full", randomSeed=2)
-
+renameTable.RelDataModel <- function(x, old, new){
+   stopifnot(
+      is.RelDataModel(x),
+      length(old)==1,
+      length(new)==1,
+      old %in% names(x)
+   )
+   newNames <- names(x)
+   newNames[which(newNames==old)] <- new
+   names(x) <- newNames
+   return(x)
 }
+
+###############################################################################@
+#' Add a table to a [RelDataModel]
+#'
+#' @param x a [RelDataModel]
+#' @param newTable the name of the new table or a [RelTableModel]
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+#'
+addTable.RelDataModel <- function(x, newTable){
+   stopifnot(is.RelTableModel(newTable) || is.character(newTable))
+   if(is.character(newTable)){
+      stopifnot(
+         length(newTable)==1
+      )
+      newTable <- RelTableModel(list(
+         "tableName"=newTable,
+         "fields"=tibble(
+            name=character(),
+            type=character(),
+            nullable=logical(),
+            comment=character()
+         ),
+         "primaryKey"=NULL,
+         "foreignKeys"=NULL,
+         "indexes"=NULL,
+         "display"=list(
+            x=as.numeric(NA), y=as.numeric(NA),
+            color=as.character(NA),
+            comment=as.character(NA)
+         )
+      ))
+   }
+   stopifnot(!newTable$tableName %in% names(x))
+   x <- unclass(x)
+   x[[newTable$tableName]] <- newTable
+   return(RelDataModel(x))
+}
+
+###############################################################################@
+#' Remove a table from a [RelDataModel]
+#'
+#' @param x a [RelDataModel]
+#' @param tableName the name of the table to remove
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+removeTable.RelDataModel <- function(x, tableName){
+   stopifnot(
+      is.character(tableName),
+      length(tableName)==1,
+      tableName %in% names(x)
+   )
+   x <- unclass(x)
+   return(RelDataModel(x[-which(names(x)==tableName)]))
+}
+
+###############################################################################@
+#' Add a field to a table in a [RelDataModel]
+#'
+#' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param name the name of the field to add (a single character)
+#' @param type the type of the field (a single character)
+#' @param nullable if the field is nullable (a single logical)
+#' @param comment a description (a single character)
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+addField.RelDataModel <- function(x, tableName, name, type, nullable, comment){
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      !is.na(tableName),
+      tableName %in% names(x),
+      is.character(name), length(name)==1,
+      !is.na(name),
+      !name %in% x[[tableName]]$fields$name,
+      is.character(type), length(type)==1,
+      !is.na(type), type %in% SUPPTYPES,
+      is.logical(nullable), length(nullable)==1,
+      !is.na(nullable),
+      is.character(comment), length(comment)==1
+   )
+   x <- unclass(x)
+   x[[tableName]]$fields <- bind_rows(
+      x[[tableName]]$fields,
+      tibble(
+         name=name,
+         type=type,
+         nullable=nullable,
+         comment=comment
+      )
+   )
+   return(RelDataModel(x))
+}
+
+###############################################################################@
+#' Rename an existing field in a [RelDataModel] table
+#'
+#' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param current the current name of the field to modify (a single character)
+#' @param new the new name of the field (a single character)
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+renameField.RelDataModel <- function(x, tableName, current, new){
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      is.character(current), length(current)==1,
+      current %in% x[[tableName]]$fields$name,
+      current!=new,
+      is.character(new), length(new)==1,
+      !new %in% x[[tableName]]$fields$name
+   )
+   x <- unclass(x)
+   tm <- x[[tableName]]
+   ## Renaming the field ----
+   tm$fields[
+      which(tm$fields$name==current),
+      "name"
+   ] <- new
+   ## Adapting primary key ----
+   tm$primaryKey[which(tm$primaryKey==current)] <- new
+   ## Adapting indexes
+   if(length(tm$indexes)>0) for(i in 1:length(tm$indexes)){
+      tm$indexes[[i]][
+         which(tm$indexes[[i]]$field==current),
+         "field"
+      ] <- new
+   }
+   ## Adapting foreign keys ----
+   if(length(tm$foreignKeys)>0) for(i in 1:length(tm$foreignKeys)){
+      tm$foreignKeys[[i]]$key[
+         which(tm$foreignKeys[[i]]$key$from==current),
+         "from"
+      ] <- new
+   }
+   x[[tableName]] <- tm
+   ## Changing foreign Keys in other tables ----
+   for(i in 1:length(x)){
+      tm <- x[[i]]
+      keys <- tm$foreignKeys
+      if(length(keys)>0) for(j in 1:length(keys)){
+         if(keys[[j]]$refTable==tableName){
+            keys[[j]]$key[which(keys[[j]]$key$to==current),"to"] <- new
+         }
+      }
+      tm$foreignKeys <- keys
+      x[[i]] <- tm
+   }
+   return(RelDataModel(x))
+}
+
+###############################################################################@
+#'
+#' @param x a [RelDataModel]
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+removeField.RelDataModel <- function(x, tableName, fieldName){
+}
+
+###############################################################################@
+#'
+#' @param x a [RelDataModel]
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+setPK.RelDataModel <- function(x, tableName, fieldNames){
+}
+
+###############################################################################@
+#'
+#' @param x a [RelDataModel]
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+addFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
+}
+
+###############################################################################@
+#'
+#' @param x a [RelDataModel]
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+removeFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
+}
+
+###############################################################################@
+#'
+#' @param x a [RelDataModel]
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+addIndex.RelDataModel <- function(x, tableName, fieldNames, uniques){
+}
+
+###############################################################################@
+#'
+#' @param x a [RelDataModel]
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+removeIndex.RelDataModel <- function(x, tableName, fieldNames){
+}
+
+###############################################################################@
+#'
+#' @param x a [RelDataModel]
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+updateTableDisplay.RelDataModel <- function(x, tableName, px, py, color, comment){
+}
+
+###############################################################################@
+#'
+#' @param x a [RelDataModel]
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+updateField.RelDataModel <- function(x, tableName, fieldName, type, nullable, comment){
+}
+

@@ -52,7 +52,7 @@ RelTableModel <- function(l){
       is.data.frame(l$fields),
       all(fieldInfo %in% colnames(l$fields)),
       all(colnames(l$fields) %in% fieldInfo),
-      nrow(l$fields) > 0,
+      # nrow(l$fields) > 0,
       is.character(l$fields$name),
       all(!is.na(l$fields$name)),
       is.character(l$fields$type),
