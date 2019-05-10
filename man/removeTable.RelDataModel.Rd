@@ -4,12 +4,16 @@
 \alias{removeTable.RelDataModel}
 \title{Remove a table from a \link{RelDataModel}}
 \usage{
-\method{removeTable}{RelDataModel}(x, tableName)
+\method{removeTable}{RelDataModel}(x, tableName, rmForeignKeys = FALSE)
 }
 \arguments{
 \item{x}{a \link{RelDataModel}}
 
 \item{tableName}{the name of the table to remove}
+
+\item{rmForeignKeys}{if TRUE, remove foreign keys which are not
+available after extraction. If FALSE (default) the function will throw an
+error if any foreign keys does not exist in the extracted RelDataModel.}
 }
 \value{
 A \link{RelDataModel}

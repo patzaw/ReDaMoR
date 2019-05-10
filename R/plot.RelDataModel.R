@@ -81,7 +81,7 @@ plot.RelDataModel <- function(x){
             mn <- m$tableName
             mt <- m$tableName
             fk <- m$foreignKeys
-            if(is.null(fk)){
+            if(length(fk)==0){
                return(NULL)
             }
             toRet <- do.call(rbind, lapply(

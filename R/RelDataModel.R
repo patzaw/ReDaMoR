@@ -567,19 +567,21 @@ addTable.RelDataModel <- function(x, newTable){
 #'
 #' @param x a [RelDataModel]
 #' @param tableName the name of the table to remove
+#' @param rmForeignKeys if TRUE, remove foreign keys which are not
+#' available after extraction. If FALSE (default) the function will throw an
+#' error if any foreign keys does not exist in the extracted RelDataModel.
 #'
 #' @return A [RelDataModel]
 #'
 #' @export
 #'
-removeTable.RelDataModel <- function(x, tableName){
+removeTable.RelDataModel <- function(x, tableName, rmForeignKeys=FALSE){
    stopifnot(
       is.character(tableName),
       length(tableName)==1,
       tableName %in% names(x)
    )
-   x <- unclass(x)
-   return(RelDataModel(x[-which(names(x)==tableName)]))
+   return(x[-which(names(x)==tableName), rmForeignKeys=rmForeignKeys])
 }
 
 ###############################################################################@
@@ -685,25 +687,55 @@ renameField.RelDataModel <- function(x, tableName, current, new){
 }
 
 ###############################################################################@
+#' Remove a field from a table in a [RelDataModel]
 #'
 #' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param fieldName the name of the field to remove (a single character)
+#' @param rmForeignKeys a single logical indicating if the corresponding foreign
+#' keys should be removed. If FALSE (default), the function will throw an
+#' error if it encounter a foreign key using the field.
 #'
 #' @return A [RelDataModel]
 #'
 #' @export
 #'
-removeField.RelDataModel <- function(x, tableName, fieldName){
+removeField.RelDataModel <- function(
+   x,
+   tableName,
+   fieldName,
+   rmForeignKeys=FALSE
+){
+   stop("NOT IMPLEMENTED YET")
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      is.character(fieldName), length(fieldName)==1,
+      fieldName %in% x[[tableName]]$fields$name
+   )
+   x <- unclass(x)
+   tm <- x[[tableName]]
 }
 
 ###############################################################################@
+#' Set the primary key a table in a [RelDataModel]
 #'
 #' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param fieldNames the names of the fields to include in the primary key
 #'
 #' @return A [RelDataModel]
 #'
 #' @export
 #'
 setPK.RelDataModel <- function(x, tableName, fieldNames){
+   stop("NOT IMPLEMENTED YET")
+   fieldNames <- as.character(fieldNames)
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      all(fieldNames %in% x[[tableName]]$fields$name)
+   )
 }
 
 ###############################################################################@
@@ -715,6 +747,7 @@ setPK.RelDataModel <- function(x, tableName, fieldNames){
 #' @export
 #'
 addFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
+   stop("NOT IMPLEMENTED YET")
 }
 
 ###############################################################################@
@@ -726,6 +759,7 @@ addFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
 #' @export
 #'
 removeFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
+   stop("NOT IMPLEMENTED YET")
 }
 
 ###############################################################################@
@@ -737,6 +771,7 @@ removeFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
 #' @export
 #'
 addIndex.RelDataModel <- function(x, tableName, fieldNames, uniques){
+   stop("NOT IMPLEMENTED YET")
 }
 
 ###############################################################################@
@@ -748,6 +783,7 @@ addIndex.RelDataModel <- function(x, tableName, fieldNames, uniques){
 #' @export
 #'
 removeIndex.RelDataModel <- function(x, tableName, fieldNames){
+   stop("NOT IMPLEMENTED YET")
 }
 
 ###############################################################################@
@@ -759,6 +795,7 @@ removeIndex.RelDataModel <- function(x, tableName, fieldNames){
 #' @export
 #'
 updateTableDisplay.RelDataModel <- function(x, tableName, px, py, color, comment){
+   stop("NOT IMPLEMENTED YET")
 }
 
 ###############################################################################@
@@ -770,5 +807,6 @@ updateTableDisplay.RelDataModel <- function(x, tableName, px, py, color, comment
 #' @export
 #'
 updateField.RelDataModel <- function(x, tableName, fieldName, type, nullable, comment){
+   stop("NOT IMPLEMENTED YET")
 }
 
