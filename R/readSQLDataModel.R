@@ -208,9 +208,10 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
                }
             ))
             colnames(toRet) <- c("field", "order")
-            toRet <- as_tibble(toRet) %>%
-               select(field) %>%
-               mutate(unique=FALSE)
+            toRet <- list(fields=toRet[,"field"], unique=FALSE)
+            # toRet <- as_tibble(toRet) %>%
+            #    select(field) %>%
+            #    mutate(unique=FALSE)
             return(toRet)
          }
       )
@@ -223,7 +224,7 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
       ## Unique indexes
       uindexes <- grep("^UNIQUE INDEX ", subStatements, value=TRUE)
       uindexes <- sub("[)]$", "", sub("^UNIQUE INDEX [^(]*[(]", "", uindexes))
-      uindexes <- lapply(
+      uindexes <- unlist(lapply(
          uindexes,
          function(x){
             toRet <- getSubStatements(x, sep=",")
@@ -239,17 +240,20 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
                }
             ))
             colnames(toRet) <- c("field", "order")
-            toRet <- as_tibble(toRet) %>%
-               select(field) %>%
-               mutate(unique=TRUE)
+            toRet <- toRet[,"field"]
+            # toRet <- as_tibble(toRet) %>%
+            #    select(field) %>%
+            #    mutate(unique=TRUE)
             return(toRet)
          }
-      )
-      if(length(uindexes)>0){
-         uindexes <- uindexes[which(!unlist(lapply(uindexes, is.null)))]
-      }else{
-         uindexes <- NULL
-      }
+      ))
+      # if(length(uindexes)>0){
+      #    uindexes <- uindexes[which(!unlist(lapply(uindexes, is.null)))]
+      # }else{
+      #    uindexes <- NULL
+      # }
+      fields <- fields %>%
+         mutate(unique=ifelse(name %in% uindexes, TRUE, FALSE))
 
       toRet <- list(list(
          dbName=dbName,
@@ -257,7 +261,7 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
          fields=fields,
          primaryKey=primaryKey,
          foreignKeys=foreignKeys,
-         indexes=c(indexes, uindexes),
+         indexes=indexes, #c(indexes, uindexes),
          display=list(
             x=as.numeric(NA),
             y=as.numeric(NA),

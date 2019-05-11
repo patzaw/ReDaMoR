@@ -36,7 +36,7 @@ RelTableModel <- function(l){
       "primaryKey", "foreignKeys", "indexes",
       "display"
    )
-   fieldInfo <- c("name", "type", "nullable", "comment")
+   fieldInfo <- c("name", "type", "nullable", "unique", "comment")
    stopifnot(
       all(tableInfo %in% names(l)),
       all(names(l) %in% tableInfo),
@@ -59,15 +59,25 @@ RelTableModel <- function(l){
       all(!is.na(l$fields$type)),
       is.logical(l$fields$nullable),
       all(!is.na(l$fields$nullable)),
+      is.logical(l$fields$unique),
+      all(!is.na(l$fields$unique)),
       is.character(l$fields$comment),
 
       is.null(l$primaryKey) || is.character(l$primaryKey),
+      all(!is.na(l$primaryKey)),
       all(l$primaryKey %in% l$fields$name)
    )
-   l$fields <- as_tibble(l$fields)
+   l$fields <- as_tibble(l$fields) %>%
+      select(c("name", "type", "nullable", "unique", "comment"))
+   if(length(l$primaryKey)==1){
+      l$fields[
+         which(l$fields$name==l$primaryKey),
+         "unique"
+      ] <- TRUE
+   }
 
    ## * Field types ----
-   checkTypes(l$field$type)
+   checkTypes(l$fields$type)
 
    ## * Foreign keys ----
    if(!is.null(l$foreignKeys)){
@@ -103,21 +113,24 @@ RelTableModel <- function(l){
    ## * Indexes ----
    if(!is.null(l$indexes)){
       stopifnot(is.list(l$indexes))
-      idn <- c("field", "unique")
+      # idn <- c("field", "unique")
+      idn <- c("fields", "unique")
       l$indexes <- lapply(
          l$indexes,
          function(ind){
             stopifnot(
-               is.data.frame(ind),
+               is.list(ind),
                all(names(ind) %in% idn),
                all(idn %in% names(ind)),
-               is.character(ind$field),
-               all(!is.na(ind$field)),
+               is.character(ind$fields),
+               all(!is.na(ind$fields)),
                is.logical(ind$unique),
                all(!is.na(ind$unique)),
-               all(ind$field %in% l$fields$name)
+               length(ind$unique)==1,
+               all(ind$fields %in% l$fields$name)
             )
-            return(as_tibble(ind))
+            ind$fields <- unique(ind$fields)
+            return(ind)
          }
       )
    }
@@ -172,11 +185,11 @@ format.RelTableModel <- function(x){
    pk <- x$primaryKey
    it <- indexTable(x)
    ind <- NULL
-   uq <- NULL
+   # uq <- NULL
    if(!is.null(it)){
       it <- it %>% filter(index!=0)
       ind <- unique(it$field)
-      uq <- unique(it$field[which(it$unique)])
+      # uq <- unique(it$field[which(it$unique)])
    }
    f$i <- unlist(lapply(
       f$name,
@@ -195,7 +208,8 @@ format.RelTableModel <- function(x){
                toRet <- paste0(
                   toRet,
                   ifelse(y[1] %in% pk, "*", " "),
-                  ifelse(y[1] %in% uq, "+ ", "  "),
+                  # ifelse(y[1] %in% uq, "+ ", "  "),
+                  ifelse(y[4]=="TRUE" & !y[1] %in% pk, "+ ", "  "),
                   y[1]
                )
                toRet <- paste0(
@@ -203,7 +217,8 @@ format.RelTableModel <- function(x){
                   y[2],
                   ifelse(
                      y[1] %in% ind,
-                     paste0(", idx.", y[5]),
+                     # paste0(", idx.", y[5]),
+                     paste0(", idx.", y[6]),
                      ""
                   ),
                   ifelse(y[3]=="FALSE", ", not", ","),
@@ -259,7 +274,8 @@ indexTable.RelTableModel <- function(x){
       toRet <- tibble(
          index=i,
          field=pk,
-         unique=length(pk)==1
+         # unique=length(pk)==1
+         uniqueIndex=TRUE
       )
    }
    for(ci in ind){
@@ -268,8 +284,8 @@ indexTable.RelTableModel <- function(x){
          toRet,
          tibble(
             index=i,
-            field=ci$field,
-            unique=ci$unique
+            field=ci$fields,
+            uniqueIndex=ci$unique
          )
       )
    }

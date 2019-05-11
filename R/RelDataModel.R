@@ -364,12 +364,22 @@ toDBM <- function(rdm){
             indexes <- do.call(bind_rows, lapply(
                1:length(tm$indexes),
                function(idx){
-                  tm$indexes[[idx]] %>%
-                     mutate(
-                        table=tm$tableName,
-                        idx=idx
-                     ) %>%
-                     select(table, idx, field, unique)
+                  if(length(idx)==0){
+                     return(NULL)
+                  }
+                  toRet <- tibble(
+                     table=tm$tableName,
+                     idx=idx,
+                     unique=tm$indexes[[idx]]$unique,
+                     field=tm$indexes[[idx]]$fields
+                  ) %>% select(table, idx, field, unique)
+                  return(toRet)
+                  # tm$indexes[[idx]] %>%
+                  #    mutate(
+                  #       table=tm$tableName,
+                  #       idx=idx
+                  #    ) %>%
+                  #    select(table, idx, field, unique)
                }
             ))
          }
@@ -482,7 +492,10 @@ fromDBM <- function(dbm){
          select(-table)
       if(nrow(tm$indexes)>0){
          tm$indexes <- split(tm$indexes, tm$indexes$idx) %>%
-            lapply(select, -idx) %>%
+            # lapply(select, -idx) %>%
+            lapply(function(x){
+               list(fields=x$field, unique=unique(x$unique))
+            }) %>%
             structure(.Names=NULL)
       }else{
          tm$indexes <- NULL

@@ -20,11 +20,11 @@ plot.RelDataModel <- function(x){
             pk <- m$primaryKey
             it <- indexTable(m)
             ind <- NULL
-            uq <- NULL
+            # uq <- NULL
             if(!is.null(it)){
                it <- it %>% filter(index!=0)
                ind <- unique(it$field)
-               uq <- unique(it$field[which(it$unique)])
+               # uq <- unique(it$field[which(it$unique)])
             }
             f$i <- unlist(lapply(
                f$name,
@@ -36,7 +36,7 @@ plot.RelDataModel <- function(x){
                '    - %s%s%s%s%s {%s%s}%s',
                ifelse(f$nullable, "(", ""),
                ifelse(f$name %in% pk, "<b>", ""),
-               ifelse(f$name %in% uq, "*", ""),
+               ifelse(f$unique & !f$name %in% pk, "*", ""),
                f$name,
                ifelse(f$name %in% pk, "</b>", ""),
                f$type,
