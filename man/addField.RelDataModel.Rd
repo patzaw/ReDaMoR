@@ -4,8 +4,7 @@
 \alias{addField.RelDataModel}
 \title{Add a field to a table in a \link{RelDataModel}}
 \usage{
-\method{addField}{RelDataModel}(x, tableName, name, type, nullable,
-  comment)
+\method{addField}{RelDataModel}(x, tableName, name, type, nullable, comment)
 }
 \arguments{
 \item{x}{a \link{RelDataModel}}

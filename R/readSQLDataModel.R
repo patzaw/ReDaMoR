@@ -104,7 +104,7 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
    ###################################################@
    parseCreateTableStatement <- function(cs, typeRef){
 
-      ## Table
+      ## Table ----
       header <- sub("[[:space:]]*[(].*", "", cs)
       p <- gregexpr('`[^`]*`[.]`[^`]*`', header)[[1]]
       tableFullName <- substr(header, p, p+attr(p, "match.length")-1)
@@ -116,7 +116,7 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
          sub("[)][^)]*$", "", .)
       subStatements <- getSubStatements(body, sep=",")
 
-      ## Fields
+      ## Fields ----
       fields <- grep("^[`]", subStatements, value=TRUE)
       types <- sub(" .*$", "", sub("^.*` *", "", fields))
       nullable <- rep(TRUE, length(fields))
@@ -142,7 +142,7 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
          comment=comments
       )
 
-      ## Primary key
+      ## Primary key ----
       primaryKey <- grep("^PRIMARY KEY ", subStatements, value=TRUE) %>%
          sub("^PRIMARY KEY [(]", "", .) %>% sub("[)]$", "", .)
       if(length(primaryKey) > 0){
@@ -151,7 +151,7 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
          primaryKey <- NULL
       }
 
-      ## Foreign keys
+      ## Foreign keys ----
       foreignKeys <- grep(
          "^CONSTRAINT `[^`]*` FOREIGN KEY [(]",
          subStatements,
@@ -189,7 +189,7 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
          }
       ))
 
-      ## Indexes
+      ## Indexes ----
       indexes <- grep("^INDEX ", subStatements, value=TRUE)
       indexes <- sub("[)][^)]*$", "", sub("^INDEX [^(]*[(]", "", indexes))
       indexes <- lapply(
@@ -221,9 +221,12 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
          indexes <- NULL
       }
 
-      ## Unique indexes
+      ## Unique indexes ----
       uindexes <- grep("^UNIQUE INDEX ", subStatements, value=TRUE)
-      uindexes <- sub("[)]$", "", sub("^UNIQUE INDEX [^(]*[(]", "", uindexes))
+      uindexes <- sub(
+         "[)][^)]*$", "",
+         sub("^UNIQUE INDEX [^(]*[(]", "", uindexes)
+      )
       uindexes <- unlist(lapply(
          uindexes,
          function(x){

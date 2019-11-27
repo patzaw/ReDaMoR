@@ -4,8 +4,7 @@
 \alias{removeField.RelDataModel}
 \title{Remove a field from a table in a \link{RelDataModel}}
 \usage{
-\method{removeField}{RelDataModel}(x, tableName, fieldName,
-  rmForeignKeys = FALSE)
+\method{removeField}{RelDataModel}(x, tableName, fieldName, rmForeignKeys = FALSE)
 }
 \arguments{
 \item{x}{a \link{RelDataModel}}
