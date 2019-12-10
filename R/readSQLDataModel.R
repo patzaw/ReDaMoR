@@ -8,7 +8,7 @@
 #'
 #' @export
 #'
-readSQLDataModel <- function(f, typeRef="MySQLWB"){
+read_SQL_data_model <- function(f, typeRef="MySQLWB"){
 
    ############################################################################@
    ## Helpers ----
@@ -308,4 +308,16 @@ readSQLDataModel <- function(f, typeRef="MySQLWB"){
    toRet <- RelDataModel(toRet, checkFK=TRUE)
    return(toRet)
 
+}
+
+#' @describeIn read_SQL_data_model
+#'
+#' Deprecated version of read_SQL_data_model
+#'
+#' @param ... params for `read_SQL_data_model`
+#'
+#' @export
+readSQLDataModel <- function(...){
+   warning("Deprecated. Use read_SQL_data_model instead")
+   read_SQL_data_model(...)
 }

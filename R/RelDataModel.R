@@ -37,7 +37,7 @@ RelDataModel <- function(l, checkFK=TRUE){
    names(toRet) <- tn
    class(toRet) <- c("RelDataModel", class(toRet))
    if(checkFK){
-      checkForeignKeys(toRet)
+      check_foreign_keys(toRet)
    }
    return(toRet)
 }
@@ -63,7 +63,7 @@ is.RelDataModel <- function(x){
 #'
 #' @export
 #'
-checkForeignKeys.RelDataModel <- function(x){
+check_foreign_keys.RelDataModel <- function(x){
    lapply(
       x,
       function(tm){
@@ -521,7 +521,7 @@ fromDBM <- function(dbm){
 #'
 #' @export
 #'
-renameTable.RelDataModel <- function(x, old, new){
+rename_table.RelDataModel <- function(x, old, new){
    stopifnot(
       is.RelDataModel(x),
       length(old)==1,
@@ -545,7 +545,7 @@ renameTable.RelDataModel <- function(x, old, new){
 #' @export
 #'
 #'
-addTable.RelDataModel <- function(x, newTable){
+add_table.RelDataModel <- function(x, newTable){
    stopifnot(is.RelTableModel(newTable) || is.character(newTable))
    if(is.character(newTable)){
       stopifnot(
@@ -557,6 +557,7 @@ addTable.RelDataModel <- function(x, newTable){
             name=character(),
             type=character(),
             nullable=logical(),
+            unique=logical(),
             comment=character()
          ),
          "primaryKey"=NULL,
@@ -588,7 +589,7 @@ addTable.RelDataModel <- function(x, newTable){
 #'
 #' @export
 #'
-removeTable.RelDataModel <- function(x, tableName, rmForeignKeys=FALSE){
+remove_table.RelDataModel <- function(x, tableName, rmForeignKeys=FALSE){
    stopifnot(
       is.character(tableName),
       length(tableName)==1,
@@ -605,13 +606,17 @@ removeTable.RelDataModel <- function(x, tableName, rmForeignKeys=FALSE){
 #' @param name the name of the field to add (a single character)
 #' @param type the type of the field (a single character)
 #' @param nullable if the field is nullable (a single logical)
+#' @param unique if the values are unique (a single logical)
 #' @param comment a description (a single character)
 #'
 #' @return A [RelDataModel]
 #'
 #' @export
 #'
-addField.RelDataModel <- function(x, tableName, name, type, nullable, comment){
+add_field.RelDataModel <- function(
+   x, tableName,
+   name, type, nullable, unique, comment
+){
    stopifnot(
       is.character(tableName), length(tableName)==1,
       !is.na(tableName),
@@ -623,6 +628,8 @@ addField.RelDataModel <- function(x, tableName, name, type, nullable, comment){
       !is.na(type), type %in% SUPPTYPES,
       is.logical(nullable), length(nullable)==1,
       !is.na(nullable),
+      is.logical(unique), length(unique)==1,
+      !is.na(unique),
       is.character(comment), length(comment)==1
    )
    x <- unclass(x)
@@ -632,6 +639,7 @@ addField.RelDataModel <- function(x, tableName, name, type, nullable, comment){
          name=name,
          type=type,
          nullable=nullable,
+         unique=unique,
          comment=comment
       )
    )
@@ -650,7 +658,7 @@ addField.RelDataModel <- function(x, tableName, name, type, nullable, comment){
 #'
 #' @export
 #'
-renameField.RelDataModel <- function(x, tableName, current, new){
+rename_field.RelDataModel <- function(x, tableName, current, new){
    stopifnot(
       is.character(tableName), length(tableName)==1,
       tableName %in% names(x),
@@ -713,7 +721,7 @@ renameField.RelDataModel <- function(x, tableName, current, new){
 #'
 #' @export
 #'
-removeField.RelDataModel <- function(
+remove_field.RelDataModel <- function(
    x,
    tableName,
    fieldName,
@@ -741,7 +749,7 @@ removeField.RelDataModel <- function(
 #'
 #' @export
 #'
-setPK.RelDataModel <- function(x, tableName, fieldNames){
+set_primary_key.RelDataModel <- function(x, tableName, fieldNames){
    stop("NOT IMPLEMENTED YET")
    fieldNames <- as.character(fieldNames)
    stopifnot(
@@ -759,7 +767,7 @@ setPK.RelDataModel <- function(x, tableName, fieldNames){
 #'
 #' @export
 #'
-addFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
+add_foreign_key.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
    stop("NOT IMPLEMENTED YET")
 }
 
@@ -771,7 +779,7 @@ addFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
 #'
 #' @export
 #'
-removeFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
+remove_foreign_key.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
    stop("NOT IMPLEMENTED YET")
 }
 
@@ -783,7 +791,7 @@ removeFK.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
 #'
 #' @export
 #'
-addIndex.RelDataModel <- function(x, tableName, fieldNames, uniques){
+add_index.RelDataModel <- function(x, tableName, fieldNames, uniques){
    stop("NOT IMPLEMENTED YET")
 }
 
@@ -795,7 +803,7 @@ addIndex.RelDataModel <- function(x, tableName, fieldNames, uniques){
 #'
 #' @export
 #'
-removeIndex.RelDataModel <- function(x, tableName, fieldNames){
+remove_index.RelDataModel <- function(x, tableName, fieldNames){
    stop("NOT IMPLEMENTED YET")
 }
 
@@ -807,7 +815,7 @@ removeIndex.RelDataModel <- function(x, tableName, fieldNames){
 #'
 #' @export
 #'
-updateTableDisplay.RelDataModel <- function(x, tableName, px, py, color, comment){
+update_table_display.RelDataModel <- function(x, tableName, px, py, color, comment){
    stop("NOT IMPLEMENTED YET")
 }
 
@@ -819,7 +827,7 @@ updateTableDisplay.RelDataModel <- function(x, tableName, px, py, color, comment
 #'
 #' @export
 #'
-updateField.RelDataModel <- function(x, tableName, fieldName, type, nullable, comment){
+update_field.RelDataModel <- function(x, tableName, fieldName, type, nullable, comment){
    stop("NOT IMPLEMENTED YET")
 }
 

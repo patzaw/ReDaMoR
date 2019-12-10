@@ -183,7 +183,7 @@ is.RelTableModel <- function(x){
 format.RelTableModel <- function(x){
    f <- x$fields
    pk <- x$primaryKey
-   it <- indexTable(x)
+   it <- index_table(x)
    ind <- NULL
    # uq <- NULL
    if(!is.null(it)){
@@ -265,7 +265,7 @@ print.RelTableModel <- function(x, ...){
 #'
 #' @export
 #'
-indexTable.RelTableModel <- function(x){
+index_table.RelTableModel <- function(x){
    pk <- x$primaryKey
    ind <- x$indexes
    toRet <- NULL

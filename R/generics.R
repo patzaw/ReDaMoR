@@ -3,8 +3,8 @@
 #'
 #' @export
 #'
-checkForeignKeys <- function(x, ...){
-   UseMethod("checkForeignKeys", x)
+check_foreign_keys <- function(x, ...){
+   UseMethod("check_foreign_keys", x)
 }
 
 ###############################################################################@
@@ -12,8 +12,8 @@ checkForeignKeys <- function(x, ...){
 #'
 #' @export
 #'
-indexTable <- function(x){
-   UseMethod("indexTable", x)
+index_table <- function(x){
+   UseMethod("index_table", x)
 }
 
 ###############################################################################@
@@ -37,93 +37,92 @@ explore <- function(x, ...){
 ###############################################################################@
 #' @export
 #'
-renameTable <- function(x, ...){
-   UseMethod("renameTable", x)
+rename_table <- function(x, ...){
+   UseMethod("rename_table", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-addTable <- function(x, ...){
-   UseMethod("addTable", x)
+add_table <- function(x, ...){
+   UseMethod("add_table", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-removeTable <- function(x, ...){
-   UseMethod("removeTable", x)
+remove_table <- function(x, ...){
+   UseMethod("remove_table", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-renameField <- function(x, ...){
-   UseMethod("renameField", x)
+rename_field <- function(x, ...){
+   UseMethod("rename_field", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-addField <- function(x, ...){
-   UseMethod("addField", x)
+add_field <- function(x, ...){
+   UseMethod("add_field", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-removeField <- function(x, ...){
-   UseMethod("removeField", x)
+remove_field <- function(x, ...){
+   UseMethod("remove_field", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-setPK <- function(x, ...){
-   UseMethod("setPK", x)
+set_primary_key <- function(x, ...){
+   UseMethod("set_primary_key", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-addFK <- function(x, ...){
-   UseMethod("addFK", x)
+add_foreign_key <- function(x, ...){
+   UseMethod("add_foreign_key", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-removeFK <- function(x, ...){
-   UseMethod("removeFK", x)
+remove_foreign_key <- function(x, ...){
+   UseMethod("remove_foreign_key", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-addIndex <- function(x, ...){
-   UseMethod("addIndex", x)
+add_index <- function(x, ...){
+   UseMethod("add_index", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-removeIndex <- function(x, ...){
-   UseMethod("removeIndex <- function(x, ...){
-   UseMethod", x)
+remove_index <- function(x, ...){
+   UseMethod("remove_index", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-updateTableDisplay <- function(x, ...){
-   UseMethod("updateTableDisplay", x)
+update_table_display <- function(x, ...){
+   UseMethod("update_table_display", x)
 }
 
 ###############################################################################@
 #' @export
 #'
-updateField <- function(x, ...){
-   UseMethod("updateField", x)
+update_field <- function(x, ...){
+   UseMethod("update_field", x)
 }
 
 

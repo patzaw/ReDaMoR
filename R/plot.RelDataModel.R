@@ -18,7 +18,7 @@ plot.RelDataModel <- function(x){
          function(m){
             f <- m$fields
             pk <- m$primaryKey
-            it <- indexTable(m)
+            it <- index_table(m)
             ind <- NULL
             # uq <- NULL
             if(!is.null(it)){
