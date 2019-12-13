@@ -4,7 +4,7 @@
 \alias{plot.RelDataModel}
 \title{Plot a \link{RelDataModel} object}
 \usage{
-\method{plot}{RelDataModel}(x)
+\method{plot}{RelDataModel}(x, autolayout = TRUE)
 }
 \description{
 This function draw a visNetwork of the model.

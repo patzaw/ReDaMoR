@@ -1,18 +1,41 @@
 TYPETABLE <- list(
-   MySQLWB=tibble(
-      ext=c(
-         "INT.*", "DECIMAL.*", "TINYINT.*", "VARCHAR.*", "BLOB.*",
-         "DATE.*", "DATETIME.*"
-      ),
-      R=c(
-         "integer", "numeric", "logical", "character", "character",
-         "Date", "POSIXct"
-      )
-   ),
-   ClickHouse=tibble(
-      ext=c("Int32", "Float64", "UInt8", "String", "Date", "DateTime"),
-      R=c("integer", "numeric", "logical", "character", "Date", "POSIXct")
-   )
+   MySQLWB=c(
+      "^TINYINT([()].*[)])?$",    "TINYINT",    "logical",
+      "^BIGINT([()].*[)])?$",     "BIGINT",     "integer",
+      "^INT([()].*[)])?$",        "INT",        "integer",
+      "^SMALLINT([()].*[)])?$",   "SMALLINT",   "integer",
+      "^DOUBLE([()].*[)])?$",     "DOUBLE",     "numeric",
+      "^FLOAT([()].*[)])?$",      "FLOAT",      "numeric",
+      "^DECIMAL([()].*[)])?$",    "DECIMAL",    "numeric",
+      "^VARCHAR([()].*[)])?$",    "VARCHAR",    "character",
+      "^TEXT([()].*[)])?$",       "TEXT",       "character",
+      "^TINYTEXT([()].*[)])?$",   "TINYTEXT",   "character",
+      "^LONGTEXT([()].*[)])?$",   "LONGTEXT",   "character",
+      "^MEDIUMTEXT([()].*[)])?$", "MEDIUMTEXT", "character",
+      "^BLOB([()].*[)])?$",       "BLOB",       "character",
+      "^DATETIME([()].*[)])?$",   "DATETIME",   "POSIXct",
+      "^DATE([()].*[)])?$",       "DATE",       "Date",
+      "^ENUM([()].*[)])?$",       "ENUM",       "character",
+      "^SET([()].*[)])?$",        "SET",        "character"
+   ) %>%
+      matrix(
+         ncol=3, byrow=TRUE,
+         dimnames=list(NULL, c("match", "inst", "R"))
+      ) %>%
+      as_tibble(),
+   ClickHouse=c(
+      "Int32",    "Int32",    "integer",
+      "Float64",  "Float64",  "numeric",
+      "UInt8",    "UInt8",    "logical",
+      "String",   "String",   "character",
+      "Date",     "Date",     "Date",
+      "DateTime", "DateTime", "POSIXct"
+   ) %>%
+      matrix(
+         ncol=3, byrow=TRUE,
+         dimnames=list(NULL, c("match", "inst", "R"))
+      ) %>%
+      as_tibble()
 )
 
 ###############################################################################@
@@ -27,7 +50,7 @@ SUPPTYPES <- c("integer", "numeric", "logical", "character", "Date", "POSIXct")
 #'
 #' @export
 #'
-listTypeRef <- function(){
+list_type_ref <- function(){
    names(TYPETABLE)
 }
 
@@ -36,20 +59,22 @@ listTypeRef <- function(){
 #'
 #' @param x a character vector to normalize
 #' @param typeRef a character vector of length one: the type
-#' reference (\code{\link{listTypeRef}})
+#' reference ([list_type_ref])
+#' @param ignore.case should case be ignored (default: TRUE)
 #'
 #' @export
 #'
-normTypeRef <- function(x, typeRef){
+norm_type_ref <- function(x, typeRef, ignore.case=TRUE){
    stopifnot(is.character(x))
-   typeRef <- match.arg(typeRef, listTypeRef())
-   ntypes <- unique(TYPETABLE[[typeRef]] %>% pull(ext))
+   typeRef <- match.arg(typeRef, list_type_ref())
+   ntypes <- unique(TYPETABLE[[typeRef]] %>% pull(match))
    toRet <- x
    for(nt in ntypes){
       toRet <- sub(
          nt,
          nt,
-         toRet
+         toRet,
+         ignore.case=ignore.case
       )
    }
    return(toRet)
@@ -62,36 +87,39 @@ normTypeRef <- function(x, typeRef){
 #' x should be a set of valid types in the from reference. If to is not null,
 #' x should be a set of supported R types (SUPPTYPES).
 #' @param from a character vector of length one: the type reference
-#' (\code{\link{listTypeRef}}) of x
+#' ([list_type_ref]) of x
 #' @param to a character vector of length one: the targeted type reference
-#' (\code{\link{listTypeRef}})
+#' ([list_type_ref])
+#' @param ignore.case should case be ignored when converting `from``
+#' type reference (default: TRUE)
 #'
 #' @details Only `from` XOR `to` should be set
 #'
 #' @export
 #'
-typeRefConv <- function(x, from=NULL, to=NULL){
+conv_type_ref <- function(x, from=NULL, to=NULL, ignore.case=TRUE){
    stopifnot(
       !is.null(from) | !is.null(to),
       is.null(from) | is.null(to)
    )
    if(!is.null(from)){
-      r <- match.arg(from, listTypeRef())
+      r <- match.arg(from, list_type_ref())
       ct <- TYPETABLE[[r]]
-      notSupported <- setdiff(x, ct %>% pull(ext))
+      x <- norm_type_ref(x, from, ignore.case=ignore.case)
+      notSupported <- setdiff(x, ct %>% pull(match))
       if(length(notSupported)>0){
          stop(paste(
             sprintf("The following types are not supported %s types:", r),
             paste(notSupported, collapse=", ")
          ))
       }
-      toRet <- ct %>% slice(match(x, ext)) %>% pull(R)
+      toRet <- ct %>% slice(match(x, match)) %>% pull(R)
    }
    if(!is.null(to)){
-      r <- match.arg(to, listTypeRef())
+      r <- match.arg(to, list_type_ref())
       ct <- TYPETABLE[[r]]
-      checkTypes(x)
-      toRet <- ct %>% slice(match(x, R)) %>% pull(ext)
+      check_types(x)
+      toRet <- ct %>% slice(match(x, R)) %>% pull(inst)
    }
    return(toRet)
 }
@@ -103,7 +131,7 @@ typeRefConv <- function(x, from=NULL, to=NULL){
 #'
 #' @export
 #'
-checkTypes <- function(x){
+check_types <- function(x){
    stopifnot(is.character(x))
    notSupported <- setdiff(x, SUPPTYPES)
    if(length(notSupported)>0){
@@ -122,7 +150,7 @@ checkTypes <- function(x){
 #'
 #' @export
 #'
-asType <- function(x, type){
+as_type <- function(x, type){
    type <- match.arg(type, SUPPTYPES)
    return(switch(
       type,

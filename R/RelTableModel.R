@@ -77,7 +77,7 @@ RelTableModel <- function(l){
    }
 
    ## * Field types ----
-   checkTypes(l$fields$type)
+   check_types(l$fields$type)
 
    ## * Foreign keys ----
    if(!is.null(l$foreignKeys)){

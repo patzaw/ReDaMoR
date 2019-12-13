@@ -5,7 +5,7 @@
 \alias{readSQLDataModel}
 \title{Read a data model from an SQL file from the MySQL Workbench}
 \usage{
-read_SQL_data_model(f, typeRef = "MySQLWB")
+read_SQL_data_model(f, typeRef = "MySQLWB", mysqlcomments = TRUE)
 
 readSQLDataModel(...)
 }
@@ -13,7 +13,10 @@ readSQLDataModel(...)
 \item{f}{the SQL file to read}
 
 \item{typeRef}{the reference for type conversion
-(Default: "MySQLWB"; see \code{\link[=listTypeRef]{listTypeRef()}})}
+(Default: "MySQLWB"; see \code{\link[=list_type_ref]{list_type_ref()}})}
+
+\item{mysqlcomments}{if MySQL comments (starting with #) should be removed
+(Default: TRUE)}
 
 \item{...}{params for \code{read_SQL_data_model}}
 }
@@ -22,6 +25,9 @@ A \link{RelDataModel} object
 }
 \description{
 Read a data model from an SQL file from the MySQL Workbench
+}
+\details{
+Database, table and field names should be surrounded by "`".
 }
 \section{Functions}{
 \itemize{

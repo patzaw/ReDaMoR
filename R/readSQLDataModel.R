@@ -2,13 +2,17 @@
 #'
 #' @param f the SQL file to read
 #' @param typeRef the reference for type conversion
-#' (Default: "MySQLWB"; see [listTypeRef()])
+#' (Default: "MySQLWB"; see [list_type_ref()])
+#' @param mysqlcomments if MySQL comments (starting with #) should be removed
+#' (Default: TRUE)
+#'
+#' @details Database, table and field names should be surrounded by "`".
 #'
 #' @return A [RelDataModel] object
 #'
 #' @export
 #'
-read_SQL_data_model <- function(f, typeRef="MySQLWB"){
+read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
 
    ############################################################################@
    ## Helpers ----
@@ -106,10 +110,18 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB"){
 
       ## Table ----
       header <- sub("[[:space:]]*[(].*", "", cs)
-      p <- gregexpr('`[^`]*`[.]`[^`]*`', header)[[1]]
-      tableFullName <- substr(header, p, p+attr(p, "match.length")-1)
-      dbName <- gsub("`", "", sub("[.].*$", "", tableFullName))
-      tableName <- gsub("`", "", sub("^.*[.]", "", tableFullName))
+      p <- gregexpr('(`[^`]*`[.])?`[^`]*`', header)[[1]]
+      tableFullName <-
+         substr(header, p, p+attr(p, "match.length")-1) %>%
+         strsplit(split="[.]") %>%
+         unlist() %>%
+         gsub("`", "", .)
+      if(length(tableFullName)==1){
+         tableFullName <- c("", tableFullName)
+      }
+      dbName <- tableFullName[1]
+      tableName <- tableFullName[2]
+      tableFullName <- paste0("`", dbName, "`.`", tableName, "`")
 
       ##
       body <- sub("[^(]*[(]", "", cs) %>%
@@ -137,7 +149,7 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB"){
       }
       fields <- tibble(
          name=sub("[`].*$", "", sub("[`]", "", fields)),
-         type=normTypeRef(types, typeRef=typeRef) %>% typeRefConv(from=typeRef),
+         type=conv_type_ref(types, from=typeRef),
          nullable=nullable,
          comment=comments
       )
@@ -168,10 +180,19 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB"){
             ref <- sub(
                "^CONSTRAINT `[^`]*` FOREIGN KEY [(].*[)] REFERENCES ", "", x
             )
-            p <- gregexpr('`[^`]*`[.]`[^`]*`', ref)[[1]]
-            refTableFullName <- substr(ref, p, p+attr(p, "match.length")-1)
-            refDB <- gsub("`", "", sub("[.].*$", "", refTableFullName))
-            refTable <- gsub("`", "", sub("^.*[.]", "", refTableFullName))
+            p <- gregexpr('(`[^`]*`[.])?`[^`]*`', ref)[[1]]
+            refTableFullName <-
+               substr(ref, p, p+attr(p, "match.length")-1) %>%
+               strsplit(split="[.]") %>%
+               unlist() %>%
+               gsub("`", "", .)
+            if(length(refTableFullName)==1){
+               refTableFullName <- c("", refTableFullName)
+            }
+            refDB <- refTableFullName[1]
+            refTable <- refTableFullName[2]
+            refTableFullName <- paste0("`", refDB, "`.`", refTable, "`")
+
             refKeys <- gsub('`', '', getSubStatements(sub(
                '^.*[(]', "",
                sub('[)].*$', "", ref)
@@ -280,17 +301,41 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB"){
    ############################################################################@
    ## Main ----
 
-   typeRef <- match.arg(typeRef, listTypeRef())
-   txt <- readLines(f)
-   txt <- sub("--.*$", "", txt)
-   txt <- sub("^[[:space:]]*", "", txt)
-   txt <- txt[which(txt!="")]
-   txt <- paste(txt, collapse=" ")
-   txt <- unlist(strsplit(txt, split=";"))
-   txt <- sub("^[[:space:]]*", "", txt)
-   txt <- sub("[[:space:]]*$", "", txt)
-   txt <- gsub("[[:space:]]+", " ", txt)
-   tdTxt <- grep("^CREATE TABLE", txt, value=TRUE, ignore.case=TRUE)
+   typeRef <- match.arg(typeRef, list_type_ref())
+   txt <- readLines(f) %>%
+      paste(collapse="\n") %>%
+      gsub("/\\*((?!\\*/)(.|\n))*\\**/", "", ., perl=T) %>%
+      strsplit(split="\n") %>%
+      unlist() %>%
+      sub("--.*$", "", .)
+   if(mysqlcomments){
+      txt <- txt %>%
+         sub("#.*$", "", .)
+   }
+   txt <- txt %>%
+      sub("^[[:space:]]*", "", .) %>%
+      `[`(which(.!="")) %>%
+      paste(collapse=" ") %>%
+      strsplit(split=";") %>%
+      unlist() %>%
+      sub("^[[:space:]]*", "", .) %>%
+      sub("[[:space:]]*$", "", .) %>%
+      gsub("[[:space:]]+", " ", .)
+   tdTxt <- txt %>%
+      grep("^CREATE TABLE", ., ignore.case=TRUE, value=TRUE)
+   unsupported <- tdTxt %>%
+      grep("`", ., value=TRUE, invert=TRUE)
+   if(length(unsupported)>0){
+      stop(
+         sprintf(
+            '%s statement%s %s not supported because without "`":\n',
+            length(unsupported),
+            ifelse(length(unsupported)>1, "s", ""),
+            ifelse(length(unsupported)>1, "are", "is")
+         ),
+         paste("   -", unsupported) %>% paste(collapse="\n")
+      )
+   }
    toRet <- do.call(c, lapply(
       tdTxt,
       parseCreateTableStatement,

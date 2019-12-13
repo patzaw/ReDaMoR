@@ -16,8 +16,9 @@ Imports:
    readr,
    base64enc
 Suggests:
-   knitr,
-   rmarkdown
+    knitr,
+    rmarkdown,
+    testthat (>= 2.1.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

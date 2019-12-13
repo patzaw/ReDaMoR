@@ -708,6 +708,109 @@ rename_field.RelDataModel <- function(x, tableName, current, new){
 }
 
 ###############################################################################@
+fk_match <- function(
+   x, fromTable, fromFields, toTable, toFields
+){
+   tocheck <- paste(fromFields, toFields, sep="-->") %>% sort()
+   tfk <- x[[fromTable]]$foreignKeys
+   lapply(
+      tfk,
+      function(y){
+         y$refTable==toTable &
+         sort(paste(y$key$from, y$key$to, sep="-->")) %in% tocheck
+      }
+   ) %>%
+      unlist() %>%
+      as.logical() %>%
+      which()
+}
+
+###############################################################################@
+#' Add a foreign key between two tables
+#'
+#' @param x a [RelDataModel]
+#' @param fromTable the name of the referencing table
+#' @param fromFields the name of the referencing fields
+#' @param toTable the name of the referenced table
+#' @param toFields the names of the referenced fields
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+add_foreign_key.RelDataModel <- function(
+   x, fromTable, fromFields, toTable, toFields
+){
+   stopifnot(
+      is.character(fromTable), length(fromTable)==1,
+      fromTable %in% names(x),
+      is.character(toTable), length(toTable)==1,
+      toTable %in% names(x),
+      is.character(fromFields), length(fromFields)>=1,
+      is.character(toFields), length(toFields)==length(fromFields),
+      all(fromFields %in% x[[fromTable]]$fields$name),
+      all(toFields %in% x[[toTable]]$fields$name),
+      all(
+         x[[fromTable]]$fields$type[match(fromFields, x[[fromTable]]$fields$name)]==
+            x[[toTable]]$fields$type[match(toFields, x[[toTable]]$fields$name)]
+      )
+   )
+   efk <- fk_match(x, fromTable, fromFields, toTable, toFields)
+   if(length(efk)!=0){
+      warning("The foreign key already exists ==> no change")
+      return(x)
+   }
+   x <- unclass(x)
+   x[[fromTable]]$foreignKeys <- c(
+      x[[fromTable]]$foreignKeys,
+      list(list(
+         refTable=toTable,
+         key=tibble(
+            from=fromFields,
+            to=toFields
+         )
+      ))
+   )
+   return(RelDataModel(x))
+}
+
+###############################################################################@
+#' Remove a foreign key between two tables
+#'
+#' @param x a [RelDataModel]
+#' @param fromTable the name of the referencing table
+#' @param fromFields the name of the referencing fields
+#' @param toTable the name of the referenced table
+#' @param toFields the names of the referenced fields
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+remove_foreign_key.RelDataModel <- function(
+   x, fromTable, fromFields, toTable, toFields
+){
+   stopifnot(
+      is.character(fromTable), length(fromTable)==1,
+      fromTable %in% names(x),
+      is.character(toTable), length(toTable)==1,
+      toTable %in% names(x),
+      is.character(fromFields), length(fromFields)>=1,
+      is.character(toFields), length(toFields)==length(fromFields),
+      all(fromFields %in% x[[fromTable]]$fields$name),
+      all(toFields %in% x[[toTable]]$fields$name)
+   )
+   efk <- fk_match(x, fromTable, fromFields, toTable, toFields)
+   if(length(efk)==0){
+      warning("The foreign key does not exist ==> no change")
+      return(x)
+   }
+   x <- unclass(x)
+   x[[fromTable]]$foreignKeys <- x[[fromTable]]$foreignKeys[-efk]
+   return(RelDataModel(x))
+}
+
+###############################################################################@
 #' Remove a field from a table in a [RelDataModel]
 #'
 #' @param x a [RelDataModel]
@@ -727,15 +830,76 @@ remove_field.RelDataModel <- function(
    fieldName,
    rmForeignKeys=FALSE
 ){
-   stop("NOT IMPLEMENTED YET")
    stopifnot(
       is.character(tableName), length(tableName)==1,
       tableName %in% names(x),
       is.character(fieldName), length(fieldName)==1,
       fieldName %in% x[[tableName]]$fields$name
    )
+   ## Foreign keys ----
+   refk <- lapply(
+      x[[tableName]]$foreignKeys,
+      function(y){
+         fieldName %in% y$key$from
+      }
+   ) %>%
+      unlist() %>%
+      as.logical() %>%
+      which()
+   tefk <- lapply(
+      x,
+      function(y){
+         lapply(
+            y$foreignKeys,
+            function(z){
+               tableName==z$refTable &
+               fieldName %in% z$key$to
+            }
+         ) %>%
+            unlist() %>%
+            as.logical() %>%
+            which()
+      }
+   )
    x <- unclass(x)
-   tm <- x[[tableName]]
+   if(length(refk)>0 || any(unlist(lapply(tefk, length))>0)){
+      if(!rmForeignKeys){
+         stop(
+            "This field is used as a foreign key.\n",
+            "Set rmForeignKeys to TRUE to remove them"
+         )
+      }else{
+         if(length(refk)>0){
+            x[[tableName]]$foreignKeys <- x[[tableName]]$foreignKeys[-refk]
+         }
+         for(tn in names(tefk)){
+            if(length(tefk[[tn]]>0)){
+               x[[tn]]$foreignKeys <- x[[tn]]$foreignKeys[-tefk[[tn]]]
+            }
+         }
+      }
+   }
+   ## Adapting primary key ----
+   if(fieldName %in% x[[tableName]]$primaryKey){
+      x[[tableName]]$primaryKey <- character()
+   }
+   ## Adapting indexes ----
+   if(length(x[[tableName]]$indexes)>0){
+      toRm <- c()
+      for(i in 1:length(x[[tableName]]$indexes)){
+         if(fieldName %in% x[[tableName]]$indexes[[i]]$fields){
+            toRm <- c(toRm, i)
+         }
+      }
+      if(length(toRm)>0){
+         x[[tableName]]$indexes <- x[[tableName]]$indexes[-toRm]
+      }
+   }
+   ## Removing the field ----
+   x[[tableName]]$fields <- x[[tableName]]$fields %>% filter(name!=fieldName)
+   ## Returning the results ----
+   return(RelDataModel(x))
+
 }
 
 ###############################################################################@
@@ -750,84 +914,249 @@ remove_field.RelDataModel <- function(
 #' @export
 #'
 set_primary_key.RelDataModel <- function(x, tableName, fieldNames){
-   stop("NOT IMPLEMENTED YET")
    fieldNames <- as.character(fieldNames)
    stopifnot(
       is.character(tableName), length(tableName)==1,
       tableName %in% names(x),
       all(fieldNames %in% x[[tableName]]$fields$name)
    )
+   x <- unclass(x)
+   x[[tableName]]$primaryKey <- fieldNames
+   return(RelDataModel(x))
 }
 
+
 ###############################################################################@
+#' Add an index to a table in a [RelDataModel]
 #'
 #' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param fieldNames the names of the fields to include in the index
+#' @param unique a logical indicating if the indexed values are unique
 #'
 #' @return A [RelDataModel]
 #'
 #' @export
 #'
-add_foreign_key.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
-   stop("NOT IMPLEMENTED YET")
+add_index.RelDataModel <- function(x, tableName, fieldNames, unique){
+   fieldNames <- as.character(fieldNames)
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      all(fieldNames %in% x[[tableName]]$fields$name),
+      is.logical(unique), length(unique)==1
+   )
+   ei <- lapply(
+      x[[tableName]]$indexes,
+      function(y){
+         identical(sort(y$fields), sort(fieldNames))
+      }
+   ) %>%
+      unlist() %>%
+      as.logical() %>%
+      any()
+   if(ei){
+      warning("The index already exists ==> no change")
+      return(x)
+   }
+   x <- unclass(x)
+   x[[tableName]]$indexes <- c(
+      x[[tableName]]$indexes,
+      list(list(fields=fieldNames, unique=unique))
+   )
+   return(RelDataModel(x))
 }
 
 ###############################################################################@
+#' Remove an index from a table in a [RelDataModel]
 #'
 #' @param x a [RelDataModel]
-#'
-#' @return A [RelDataModel]
-#'
-#' @export
-#'
-remove_foreign_key.RelDataModel <- function(x, fromTable, fromFields, toTable, toFields){
-   stop("NOT IMPLEMENTED YET")
-}
-
-###############################################################################@
-#'
-#' @param x a [RelDataModel]
-#'
-#' @return A [RelDataModel]
-#'
-#' @export
-#'
-add_index.RelDataModel <- function(x, tableName, fieldNames, uniques){
-   stop("NOT IMPLEMENTED YET")
-}
-
-###############################################################################@
-#'
-#' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param fieldNames the names of the fields composing the index
 #'
 #' @return A [RelDataModel]
 #'
 #' @export
 #'
 remove_index.RelDataModel <- function(x, tableName, fieldNames){
-   stop("NOT IMPLEMENTED YET")
+   fieldNames <- as.character(fieldNames)
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      all(fieldNames %in% x[[tableName]]$fields$name)
+   )
+   ei <- lapply(
+      x[[tableName]]$indexes,
+      function(y){
+         identical(sort(y$fields), sort(fieldNames))
+      }
+   ) %>%
+      unlist() %>%
+      as.logical() %>%
+      which()
+   if(length(ei)==0){
+      warning("The index does not exists ==> no change")
+      return(x)
+   }
+   x <- unclass(x)
+   x[[tableName]]$indexes <- x[[tableName]]$indexes[-ei]
+   return(RelDataModel(x))
 }
 
 ###############################################################################@
+#' Update field information in a table of a [RelDataModel]
 #'
 #' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param name the name of the field to modify (a single character)
+#' @param type the type of the field (a single character)
+#' @param nullable if the field is nullable (a single logical)
+#' @param unique if the values are unique (a single logical)
+#' @param comment a description (a single character)
 #'
 #' @return A [RelDataModel]
 #'
 #' @export
 #'
-update_table_display.RelDataModel <- function(x, tableName, px, py, color, comment){
-   stop("NOT IMPLEMENTED YET")
+update_field.RelDataModel <- function(
+   x, tableName, fieldName, type=NA, nullable=NA, unique=NA, comment=NA
+){
+   type <- as.character(type)
+   nullable <- as.logical(nullable)
+   unique <- as.logical(unique)
+   comment <- as.character(comment)
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      is.character(fieldName), length(fieldName)==1,
+      fieldName %in% x[[tableName]]$fields$name,
+      is.character(type), length(type)==1,
+      is.logical(nullable), length(nullable)==1,
+      is.logical(unique), length(unique)==1,
+      is.character(comment), length(comment)==1
+   )
+   curType <- x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(type)
+   type <- ifelse(
+      is.na(type),
+      curType,
+      type
+   )
+   check_types(type)
+   nullable <- ifelse(
+      is.na(nullable),
+      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(nullable),
+      nullable
+   )
+   unique <- ifelse(
+      is.na(unique),
+      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(unique),
+      unique
+   )
+   comment <- ifelse(
+      is.na(comment),
+      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(comment),
+      comment
+   )
+   ## Foreign keys ----
+   if(type != curType){
+      refk <- lapply(
+         x[[tableName]]$foreignKeys,
+         function(y){
+            fieldName %in% y$key$from
+         }
+      ) %>%
+         unlist() %>%
+         as.logical() %>%
+         which()
+      tefk <- lapply(
+         x,
+         function(y){
+            lapply(
+               y$foreignKeys,
+               function(z){
+                  tableName==z$refTable &
+                     fieldName %in% z$key$to
+               }
+            ) %>%
+               unlist() %>%
+               as.logical() %>%
+               which()
+         }
+      )
+      if(length(refk)>0 || any(unlist(lapply(tefk, length))>0)){
+         stop(
+            "Cannot change the type of a field involved in a foreign key.\n",
+            "You should first remove the foreign key involving it."
+         )
+      }
+   }
+   ## Updating field information ----
+   x <- unclass(x)
+   x[[tableName]]$fields <- x[[tableName]]$fields %>%
+      mutate(
+         type=ifelse(name==fieldName, !!type, type),
+         nullable=ifelse(name==fieldName, !!nullable, nullable),
+         unique=ifelse(name==fieldName, !!unique, unique),
+         comment=ifelse(name==fieldName, !!comment, comment)
+      )
+   return(RelDataModel(x))
 }
 
+
 ###############################################################################@
+#' Update the display of a table of a [RelDataModel]
 #'
 #' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param px the position of the table: x value
+#' @param py the position of the table: y value
+#' @param color the color of the table
+#' @param comment a table description/comment
 #'
 #' @return A [RelDataModel]
 #'
 #' @export
 #'
-update_field.RelDataModel <- function(x, tableName, fieldName, type, nullable, comment){
-   stop("NOT IMPLEMENTED YET")
+update_table_display.RelDataModel <- function(
+   x, tableName, px=NA, py=NA, color=NA, comment=NA
+){
+   px <- as.numeric(px)
+   py <- as.numeric(py)
+   color <- as.character(color)
+   comment <- as.character(comment)
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      is.numeric(px), length(px)==1,
+      is.numeric(py), length(py)==1,
+      is.character(color), length(color)==1,
+      is.character(comment), length(comment)==1
+   )
+   px <- ifelse(
+      is.na(px),
+      x[[tableName]]$display$x,
+      px
+   )
+   py <- ifelse(
+      is.na(py),
+      x[[tableName]]$display$y,
+      py
+   )
+   color <- ifelse(
+      is.na(color),
+      x[[tableName]]$display$color,
+      color
+   )
+   comment <- ifelse(
+      is.na(comment),
+      x[[tableName]]$display$comment,
+      comment
+   )
+   ## Updating table display ----
+   x <- unclass(x)
+   x[[tableName]]$display$x <- px
+   x[[tableName]]$display$y <- py
+   x[[tableName]]$display$color <- color
+   x[[tableName]]$display$comment <- comment
+   return(RelDataModel(x))
 }
-
