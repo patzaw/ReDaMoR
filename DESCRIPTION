@@ -1,7 +1,7 @@
 Package: ReDaMoR
 Type: Package
 Title: Relational Data ModeleR
-Version: 0.2.2
+Version: 0.2.3
 Author: Patrice Godard
 Maintainer: Patrice Godard <patrice.godard@gmail.com>
 Description: Design, explore and import relational data model.
@@ -14,7 +14,8 @@ Depends:
    shiny
 Imports:
    readr,
-   base64enc
+   base64enc,
+   jsonlite
 Suggests:
     knitr,
     rmarkdown,
