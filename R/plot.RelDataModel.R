@@ -8,27 +8,47 @@
 #'
 #' @export
 #'
-plot.RelDataModel <- function(x, autolayout=TRUE){
+plot.RelDataModel <- function(
+   x,
+   reproducible_layout=TRUE,
+   ...
+){
 
-   toPlot <- modelToVn(x)
+   toPlot <- modelToVn(x, ...)
 
-   toShow <- visNetwork(nodes=toPlot$nodes, edges=toPlot$edges)
-   if(autolayout){
+   toShow <- visNetwork::visNetwork(nodes=toPlot$nodes, edges=toPlot$edges) %>%
+      visNetwork::visNodes(
+         labelHighlightBold=FALSE,
+         borderWidth=2
+      ) %>%
+      visNetwork::visEdges(
+         # color=list(
+         #    color=border,
+         #    highlight=highlightBorder
+         # ),
+         width=2,
+         selectionWidth=2
+      ) %>%
+      visNetwork::visInteraction(multiselect=TRUE)
+   if(reproducible_layout){
       toShow <- toShow %>%
-         visPhysics(
-            solver="repulsion",
-            repulsion=list(
-               nodeDistance=100,
-               springLength=100,
-               springConstant=0.001,
-               damping=1
-            )
-         ) %>%
-         visLayout(randomSeed=2) #%>%
-   # visOptions(selectedBy="tableName", highlightNearest=TRUE) %>%
-   # visIgraphLayout(smooth=TRUE, type="full", randomSeed=2)
+         ################################################@
+         ## The code below is useless when edge smooth is
+         ## define by edge
+         # visNetwork::visPhysics(
+         #    solver="repulsion",
+         #    repulsion=list(
+         #       nodeDistance=100,
+         #       springLength=100,
+         #       springConstant=0.001,
+         #       damping=1,
+         #       avoidOverlap=1
+         #    )
+         # ) %>%
+         ################################################@
+         visNetwork::visLayout(randomSeed=2) #%>%
    }
-   return(toShow)
+   toShow %>% visPhysics(enabled=FALSE)
 
 }
 
@@ -37,7 +57,12 @@ plot.RelDataModel <- function(x, autolayout=TRUE){
 #'
 #' Internal function
 #'
-modelToVn <- function(model){
+modelToVn <- function(
+   model,
+   border="black",
+   color="lightgrey",
+   highlightBorder="orange"
+){
    nodes <- do.call(rbind, lapply(
       model,
       function(m){
@@ -107,11 +132,24 @@ modelToVn <- function(model){
             font.align="left",
             x=m$display$x,
             y=m$display$y,
-            color=m$display$color
+            color.background=m$display$color
          ))
       }
    ))
-   nodes$id <- names(model)
+   if(!is.null(nodes) && nrow(nodes)>0){
+      nodes <- nodes %>%
+         mutate(
+            color.border=!!border,
+            color.highlight.border=!!highlightBorder,
+            color.background=ifelse(
+               is.na(color.background), !!color, color.background
+            )
+         ) %>%
+         mutate(
+            color.highlight.background=color.background
+         )
+      nodes$id <- names(model)
+   }
 
    edges <- do.call(rbind, lapply(
       model,
@@ -126,11 +164,12 @@ modelToVn <- function(model){
             fk,
             function(k){
                to <- k$refTable
+               kt <- k$key %>% arrange(from, to)
                title <- paste0(
                   '<tr style="border: 1px solid black">',
-                  '<td style="border: 1px solid black">', k$key$from,
+                  '<td style="border: 1px solid black">', kt,
                   '</td>',
-                  '<td style="border: 1px solid black">', k$key$to,
+                  '<td style="border: 1px solid black">', kt,
                   '</td>',
                   '</tr>'
                )
@@ -148,10 +187,14 @@ modelToVn <- function(model){
                   paste(title, collapse=""),
                   '</table>'
                )
-               return(tibble(to=to, title=title))
+               id <- paste(kt$from, kt$to, sep="->")
+               id <- paste(id, collapse=" && ")
+               id <- paste(to, id, sep=": ")
+               return(tibble(id=id, to=to, title=title))
             }
          ))
          toRet$from <- mn
+         toRet$id <- paste(mn, toRet$id, sep="->")
          toRet$arrows <- "to"
          toRet$font.align <- "bottom"
          return(toRet)
@@ -159,6 +202,24 @@ modelToVn <- function(model){
    ))
    if(is.null(edges)){
       edges <- tibble(from=character(), to=character())
+   }else{
+      edges$smooth.type <- "curvedCW"
+      edges$smooth.roundness <- 0
+      edges$ue <- edges %>% select(from, to) %>%
+         apply(1, function(x) paste(sort(x), collapse="<->"))
+      edges <- edges %>%
+         group_by(ue) %>%
+         mutate(
+            smooth.roundness={
+               mr <- min(1, 0.2*(length(ue)%/%2))
+               seq(-mr, mr, length.out=length(ue))
+            }
+         ) %>%
+         ungroup() %>%
+         mutate(
+            color.color=border,
+            color.highlight=highlightBorder
+         )
    }
 
    return(list(nodes=nodes, edges=edges))

@@ -4,7 +4,14 @@
 \alias{update_table_display.RelDataModel}
 \title{Update the display of a table of a \link{RelDataModel}}
 \usage{
-\method{update_table_display}{RelDataModel}(x, tableName, px = NA, py = NA, color = NA, comment = NA)
+\method{update_table_display}{RelDataModel}(
+  x,
+  tableName,
+  px = NULL,
+  py = NULL,
+  color = NULL,
+  comment = NULL
+)
 }
 \arguments{
 \item{x}{a \link{RelDataModel}}

@@ -1019,44 +1019,46 @@ remove_index.RelDataModel <- function(x, tableName, fieldNames){
 #' @export
 #'
 update_field.RelDataModel <- function(
-   x, tableName, fieldName, type=NA, nullable=NA, unique=NA, comment=NA
+   x, tableName, fieldName, type=NULL, nullable=NULL, unique=NULL, comment=NULL
 ){
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      is.character(fieldName), length(fieldName)==1,
+      fieldName %in% x[[tableName]]$fields$name
+   )
+   curType <- x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(type)
+   type <- ifelse(
+      is.null(type),
+      curType,
+      type
+   )
+   nullable <- ifelse(
+      is.null(nullable),
+      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(nullable),
+      nullable
+   )
+   unique <- ifelse(
+      is.null(unique),
+      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(unique),
+      unique
+   )
+   comment <- ifelse(
+      is.null(comment),
+      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(comment),
+      comment
+   )
    type <- as.character(type)
    nullable <- as.logical(nullable)
    unique <- as.logical(unique)
    comment <- as.character(comment)
    stopifnot(
-      is.character(tableName), length(tableName)==1,
-      tableName %in% names(x),
-      is.character(fieldName), length(fieldName)==1,
-      fieldName %in% x[[tableName]]$fields$name,
-      is.character(type), length(type)==1,
-      is.logical(nullable), length(nullable)==1,
-      is.logical(unique), length(unique)==1,
+      is.character(type), length(type)==1, !is.na(type),
+      is.logical(nullable), length(nullable)==1, !is.na(nullable),
+      is.logical(unique), length(unique)==1, !is.na(unique),
       is.character(comment), length(comment)==1
    )
-   curType <- x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(type)
-   type <- ifelse(
-      is.na(type),
-      curType,
-      type
-   )
    check_types(type)
-   nullable <- ifelse(
-      is.na(nullable),
-      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(nullable),
-      nullable
-   )
-   unique <- ifelse(
-      is.na(unique),
-      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(unique),
-      unique
-   )
-   comment <- ifelse(
-      is.na(comment),
-      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(comment),
-      comment
-   )
    ## Foreign keys ----
    if(type != curType){
       refk <- lapply(
@@ -1118,8 +1120,28 @@ update_field.RelDataModel <- function(
 #' @export
 #'
 update_table_display.RelDataModel <- function(
-   x, tableName, px=NA, py=NA, color=NA, comment=NA
+   x, tableName, px=NULL, py=NULL, color=NULL, comment=NULL
 ){
+   px <- ifelse(
+      is.null(px),
+      x[[tableName]]$display$x,
+      px
+   )
+   py <- ifelse(
+      is.null(py),
+      x[[tableName]]$display$y,
+      py
+   )
+   color <- ifelse(
+      is.null(color),
+      x[[tableName]]$display$color,
+      color
+   )
+   comment <- ifelse(
+      is.null(comment),
+      x[[tableName]]$display$comment,
+      comment
+   )
    px <- as.numeric(px)
    py <- as.numeric(py)
    color <- as.character(color)
@@ -1131,26 +1153,6 @@ update_table_display.RelDataModel <- function(
       is.numeric(py), length(py)==1,
       is.character(color), length(color)==1,
       is.character(comment), length(comment)==1
-   )
-   px <- ifelse(
-      is.na(px),
-      x[[tableName]]$display$x,
-      px
-   )
-   py <- ifelse(
-      is.na(py),
-      x[[tableName]]$display$y,
-      py
-   )
-   color <- ifelse(
-      is.na(color),
-      x[[tableName]]$display$color,
-      color
-   )
-   comment <- ifelse(
-      is.na(comment),
-      x[[tableName]]$display$comment,
-      comment
    )
    ## Updating table display ----
    x <- unclass(x)

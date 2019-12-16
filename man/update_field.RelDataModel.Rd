@@ -8,10 +8,10 @@
   x,
   tableName,
   fieldName,
-  type = NA,
-  nullable = NA,
-  unique = NA,
-  comment = NA
+  type = NULL,
+  nullable = NULL,
+  unique = NULL,
+  comment = NULL
 )
 }
 \arguments{

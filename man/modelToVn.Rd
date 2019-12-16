@@ -4,7 +4,12 @@
 \alias{modelToVn}
 \title{VisNetwork representation of a \link{RelDataModel} object}
 \usage{
-modelToVn(model)
+modelToVn(
+  model,
+  border = "black",
+  color = "lightgrey",
+  highlightBorder = "orange"
+)
 }
 \description{
 Internal function
