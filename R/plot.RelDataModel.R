@@ -201,7 +201,7 @@ modelToVn <- function(
       }
    ))
    if(is.null(edges)){
-      edges <- tibble(from=character(), to=character())
+      edges <- tibble(id=character(), from=character(), to=character())
    }else{
       edges$smooth.type <- "curvedCW"
       edges$smooth.roundness <- 0

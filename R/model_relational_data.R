@@ -326,6 +326,71 @@ buildServer <- function(modelInput, fromR, bcko){
       })
 
       #########################################################################@
+      ## Add table ----
+      #########################################################################@
+
+      observeEvent(input$addTable, {
+         showModal(modalDialog(
+            title="Add table",
+            uiOutput("addTable"),
+            size="m",
+            easyClose=TRUE
+         ))
+      })
+
+      output$addTable <- renderUI({
+         list(
+            fluidRow(
+               column(10, textInput("newTableName", "Name", width="100%")),
+               column(2, actionButton("confirmAddTable", "Add"))
+            ),
+            fluidRow(uiOutput("newTableExists"))
+         )
+      })
+
+      output$newTableExists <- renderUI({
+         ntn <- input$newTableName
+         m <- isolate(model$x)
+         if(ntn %in% names(m)){
+            p("Table name already used", style="color:red;font-weight: bold;")
+         }else{
+            list()
+         }
+      })
+
+      observe({
+         ntn <- input$newTableName
+         m <- isolate(model$x)
+         if(is.null(ntn) || ntn=="" || ntn %in% names(m)){
+            disable("confirmAddTable")
+         }else{
+            enable("confirmAddTable")
+         }
+      })
+
+      observe({
+         validate(need(input$confirmAddTable, ""))
+         m <- add_table(
+            isolate(model$x), newTable=isolate(input$newTableName)
+         )
+         model$new <- m
+         if(length(isolate(model$x))>0){
+            toReplot <- FALSE
+            mn <- modelToVn(m)
+            visNetworkProxy("modelNet") %>%
+               visUpdateNodes(mn$nodes) %>%
+               visUpdateEdges(mn$edges) %>%
+               visFit()
+         }else{
+            toReplot <- TRUE
+         }
+         if(toReplot){
+            replot$x <- isolate(replot$x)+1
+         }
+         removeModal()
+      })
+
+      #########################################################################@
       ## Edit table ----
       #########################################################################@
 
