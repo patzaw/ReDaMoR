@@ -1,22 +1,23 @@
 ###############################################################################@
 #' Plot a [RelDataModel] object
 #'
-#' This function draw a visNetwork of the model.
+#' This function draw a visNetwork of the [RelDataModel].
 #'
-#' @importFrom visNetwork visNetwork visPhysics visLayout visOptions
-#' @importFrom magrittr %>%
+#' @param x a [RelDataModel]
+#' @param color default table background color
+#' @param border border color (single character)
+#' @param highlightBorder color of highlighted borders
 #'
 #' @export
 #'
 plot.RelDataModel <- function(
    x,
-   reproducible_layout=TRUE,
    ...
 ){
 
    toPlot <- modelToVn(x, ...)
 
-   toShow <- visNetwork::visNetwork(nodes=toPlot$nodes, edges=toPlot$edges) %>%
+   visNetwork::visNetwork(nodes=toPlot$nodes, edges=toPlot$edges) %>%
       visNetwork::visNodes(
          labelHighlightBold=FALSE,
          borderWidth=2
@@ -29,38 +30,41 @@ plot.RelDataModel <- function(
          width=2,
          selectionWidth=2
       ) %>%
-      visNetwork::visInteraction(multiselect=TRUE)
-   if(reproducible_layout){
-      toShow <- toShow %>%
-         ################################################@
-         ## The code below is useless when edge smooth is
-         ## define by edge
-         # visNetwork::visPhysics(
-         #    solver="repulsion",
-         #    repulsion=list(
-         #       nodeDistance=100,
-         #       springLength=100,
-         #       springConstant=0.001,
-         #       damping=1,
-         #       avoidOverlap=1
-         #    )
-         # ) %>%
-         ################################################@
-         visNetwork::visLayout(randomSeed=2) #%>%
-   }
-   toShow %>% visPhysics(enabled=FALSE)
+      visNetwork::visInteraction(multiselect=TRUE) %>%
+      ################################################@
+      ## The code below is useless when edge smooth is
+      ## define by edge
+      # visNetwork::visPhysics(
+      #    solver="repulsion",
+      #    repulsion=list(
+      #       nodeDistance=100,
+      #       springLength=100,
+      #       springConstant=0.001,
+      #       damping=1,
+      #       avoidOverlap=1
+      #    )
+      # ) %>%
+      ################################################@
+      visNetwork::visLayout(randomSeed=2) %>%
+      visPhysics(enabled=FALSE)
 
 }
 
 ###############################################################################@
 #' VisNetwork representation of a [RelDataModel] object
 #'
+#' @param model a [RelDataModel]
+#' @param color default table background color
+#' @param border border color (single character)
+#' @param highlightBorder color of highlighted borders
+#'
+#'
 #' Internal function
 #'
 modelToVn <- function(
    model,
-   border="black",
    color="lightgrey",
+   border="black",
    highlightBorder="orange"
 ){
    nodes <- do.call(rbind, lapply(
@@ -189,7 +193,10 @@ modelToVn <- function(
                id <- paste(kt$from, kt$to, sep="->")
                id <- paste(id, collapse=" && ")
                id <- paste(to, id, sep=": ")
-               return(tibble(id=id, to=to, title=title))
+               return(tibble(
+                  id=id, to=to, title=title,
+                  ff=list(kt$from), tf=list(kt$to)
+               ))
             }
          ))
          toRet$from <- mt

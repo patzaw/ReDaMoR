@@ -4,8 +4,17 @@
 \alias{plot.RelDataModel}
 \title{Plot a \link{RelDataModel} object}
 \usage{
-\method{plot}{RelDataModel}(x, reproducible_layout = TRUE, ...)
+\method{plot}{RelDataModel}(x, ...)
+}
+\arguments{
+\item{x}{a \link{RelDataModel}}
+
+\item{color}{default table background color}
+
+\item{border}{border color (single character)}
+
+\item{highlightBorder}{color of highlighted borders}
 }
 \description{
-This function draw a visNetwork of the model.
+This function draw a visNetwork of the \link{RelDataModel}.
 }

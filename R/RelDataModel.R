@@ -1170,6 +1170,8 @@ update_table_display.RelDataModel <- function(
 #' Pre-compute [RelDataModel] layout when missing any x or y table position
 #'
 #' @param x a [RelDataModel]
+#' @param layout character name of igraph layout function to use
+#' (Default: "layout_nicely").
 #' @param lengthMultiplier a numeric value to scale x and y coordinate
 #' (default: 300)
 #'
@@ -1177,11 +1179,15 @@ update_table_display.RelDataModel <- function(
 #'
 #' @export
 #'
-auto_layout.RelDataModel <- function(x, lengthMultiplier=300){
+auto_layout.RelDataModel <- function(
+   x,
+   layout="layout_nicely",
+   lengthMultiplier=45*length(x)
+){
    mn <- modelToVn(x)
    if(any(is.na(mn$nodes$x)) || any(is.na(mn$nodes$y))){
       vp <- visNetwork(mn$nodes %>% select(-x, -y), mn$edges) %>%
-         visIgraphLayout()
+         visIgraphLayout(layout=layout, randomSeed=2)
       x <- lapply(
          x,
          function(n){

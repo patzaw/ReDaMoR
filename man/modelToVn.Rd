@@ -6,11 +6,22 @@
 \usage{
 modelToVn(
   model,
-  border = "black",
   color = "lightgrey",
+  border = "black",
   highlightBorder = "orange"
 )
 }
+\arguments{
+\item{model}{a \link{RelDataModel}}
+
+\item{color}{default table background color}
+
+\item{border}{border color (single character)}
+
+\item{highlightBorder}{color of highlighted borders
+
+Internal function}
+}
 \description{
-Internal function
+VisNetwork representation of a \link{RelDataModel} object
 }

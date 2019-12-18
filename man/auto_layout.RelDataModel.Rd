@@ -4,10 +4,13 @@
 \alias{auto_layout.RelDataModel}
 \title{Pre-compute \link{RelDataModel} layout when missing any x or y table position}
 \usage{
-\method{auto_layout}{RelDataModel}(x, lengthMultiplier = 300)
+\method{auto_layout}{RelDataModel}(x, layout = "layout_nicely", lengthMultiplier = 45 * length(x))
 }
 \arguments{
 \item{x}{a \link{RelDataModel}}
+
+\item{layout}{character name of igraph layout function to use
+(Default: "layout_nicely").}
 
 \item{lengthMultiplier}{a numeric value to scale x and y coordinate
 (default: 300)}
