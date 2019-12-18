@@ -163,7 +163,8 @@ buildServer <- function(modelInput, fromR, bcko){
          x=1                        # Replot the model
       )
       selection <- reactiveValues(
-         tables=NULL
+         tables=NULL,               # Selected tables
+         fk=NULL                    # Selected foreign keys
       )
 
 
@@ -173,7 +174,8 @@ buildServer <- function(modelInput, fromR, bcko){
 
       output$modelNet <- renderVisNetwork({
          replot$x
-         selection$tables <-NULL
+         selection$tables <- NULL
+         selection$fk <- NULL
          plot(isolate(model$x), reproducible_layout=TRUE) %>%
             visEvents(
                release="function(nodes) {
@@ -185,18 +187,21 @@ buildServer <- function(modelInput, fromR, bcko){
       observe({
          input$modelNet_release
          visNetworkProxy("modelNet") %>% visGetSelectedNodes()
+         visNetworkProxy("modelNet") %>% visGetSelectedEdges()
          visNetworkProxy("modelNet") %>% visGetNodes()
       })
-
-      # observe({
-      #    validate(need(is.null(model$new), ""))
-      #    visNetworkProxy("modelNet") %>% visGetNodes()
-      # })
 
       observe({
          selection$tables <- intersect(
             input$modelNet_selectedNodes,
             names(model$x)
+         )
+      })
+
+      observe({
+         selection$fk <- intersect(
+            input$modelNet_selectedEdges,
+            modelToVn(model$x)$edges$id
          )
       })
 
@@ -881,10 +886,27 @@ buildServer <- function(modelInput, fromR, bcko){
       })
 
       observe({
-         sel <- intersect(names(model$x), selection$tables)
-         selection$tables <- sel
+         selTables <- intersect(names(model$x), selection$tables)
+         selection$tables <- selTables
          visNetworkProxy("modelNet") %>%
-            visSelectNodes(sel)
+            visSelectNodes(selTables)
+      })
+
+      observe({
+         selFK <- intersect(modelToVn(model$x)$edges$id, selection$fk)
+         selection$fk <- selFK
+         selTables <- intersect(names(model$x), selection$tables)
+         if(length(selTables)==0){
+            visNetworkProxy("modelNet") %>%
+               visSelectEdges(selFK)
+         }
+      })
+
+      observe({
+         message("")
+         print(selection$tables)
+         print(selection$fk)
+         message("")
       })
 
       #########################################################################@
@@ -925,7 +947,6 @@ buildServer <- function(modelInput, fromR, bcko){
             visUpdateEdges(ntdm$edges)
          model$x <- tdm
          model$current <- cm
-         # selection$tables <- intersect(isolate(selection$tables), names(tdm))
       })
 
       observe({
@@ -962,7 +983,6 @@ buildServer <- function(modelInput, fromR, bcko){
             visUpdateEdges(ntdm$edges)
          model$x <- tdm
          model$current <- cm
-         # selection$tables <- intersect(isolate(selection$tables), names(tdm))
       })
 
       observe({
