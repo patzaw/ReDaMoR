@@ -114,6 +114,13 @@ remove_index <- function(x, ...){
 ###############################################################################@
 #' @export
 #'
+update_field <- function(x, ...){
+   UseMethod("update_field", x)
+}
+
+###############################################################################@
+#' @export
+#'
 update_table_display <- function(x, ...){
    UseMethod("update_table_display", x)
 }
@@ -121,8 +128,8 @@ update_table_display <- function(x, ...){
 ###############################################################################@
 #' @export
 #'
-update_field <- function(x, ...){
-   UseMethod("update_field", x)
+auto_layout <- function(x, ...){
+   UseMethod("auto_layout", x)
 }
 
 

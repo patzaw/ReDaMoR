@@ -25,7 +25,26 @@ buildUi <- function(fromR){
          includeCSS(system.file(
             "www/defChanges.css",
             package = packageName()
-         ))
+         )),
+         tags$script(
+            '
+            $(document).keyup(function(event) {
+                if ($("#newTableName").is(":focus") * (event.key == "Enter")) {
+                    $("#confirmAddTable").click();
+                }
+            });
+            $(document).keyup(function(event) {
+                if ((event.key == "Delete")) {
+                    $("#removeTables").click();
+                }
+            });
+            $(document).keyup(function(event) {
+                if ((event.key == "Delete")) {
+                    $("#removeMTables").click();
+                }
+            });
+            '
+         )
       ),
 
       ## Main menu ----
@@ -111,7 +130,11 @@ buildUi <- function(fromR){
          ## Edit table ----
          column(
             5,
-            uiOutput("editTable")
+            uiOutput("editTable"),
+
+         ## Multiple tables ----
+            uiOutput("multiTables")
+
          )
       )
 
@@ -153,7 +176,7 @@ buildServer <- function(modelInput, fromR, bcko){
          selection$tables <-NULL
          plot(isolate(model$x), reproducible_layout=TRUE) %>%
             visEvents(
-               release = "function(nodes) {
+               release="function(nodes) {
                 Shiny.onInputChange('modelNet_release', Math.random());
                 ;}"
             )
@@ -165,10 +188,10 @@ buildServer <- function(modelInput, fromR, bcko){
          visNetworkProxy("modelNet") %>% visGetNodes()
       })
 
-      observe({
-         replot$new
-         visNetworkProxy("modelNet") %>% visGetSelectedNodes()
-      })
+      # observe({
+      #    validate(need(is.null(model$new), ""))
+      #    visNetworkProxy("modelNet") %>% visGetNodes()
+      # })
 
       observe({
          selection$tables <- intersect(
@@ -269,7 +292,11 @@ buildServer <- function(modelInput, fromR, bcko){
                silent=TRUE
             ))
          }
-         model$toImport <- mi
+         if(is.RelDataModel(mi)){
+            model$toImport <- auto_layout(mi, lengthMultiplier=300)
+         }else{
+            model$toImport <- mi
+         }
       })
 
       observe({
@@ -301,25 +328,20 @@ buildServer <- function(modelInput, fromR, bcko){
             yshift <- cmyrange[2]-tiyrange[1]
             tin$nodes$x <- tin$nodes$x+xshift
             tin$nodes$y <- tin$nodes$y+yshift
-            for(i in 1:nrow(tin$nodes)){
-               mm <- mm %>%
-                  update_table_display(
-                     tableName=tin$nodes$id[i],
-                     px=tin$nodes$x[i], py=tin$nodes$y[i]
-                  )
-            }
-            visNetworkProxy("modelNet") %>%
-               visUpdateNodes(tin$nodes) %>%
-               visUpdateEdges(tin$edges) %>%
-               visFit()
-         }else{
-            toReplot <- TRUE
+            mm <- lapply(
+               mm,
+               function(n){
+                  i <- which(tin$nodes$id==n$tableName)
+                  if(length(i)==1){
+                     n$display$x=tin$nodes$x[i]
+                     n$display$y=tin$nodes$y[i]
+                  }
+                  return(n)
+               }
+            )
+            class(mm) <- c("RelDataModel", "list")
          }
-
          model$new <- mm
-         if(toReplot){
-            replot$x <- isolate(replot$x)+1
-         }
          model$merged <- NULL
          model$toImport <- NULL
          removeModal()
@@ -370,24 +392,14 @@ buildServer <- function(modelInput, fromR, bcko){
 
       observe({
          validate(need(input$confirmAddTable, ""))
-         m <- add_table(
-            isolate(model$x), newTable=isolate(input$newTableName)
-         )
-         model$new <- m
-         if(length(isolate(model$x))>0){
-            toReplot <- FALSE
-            mn <- modelToVn(m)
-            visNetworkProxy("modelNet") %>%
-               visUpdateNodes(mn$nodes) %>%
-               visUpdateEdges(mn$edges) %>%
-               visFit()
-         }else{
-            toReplot <- TRUE
+         tn <- isolate(input$newTableName)
+         m <- isolate(model$x)
+         if(!is.null(tn) && tn!="" && !tn %in% names(m)){
+            m <- add_table(m, newTable=tn)
+            m <- m %>% update_table_display(tn, px=0, py=0)
+            model$new <- m
+            removeModal()
          }
-         if(toReplot){
-            replot$x <- isolate(replot$x)+1
-         }
-         removeModal()
       })
 
       #########################################################################@
@@ -398,7 +410,405 @@ buildServer <- function(modelInput, fromR, bcko){
          selTable <- selection$tables
          validate(need(selTable, ""))
          validate(need(length(selTable)==1, ""))
-         h1(selTable)
+         div(
+            fluidRow(
+               column(8, h3(selTable)),
+               column(
+                  4,
+                  actionButton(
+                     "removeTables", "Remove",
+                     icon=icon("trash-alt", "fa-2x")
+                  ),
+                  style="text-align:right;"
+               )
+            ),
+            fluidRow(
+               column(
+                  4,
+                  actionButton(
+                     "addForeignKey1", "Add foreign key",
+                     icon=icon("external-link-alt", "fa-2x")
+                  ),
+                  style="text-align:left;"
+               )
+            ),
+            style=paste(
+               "border:solid; border-radius:15px;",
+               "min-height:85vh; padding:15px;"
+            )
+         )
+      })
+
+      #########################################################################@
+      ## Multiple tables ----
+      #########################################################################@
+
+      output$multiTables <- renderUI({
+         selTable <- selection$tables
+         validate(need(selTable, ""))
+         validate(need(length(selTable)>1, ""))
+         toRet <- list(
+            column(
+               6,
+               actionButton(
+                  "removeMTables", "Remove",
+                  icon=icon("trash-alt", "fa-2x")
+               ),
+               style="text-align:center;"
+            )
+         )
+         if(length(selTable)==2){
+            toRet <- c(list(
+               column(
+                  6,
+                  actionButton(
+                     "addForeignKey2", "Add foreign key",
+                     icon=icon("external-link-alt", "fa-2x")
+                  ),
+                  style="text-align:center;"
+               )
+            ), toRet)
+         }
+         return(
+            div(
+               do.call(fluidRow, toRet),
+               style=paste(
+                  "border:solid; border-radius:15px;",
+                  "padding:15px;"
+               )
+            )
+         )
+      })
+
+      #########################################################################@
+      ## Remove tables ----
+      #########################################################################@
+
+      observe({
+         takeAction <- (
+            (!is.null(input$removeTables) && input$removeTables > 0) ||
+            (!is.null(input$removeMTables) && input$removeMTables > 0)
+         )
+         validate(need(takeAction, ""))
+         tns <- isolate(selection$tables)
+         m <- isolate(model$x)
+         if(length(tns)>0 && all(tns!="") && all(tns %in% names(m))){
+            for(tn in tns){
+               m <- try(remove_table(m, tableName=tn), silent=TRUE)
+               if(!is.RelDataModel(m)){
+                  break()
+               }
+            }
+            if(is.RelDataModel(m)){
+               model$new <- m
+            }else{
+               showModal(modalDialog(
+                  title="Unable to remove table",
+                  p(
+                     HTML(paste(
+                        sprintf(
+                           "%s is referenced by other tables.",
+                           sprintf("<strong>%s</strong>", tn)
+                        ),
+                        "<br>Remove foreign keys before removing this table."
+                     )),
+                     style="color:red;"#font-weight: bold;"
+                  ),
+                  size="m",
+                  easyClose=TRUE
+               ))
+            }
+         }
+      })
+
+      #########################################################################@
+      ## Add foreign keys ----
+      #########################################################################@
+
+      foreignKey <- reactiveValues(
+         triggered=0,
+         fromTable=NULL,
+         toTable=NULL,
+         fromFields=NULL,
+         toFields=NULL
+      )
+
+      observe({
+         validate(need(input$addForeignKey1 > 0, ""))
+         tns <- isolate(selection$tables)
+         m <- isolate(model$x)
+         foreignKey$fromTable <- foreignKey$toTable <-
+            foreignKey$fromFields <- foreignKey$toFields <- NULL
+         foreignKey$triggered=isolate(foreignKey$triggered)+1
+         if(length(tns)>0 && all(tns!="") && all(tns %in% names(m))){
+            showModal(modalDialog(
+               title="Add foreign key",
+               uiOutput("addForeignKey"),
+               size="l",
+               easyClose=TRUE
+            ))
+         }
+      })
+
+      observe({
+         validate(need(input$addForeignKey2 > 0, ""))
+         tns <- isolate(selection$tables)
+         m <- isolate(model$x)
+         foreignKey$fromTable <- foreignKey$toTable <-
+            foreignKey$fromFields <- foreignKey$toFields <- NULL
+         foreignKey$triggered=isolate(foreignKey$triggered)+1
+         if(length(tns)>0 && all(tns!="") && all(tns %in% names(m))){
+            showModal(modalDialog(
+               title="Add foreign key",
+               uiOutput("addForeignKey"),
+               size="l",
+               easyClose=TRUE
+            ))
+         }
+      })
+
+      output$addForeignKey <- renderUI({
+         tns <- selection$tables
+         validate(need(length(tns)>0, ""))
+         validate(need(foreignKey$triggered>0, ""))
+         foreignKey$fromTable <- tns[1]
+         foreignKey$toTable <- tns[length(tns)]
+         div(
+            fluidRow(
+               column(5, h2(tns[1]), style="text-align:center;"),
+               if(length(tns)==1){
+                  column(
+                     2,
+                     actionButton("confirmAddFK", "Add", disabled=TRUE),
+                     tags$br(),
+                     icon("long-arrow-alt-right", "fa-2x"),
+                     style="text-align:center;"
+                  )
+               }else{
+                  column(
+                     2,
+                     actionButton("confirmAddFK", "Add", disabled=TRUE),
+                     tags$br(),
+                     actionButton(
+                        "fkDirection", "", icon=icon("long-arrow-alt-right", "fa-2x")
+                     ),
+                     style="text-align:center;"
+                  )
+               },
+               column(5, h2(tns[length(tns)]), style="text-align:center;"),
+               style="border-bottom:solid;"
+            ),
+            fluidRow(
+              uiOutput("fkFields"),
+              style="border-bottom:solid; margin:15px; padding:15px;"
+            ),
+            fluidRow(
+               uiOutput("possibleFkFields"),
+               style="border-bottom:solid; margin:15px; padding:15px;"
+            )
+            # fluidRow(div(
+            #    actionButton("confirmAddFK", "Add", disabled=TRUE),
+            #    style="width:50px; margin:auto;"
+            # ))
+         )
+      })
+
+      observe({
+         # print(foreignKey$fromTable)
+         # print(foreignKey$toTable)
+         # print(foreignKey$fromFields)
+         # print(foreignKey$toFields)
+         if(
+            length(foreignKey$fromTable)==0 || length(foreignKey$toTable)==0 ||
+            length(foreignKey$fromFields)==0 || length(foreignKey$toFields)==0
+         ){
+            # print("disable")
+            disable("confirmAddFK")
+         }else{
+            # print("enable")
+            enable("confirmAddFK")
+         }
+      })
+
+      observe({
+         validate(need(input$fkDirection>0, ""))
+         tns <- isolate(selection$tables)
+         validate(need(length(tns)==2, ""))
+         ft <- isolate(foreignKey$toTable)
+         tt <- isolate(foreignKey$fromTable)
+         validate(need(ft, ""))
+         validate(need(tt, ""))
+         foreignKey$fromTable <- ft
+         foreignKey$toTable <- tt
+         foreignKey$fromFields <- foreignKey$toFields <- NULL
+         if(ft==tns[1]){
+            updateActionButton(
+               session, "fkDirection",
+               icon=icon("long-arrow-alt-right", "fa-2x")
+            )
+         }else{
+            updateActionButton(
+               session, "fkDirection",
+               icon=icon("long-arrow-alt-left", "fa-2x")
+            )
+         }
+      })
+
+      output$possibleFkFields <- renderUI({
+         tns <- isolate(selection$tables)
+         ft <- foreignKey$fromTable
+         tt <- foreignKey$toTable
+         validate(need(ft, ""))
+         validate(need(tt, ""))
+         m <- isolate(model$x)
+         ftfields <- m[[ft]]$fields$name
+         ttfields <- m[[tt]]$fields$name
+         toRet <- list(
+            column(
+               5,
+               div(
+                  selectInput(
+                     "fkFromField", "", ftfields, multiple=FALSE, width="100%"
+                  ),
+                  style="width:300px; margin:auto;"
+               )
+            ),
+            column(2, uiOutput("addFkFields"), style="text-align:center;"),
+            column(
+               5,
+               div(
+                  selectInput(
+                     "fkToField", "", ttfields, multiple=FALSE, width="100%"
+                  ),
+                  style="width:300px; margin:auto;"
+               )
+            )
+         )
+         if(tns[1]!=ft){
+            toRet <- toRet[c(3,2,1)]
+         }
+         return(toRet)
+      })
+
+      output$addFkFields <- renderUI({
+         ft <- foreignKey$fromTable
+         tt <- foreignKey$toTable
+         validate(need(ft, ""))
+         validate(need(tt, ""))
+         m <- isolate(model$x)
+         ftfields <- m[[ft]]$fields
+         ttfields <- m[[tt]]$fields
+         from <- input$fkFromField
+         to <- input$fkToField
+         validate(need(from %in% ftfields$name, ""))
+         validate(need(to %in% ttfields$name, ""))
+         if(
+            ftfields[which(ftfields$name==from),]$type !=
+            ttfields[which(ttfields$name==to),]$type
+         ){
+            return(list(tags$br(), p("Incompatible types", style="color:red;")))
+         }else{
+            selFrom <- foreignKey$fromFields
+            selTo <- foreignKey$toFields
+            alreadyIn <- length(which(selFrom==from & selTo==to))>0
+            if(alreadyIn){
+               return(list(tags$br(), p("Already in key", style="color:red;")))
+            }else{
+               return(list(tags$br(), actionButton(
+                  "addFkField", label="",
+                  icon=icon("plus-circle", "fa-2x")
+               )))
+            }
+         }
+      })
+
+      observe({
+         validate(need(input$addFkField>0, ""))
+         foreignKey$fromFields <- c(
+            isolate(foreignKey$fromFields), isolate(input$fkFromField)
+         )
+         foreignKey$toFields <- c(
+            isolate(foreignKey$toFields), isolate(input$fkToField)
+         )
+      })
+
+      output$fkFields <- renderUI({
+         from <- foreignKey$fromFields
+         to <- foreignKey$toFields
+         validate(need(from, ""))
+         validate(need(to, ""))
+         div(
+            DT::DTOutput("fkFieldTable"),
+            div(
+               uiOutput("rmFkField"),
+               style="text-align:center;"
+            ),
+            style="width:50%; margin:auto"
+         )
+      })
+      output$fkFieldTable <- DT::renderDT({
+         from <- foreignKey$fromFields
+         to <- foreignKey$toFields
+         tns <- isolate(selection$tables)
+         ft <- isolate(foreignKey$fromTable)
+         tt <- isolate(foreignKey$toTable)
+         validate(need(from, ""))
+         validate(need(to, ""))
+         if(tns[1]==ft){
+            left <- from
+            right <- to
+         }else{
+            left <- to
+            right <- from
+         }
+         DT::datatable(
+            tibble(l=left, m="", r=right),
+            rownames=FALSE,
+            colnames=c("", "", ""),
+            options=list(
+               dom=ifelse(length(left)>10, "tip", "t"),
+               columnDefs = list(
+                  list(targets=c(0), visible=TRUE, width='40%'),
+                  list(targets=c(1), visible=TRUE, width='20%'),
+                  list(targets=c(2), visible=TRUE, width='40%')
+               )
+            )
+         ) %>%
+            DT::formatStyle(c("l", "m", "r"), "text-align"="center")
+      })
+      output$rmFkField <- renderUI({
+         sel <- input$fkFieldTable_rows_selected
+         validate(need(sel, ""))
+         return(
+            actionButton(
+               "confirmRmFkField",
+               # label="",
+               label=HTML(paste(
+                  '<i class="fa fa-minus-circle fa-2x" style="color:red;">',
+                  '</i>'
+               ))
+               # icon=icon("minus-circle", "fa-2x")
+            )
+         )
+      })
+      observe({
+         validate(need(input$confirmRmFkField, ""))
+         sel <- isolate(input$fkFieldTable_rows_selected)
+         validate(need(length(sel)>0, ""))
+         foreignKey$fromFields <- isolate(foreignKey$fromFields)[-sel]
+         foreignKey$toFields <- isolate(foreignKey$toFields)[-sel]
+      })
+
+      observe({
+         validate(need(input$confirmAddFK > 0, ""))
+         model$new <- isolate(model$x) %>%
+            add_foreign_key(
+               fromTable=isolate(foreignKey$fromTable),
+               toTable=isolate(foreignKey$toTable),
+               fromFields=isolate(foreignKey$fromFields),
+               toFields=isolate(foreignKey$toFields)
+            )
+         removeModal()
       })
 
       #########################################################################@
@@ -409,23 +819,53 @@ buildServer <- function(modelInput, fromR, bcko){
          dispNodes <- input$modelNet_nodes
          validate(need(dispNodes, ""))
          m <- isolate(model$x)
-         for(tn in names(dispNodes)){
-            m <- m %>% update_table_display(
-               tn,
-               px=dispNodes[[tn]]$x,
-               py=dispNodes[[tn]]$y
-            )
-         }
+         m <- lapply(
+            m,
+            function(n){
+               if(n$tableName %in% names(dispNodes)){
+                  n$display$x=dispNodes[[n$tableName]]$x
+                  n$display$y=dispNodes[[n$tableName]]$y
+               }
+               return(n)
+            }
+         )
+         class(m) <- c("RelDataModel", "list")
          model$new <- m
       })
 
       #########################################################################@
-      ## History ----
+      ## Update model ----
       #########################################################################@
 
       observe({
          nm <- model$new
          validate(need(nm, ""))
+         dm <- isolate(model$x)
+
+         ##
+         tdm <- nm
+         if(length(dm)==0){
+            toReplot <- TRUE
+         }else{
+            toReplot <- FALSE
+            ndm <- modelToVn(dm)
+            ntdm <- modelToVn(tdm)
+            edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
+            if(length(edgeToDel)>0){
+               visNetworkProxy("modelNet") %>%
+                  visRemoveEdges(edgeToDel)
+            }
+            nodeToDel <- setdiff(names(dm), names(tdm))
+            if(length(nodeToDel)>0){
+               visNetworkProxy("modelNet") %>%
+                  visRemoveNodes(nodeToDel)
+            }
+            visNetworkProxy("modelNet") %>%
+               visUpdateNodes(ntdm$nodes) %>%
+               visUpdateEdges(ntdm$edges)
+         }
+         ##
+
          ch <- isolate(model$history)
          cm <- isolate(model$current)
          ch <- ch[-((cm:length(ch))+1)]
@@ -434,7 +874,22 @@ buildServer <- function(modelInput, fromR, bcko){
          model$history <- ch
          model$current <- cm
          model$x <- nm
+         model$new <- NULL
+         if(toReplot){
+            replot$x <- isolate(replot$x)+1
+         }
       })
+
+      observe({
+         sel <- intersect(names(model$x), selection$tables)
+         selection$tables <- sel
+         visNetworkProxy("modelNet") %>%
+            visSelectNodes(sel)
+      })
+
+      #########################################################################@
+      ## Manage history ----
+      #########################################################################@
 
       observe({
          validate(need(input$undo, ""))
@@ -470,7 +925,7 @@ buildServer <- function(modelInput, fromR, bcko){
             visUpdateEdges(ntdm$edges)
          model$x <- tdm
          model$current <- cm
-         selection$tables <- intersect(isolate(selection$tables), names(tdm))
+         # selection$tables <- intersect(isolate(selection$tables), names(tdm))
       })
 
       observe({
@@ -507,7 +962,7 @@ buildServer <- function(modelInput, fromR, bcko){
             visUpdateEdges(ntdm$edges)
          model$x <- tdm
          model$current <- cm
-         selection$tables <- intersect(isolate(selection$tables), names(tdm))
+         # selection$tables <- intersect(isolate(selection$tables), names(tdm))
       })
 
       observe({
@@ -616,6 +1071,9 @@ model_relational_data <- function(
          c(".RelDataModel_", sample(letters, 10, replace=TRUE)), collapse=""
       )
    }
+
+   modelInput <- auto_layout(modelInput, lengthMultiplier=300)
+
    ui <- buildUi(fromR=fromR)
    server <- buildServer(modelInput=modelInput, fromR=fromR, bcko=bcko)
 

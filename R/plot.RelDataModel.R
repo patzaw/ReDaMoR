@@ -154,7 +154,6 @@ modelToVn <- function(
    edges <- do.call(rbind, lapply(
       model,
       function(m){
-         mn <- m$tableName
          mt <- m$tableName
          fk <- m$foreignKeys
          if(length(fk)==0){
@@ -167,9 +166,9 @@ modelToVn <- function(
                kt <- k$key %>% arrange(from, to)
                title <- paste0(
                   '<tr style="border: 1px solid black">',
-                  '<td style="border: 1px solid black">', kt,
+                  '<td style="border: 1px solid black">', kt$from,
                   '</td>',
-                  '<td style="border: 1px solid black">', kt,
+                  '<td style="border: 1px solid black">', kt$to,
                   '</td>',
                   '</tr>'
                )
@@ -193,8 +192,8 @@ modelToVn <- function(
                return(tibble(id=id, to=to, title=title))
             }
          ))
-         toRet$from <- mn
-         toRet$id <- paste(mn, toRet$id, sep="->")
+         toRet$from <- mt
+         toRet$id <- paste(mt, toRet$id, sep="->")
          toRet$arrows <- "to"
          toRet$font.align <- "bottom"
          return(toRet)
@@ -203,19 +202,32 @@ modelToVn <- function(
    if(is.null(edges)){
       edges <- tibble(id=character(), from=character(), to=character())
    }else{
-      edges$smooth.type <- "curvedCW"
+      edges$smooth.type <- "curvedCCW"
       edges$smooth.roundness <- 0
-      edges$ue <- edges %>% select(from, to) %>%
-         apply(1, function(x) paste(sort(x), collapse="<->"))
+      edges$selfReferenceSize  <- 30
+      edges <- bind_cols(edges, edges %>% select(from, to) %>%
+         apply(1, function(x) c(sort(x), paste(sort(x), collapse="<->"))) %>%
+         t() %>%
+         set_colnames(c("uef", "uet", "ue")) %>%
+         as_tibble()
+      )
       edges <- edges %>%
          group_by(ue) %>%
          mutate(
             smooth.roundness={
                mr <- min(1, 0.2*(length(ue)%/%2))
                seq(-mr, mr, length.out=length(ue))
+            },
+            selfReferenceSize={
+               seq(30, 50, length.out=length(ue))
             }
          ) %>%
          ungroup() %>%
+         mutate(
+            smooth.roundness=ifelse(
+               uef==from, smooth.roundness, -smooth.roundness
+            )
+         ) %>%
          mutate(
             color.color=border,
             color.highlight=highlightBorder

@@ -716,8 +716,11 @@ fk_match <- function(
    lapply(
       tfk,
       function(y){
-         y$refTable==toTable &
-         sort(paste(y$key$from, y$key$to, sep="-->")) %in% tocheck
+         y$refTable==toTable &&
+         nrow(y$key)==length(tocheck) &&
+         all(
+            sort(paste(y$key$from, y$key$to, sep="-->")) == tocheck
+         )
       }
    ) %>%
       unlist() %>%
@@ -1161,4 +1164,34 @@ update_table_display.RelDataModel <- function(
    x[[tableName]]$display$color <- color
    x[[tableName]]$display$comment <- comment
    return(RelDataModel(x))
+}
+
+###############################################################################@
+#' Pre-compute [RelDataModel] layout when missing any x or y table position
+#'
+#' @param x a [RelDataModel]
+#' @param lengthMultiplier a numeric value to scale x and y coordinate
+#' (default: 300)
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+auto_layout.RelDataModel <- function(x, lengthMultiplier=300){
+   mn <- modelToVn(x)
+   if(any(is.na(mn$nodes$x)) || any(is.na(mn$nodes$y))){
+      vp <- visNetwork(mn$nodes %>% select(-x, -y), mn$edges) %>%
+         visIgraphLayout()
+      x <- lapply(
+         x,
+         function(n){
+            i <- which(vp$x$nodes$id==n$tableName)
+            n$display$x <- vp$x$nodes$x[i]*lengthMultiplier
+            n$display$y <- vp$x$nodes$y[i]*lengthMultiplier
+            return(n)
+         }
+      )
+      class(x) <- c("RelDataModel", "list")
+   }
+   return(x)
 }

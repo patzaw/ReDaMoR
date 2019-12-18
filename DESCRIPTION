@@ -16,7 +16,8 @@ Depends:
 Imports:
    readr,
    base64enc,
-   jsonlite
+   jsonlite,
+   DT
 Suggests:
     knitr,
     rmarkdown,
