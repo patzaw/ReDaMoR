@@ -139,7 +139,10 @@ buildUi <- function(fromR){
 }
 
 ###############################################################################@
-buildServer <- function(modelInput, fromR, bcko){
+buildServer <- function(
+   modelInput, fromR, bcko,
+   defaultColor, availableColors
+){
 
    function(input, output, session) {
 
@@ -163,6 +166,21 @@ buildServer <- function(modelInput, fromR, bcko){
          fk=NULL                    # Selected foreign keys
       )
 
+      #########################################################################@
+      ## Settings ----
+      #########################################################################@
+
+      settings <- reactiveValues()
+      settings$defaultColor <- defaultColor
+      settings$availableColors <- availableColors
+      observe({
+         settings$availableColors <- unique(c(
+            settings$defaultColor,
+            lapply(model$x, function(x) x$display$color) %>%
+               unlist() %>% setdiff(NA),
+            isolate(settings$availableColors)
+         ))
+      })
 
       #########################################################################@
       ## Model network ----
@@ -172,7 +190,7 @@ buildServer <- function(modelInput, fromR, bcko){
          replot$x
          selection$tables <- NULL
          selection$fk <- NULL
-         plot(isolate(model$x)) %>%
+         plot(isolate(model$x), color=isolate(settings$defaultColor)) %>%
             visEvents(
                release="function(nodes) {
                 Shiny.onInputChange('modelNet_release', Math.random());
@@ -198,7 +216,7 @@ buildServer <- function(modelInput, fromR, bcko){
       observe({
          selection$fk <- intersect(
             input$modelNet_selectedEdges,
-            modelToVn(model$x)$edges$id
+            modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id
          )
       })
 
@@ -248,7 +266,7 @@ buildServer <- function(modelInput, fromR, bcko){
       output$impModelNet <- renderVisNetwork({
          mi <- model$toImport
          validate(need(mi, ""))
-         plot(mi)
+         plot(mi, color=isolate(settings$defaultColor))
       })
 
       observe({
@@ -306,7 +324,9 @@ buildServer <- function(modelInput, fromR, bcko){
          mm <- isolate(model$merged)
          validate(need(mm, ""))
 
-         cmn <- modelToVn(isolate(model$x))
+         cmn <- modelToVn(
+            isolate(model$x), color=isolate(settings$defaultColor)
+         )
          if(
             !is.null(cmn$nodes)>0 && nrow(cmn$nodes)>0 &&
             all(!is.na(cmn$nodes$x)) && all(!is.na(cmn$nodes$y))
@@ -315,7 +335,10 @@ buildServer <- function(modelInput, fromR, bcko){
             cmxrange <- c(min(cmn$nodes$x), max(cmn$nodes$x))
             cmyrange <- c(min(cmn$nodes$x), max(cmn$nodes$y))
             validate(need(isolate(model$toImport), ""))
-            tin <- modelToVn(isolate(model$toImport))
+            tin <- modelToVn(
+               isolate(model$toImport),
+               color=isolate(settings$defaultColor)
+            )
             if(any(is.na(tin$nodes$x)) || any(is.na(tin$nodes$y))){
                tin$nodes$x <- runif(
                   nrow(tin$nodes), min=cmxrange[1], max=cmxrange[2]
@@ -433,9 +456,21 @@ buildServer <- function(modelInput, fromR, bcko){
          selFK <- selection$fk
          validate(need(length(selTable)>0 || length(selFK)>0, ""))
          return(div(
-            uiOutput("addFKInput", style="display: inline-block; margin-right:15px;"),
-            uiOutput("rmFKInput", style="display: inline-block; margin-right:15px;"),
-            uiOutput("rmTablesInput", style="display: inline-block;"),
+            uiOutput(
+               "setTableColor",
+               style="display: inline-block; margin-right:15px; width:100px;"
+            ),
+            uiOutput(
+               "addFKInput",
+               style="display: inline-block; margin-right:15px;"
+            ),
+            uiOutput(
+               "rmFKInput",
+               style="display: inline-block; margin-right:15px;"),
+            uiOutput(
+               "rmTablesInput",
+               style="display: inline-block;"
+            ),
             style="padding:15px; text-align:center;"
          ))
       })
@@ -445,6 +480,17 @@ buildServer <- function(modelInput, fromR, bcko){
          actionButton(
             "addForeignKey", "Add foreign key",
             icon=icon("external-link-alt", "fa-2x")
+         )
+      })
+      output$rmFKInput <- renderUI({
+         selFK <- selection$fk
+         validate(need(length(selFK)>0, ""))
+         actionButton(
+            "removeFK",
+            label=HTML(paste(
+               '<i class="far fa-trash-alt fa-2x"></i>',
+               'Remove foreign keys'
+            ))
          )
       })
       output$rmTablesInput <- renderUI({
@@ -458,16 +504,47 @@ buildServer <- function(modelInput, fromR, bcko){
             ))
          )
       })
-      output$rmFKInput <- renderUI({
-         selFK <- selection$fk
-         validate(need(length(selFK)>0, ""))
-         actionButton(
-            "removeFK",
-            label=HTML(paste(
-               '<i class="far fa-trash-alt fa-2x"></i>',
-               'Remove foreign keys'
-            ))
+
+      #########################################################################@
+      ## Table color ----
+      #########################################################################@
+
+      output$setTableColor <- renderUI({
+         selTables <- selection$tables
+         validate(need(length(selTables)>0, ""))
+         tval <- lapply(
+            isolate(model$x),
+            function(x) x$display$color
+         ) %>% unlist()
+         tval <- tval[selTables] %>% unique()
+         if(length(tval)>1 || is.na(tval)){
+            tval=""
+         }
+         colourpicker::colourInput(
+            "tableColor",
+            label=NULL,
+            value=tval,
+            showColour="background",
+            palette="limited",
+            allowedCols=c(
+               "", isolate(settings$availableColors)
+            ),
+            allowTransparent=TRUE
          )
+      })
+      observe({
+         newCol <- input$tableColor
+         validate(need(newCol!="", ""))
+         selTables <- isolate(selection$tables)
+         validate(need(length(selTables)>0, ""))
+         m <- isolate(model$x)
+         for(tn in selTables){
+            m <- m %>%  update_table_display(
+               tableName=tn,
+               color=newCol
+            )
+         }
+         model$new <- m
       })
 
       #########################################################################@
@@ -794,7 +871,7 @@ buildServer <- function(modelInput, fromR, bcko){
          validate(need(takeAction, ""))
          fks <- isolate(selection$fk)
          m <- isolate(model$x)
-         mne <- modelToVn(m)$edges
+         mne <- modelToVn(m, color=isolate(settings$defaultColor))$edges
          if(length(fks)>0 && all(fks!="") && all(fks %in% mne$id)){
             for(fk in fks){
                i <- which(mne$id==fk)
@@ -846,8 +923,8 @@ buildServer <- function(modelInput, fromR, bcko){
             toReplot <- TRUE
          }else{
             toReplot <- FALSE
-            ndm <- modelToVn(dm)
-            ntdm <- modelToVn(tdm)
+            ndm <- modelToVn(dm, color=isolate(settings$defaultColor))
+            ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
             edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
             if(length(edgeToDel)>0){
                visNetworkProxy("modelNet") %>%
@@ -887,7 +964,10 @@ buildServer <- function(modelInput, fromR, bcko){
       })
 
       observe({
-         selFK <- intersect(modelToVn(model$x)$edges$id, selection$fk)
+         selFK <- intersect(
+            modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id,
+            selection$fk
+         )
          selection$fk <- selFK
          selTables <- intersect(names(model$x), selection$tables)
          if(length(selTables)==0){
@@ -918,8 +998,8 @@ buildServer <- function(modelInput, fromR, bcko){
 
          dm <- isolate(model$x)
          tdm <- ch[[cm]]
-         ndm <- modelToVn(dm)
-         ntdm <- modelToVn(tdm)
+         ndm <- modelToVn(dm, color=isolate(settings$defaultColor))
+         ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
          edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
          if(length(edgeToDel)>0){
             visNetworkProxy("modelNet") %>%
@@ -954,8 +1034,8 @@ buildServer <- function(modelInput, fromR, bcko){
 
          dm <- isolate(model$x)
          tdm <- ch[[cm]]
-         ndm <- modelToVn(dm)
-         ntdm <- modelToVn(tdm)
+         ndm <- modelToVn(dm, color=isolate(settings$defaultColor))
+         ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
          edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
          if(length(edgeToDel)>0){
             visNetworkProxy("modelNet") %>%
@@ -1036,7 +1116,7 @@ buildServer <- function(modelInput, fromR, bcko){
          content = function(file) {
             m <- isolate(model$x)
             validate(need(m, ""))
-            plot(m) %>% visSave(file)
+            plot(m, color=isolate(settings$defaultColor)) %>% visSave(file)
          }
       )
 
@@ -1064,11 +1144,20 @@ buildServer <- function(modelInput, fromR, bcko){
 #'
 #' @param modelInput the [RelDataModel] to start from
 #' @param fromR a logical indicating if the application is launched from R
+#' @param defaultColor a single color indicating the default table color
+#' @param availableColors a character of possible colors for tables
 #'
 #' @export
 #'
 model_relational_data <- function(
-   modelInput=RelDataModel(list()), fromR=interactive()
+   modelInput=RelDataModel(list()), fromR=interactive(),
+   defaultColor="#D9D9D9",
+   availableColors=c(
+      "#D9B661", "#E14D7D", "#75E4AE", "#9638E5", "#C6D1DC", "#D8B8E3",
+      "#C663CB", "#7CE65F", "#DF7442", "#E0B8A0", "#D4E355", "#7D76D9",
+      "#6E9DCE", "#E747D7", "#77DFDE", "#CC8490", "#D991D6", "#D0E9CF",
+      "#CAE095", "#6E8D65"
+   )
 ){
 
    bcko <- paste(
@@ -1083,7 +1172,10 @@ model_relational_data <- function(
    modelInput <- auto_layout(modelInput, lengthMultiplier=300)
 
    ui <- buildUi(fromR=fromR)
-   server <- buildServer(modelInput=modelInput, fromR=fromR, bcko=bcko)
+   server <- buildServer(
+      modelInput=modelInput, fromR=fromR, bcko=bcko,
+      defaultColor=defaultColor, availableColors=availableColors
+   )
 
    if(fromR){
       ## From R ----

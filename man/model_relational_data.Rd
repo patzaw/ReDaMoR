@@ -4,12 +4,23 @@
 \alias{model_relational_data}
 \title{Relational data modeler GUI}
 \usage{
-model_relational_data(modelInput = RelDataModel(list()), fromR = interactive())
+model_relational_data(
+  modelInput = RelDataModel(list()),
+  fromR = interactive(),
+  defaultColor = "#D9D9D9",
+  availableColors = c("#D9B661", "#E14D7D", "#75E4AE", "#9638E5", "#C6D1DC", "#D8B8E3",
+    "#C663CB", "#7CE65F", "#DF7442", "#E0B8A0", "#D4E355", "#7D76D9", "#6E9DCE",
+    "#E747D7", "#77DFDE", "#CC8490", "#D991D6", "#D0E9CF", "#CAE095", "#6E8D65")
+)
 }
 \arguments{
 \item{modelInput}{the \link{RelDataModel} to start from}
 
 \item{fromR}{a logical indicating if the application is launched from R}
+
+\item{defaultColor}{a single color indicating the default table color}
+
+\item{availableColors}{a character of possible colors for tables}
 }
 \description{
 Relational data modeler GUI

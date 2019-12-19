@@ -17,7 +17,8 @@ Imports:
    readr,
    base64enc,
    jsonlite,
-   DT
+   DT,
+   colourpicker
 Suggests:
     knitr,
     rmarkdown,
