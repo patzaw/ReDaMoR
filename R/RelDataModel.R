@@ -942,7 +942,7 @@ set_primary_key.RelDataModel <- function(x, tableName, fieldNames){
 #' @export
 #'
 add_index.RelDataModel <- function(x, tableName, fieldNames, unique){
-   fieldNames <- as.character(fieldNames)
+   fieldNames <- as.character(fieldNames) %>% unique()
    stopifnot(
       is.character(tableName), length(tableName)==1,
       tableName %in% names(x),
@@ -1003,6 +1003,44 @@ remove_index.RelDataModel <- function(x, tableName, fieldNames){
    }
    x <- unclass(x)
    x[[tableName]]$indexes <- x[[tableName]]$indexes[-ei]
+   return(RelDataModel(x))
+}
+
+###############################################################################@
+#' Set table index uniqueness in a [RelDataModel]
+#'
+#' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param fieldNames the names of the fields composing the index
+#' @param unique a logical value
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+set_unique_index.RelDataModel <- function(x, tableName, fieldNames, unique){
+   fieldNames <- as.character(fieldNames)
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      all(fieldNames %in% x[[tableName]]$fields$name),
+      is.logical(unique), length(unique)==1, !is.na(unique)
+   )
+   ei <- lapply(
+      x[[tableName]]$indexes,
+      function(y){
+         identical(sort(y$fields), sort(fieldNames))
+      }
+   ) %>%
+      unlist() %>%
+      as.logical() %>%
+      which()
+   if(length(ei)==0){
+      warning("The index does not exists ==> no change")
+      return(x)
+   }
+   x <- unclass(x)
+   x[[tableName]]$indexes[[ei]]$unique <- unique
    return(RelDataModel(x))
 }
 

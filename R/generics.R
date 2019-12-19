@@ -114,6 +114,13 @@ remove_index <- function(x, ...){
 ###############################################################################@
 #' @export
 #'
+set_unique_index <- function(x, ...){
+   UseMethod("set_unique_index", x)
+}
+
+###############################################################################@
+#' @export
+#'
 update_field <- function(x, ...){
    UseMethod("update_field", x)
 }

@@ -34,8 +34,8 @@ buildUi <- function(fromR){
                 }
             });
             $(document).keyup(function(event) {
-                if ((event.key == "Delete")) {
-                    $("#removeTables").click();
+                if ($("#tableNewName").is(":focus") * (event.key == "Enter")) {
+                    $("#confirmRenameTable").click();
                 }
             });
             '
@@ -156,7 +156,11 @@ buildServer <- function(
          history=list(modelInput),  # The model history
          current=1,                 # The position of current model in history
          toImport=NULL,             # Model to import from file
-         merged=NULL                # merge: c(x, toImport)
+         merged=NULL,               # merge: c(x, toImport)
+         indexTable=tibble(
+            fields=character(),
+            unique=logical()
+         )
       )
       replot <- reactiveValues(
          x=1                        # Replot the model
@@ -379,20 +383,22 @@ buildServer <- function(
       observeEvent(input$addTable, {
          showModal(modalDialog(
             title="Add table",
-            uiOutput("addTable"),
-            size="m",
+            div(
+               fluidRow(
+                  column(
+                     10,
+                     textInput(
+                        "newTableName", label=NULL, width="100%",
+                        placeholder="Table name"
+                     )
+                  ),
+                  column(2, actionButton("confirmAddTable", "Add"))
+               ),
+               fluidRow(uiOutput("newTableExists"))
+            ),
+            size="s",
             easyClose=TRUE
          ))
-      })
-
-      output$addTable <- renderUI({
-         list(
-            fluidRow(
-               column(10, textInput("newTableName", "Name", width="100%")),
-               column(2, actionButton("confirmAddTable", "Add"))
-            ),
-            fluidRow(uiOutput("newTableExists"))
-         )
       })
 
       output$newTableExists <- renderUI({
@@ -433,18 +439,337 @@ buildServer <- function(
 
       output$editTable <- renderUI({
          selTable <- selection$tables
-         validate(need(selTable, ""))
          validate(need(length(selTable)==1, ""))
+         mt <- isolate(model$x[[selTable]])
          div(
             fluidRow(
-               column(12, h3(selTable))
+               column(8, h3(selTable, style="margin-top:6px;")),
+               column(
+                  4,
+                  actionButton("renameTable", "Rename"),
+                  style="text-align:right;"
+               )
             ),
+            uiOutput("tableComment"),
+            tags$hr(),
+            uiOutput("fields"),
+            tags$hr(),
+            uiOutput("primaryKey"),
+            tags$hr(),
+            uiOutput("indexes"),
             style=paste(
                "border:solid; border-radius:15px;",
                # "min-height:85vh;",
                "padding:15px;"
             )
          )
+      })
+
+      ## _+ Rename table ----
+      observeEvent(input$renameTable, {
+         showModal(modalDialog(
+            title="Rename table",
+            div(
+               fluidRow(
+                  column(
+                     10,
+                     textInput(
+                        "tableNewName", label=NULL, width="100%",
+                        placeholder="Table new name"
+                     )
+                  ),
+                  column(2, actionButton("confirmRenameTable", "Rename"))
+               ),
+               fluidRow(uiOutput("newNameExists"))
+            ),
+            size="s",
+            easyClose=TRUE
+         ))
+      })
+      output$newNameExists <- renderUI({
+         ntn <- input$tableNewName
+         m <- isolate(model$x)
+         if(ntn %in% names(m)){
+            p("Table name already used", style="color:red;font-weight: bold;")
+         }else{
+            list()
+         }
+      })
+      observe({
+         ntn <- input$tableNewName
+         m <- isolate(model$x)
+         if(is.null(ntn) || ntn=="" || ntn %in% names(m)){
+            disable("confirmRenameTable")
+         }else{
+            enable("confirmRenameTable")
+         }
+      })
+      observe({
+         validate(need(input$confirmRenameTable, ""))
+         tn <- isolate(input$tableNewName)
+         selTable <- isolate(selection$tables)
+         validate(need(length(selTable)==1, ""))
+         m <- isolate(model$x)
+         if(!is.null(tn) && tn!="" && !tn %in% names(m)){
+            m <- rename_table(m, old=selTable, new=tn)
+            model$new <- m
+            removeModal()
+         }
+      })
+
+      ## _+ Table commment ----
+      output$tableComment <- renderUI({
+         selTable <- selection$tables
+         validate(need(length(selTable)==1, ""))
+         mt <- model$x[[selTable]]
+         fluidRow(
+            column(
+               12,
+               textInput(
+                  "tableComment",
+                  label=NULL,
+                  value=mt$display$comment,
+                  width="100%",
+                  placeholder="Table comment"
+               )
+            )
+         )
+      })
+      observe({
+         nc <- input$tableComment
+         validate(need(!is.na(nc), ""))
+         if(nc==""){
+            nc <- NA
+         }
+         selTable <- isolate(selection$tables)
+         validate(need(length(selTable)==1, ""))
+         m <- isolate(model$x)
+         cc <- m[[selTable]]$display$comment
+         if(
+            xor(is.na(nc), is.na(cc)) ||
+            (!is.na(nc) && !is.na(cc) && nc!=cc)
+         ){
+            model$new <- m %>% update_table_display(
+               tableName=selTable,
+               comment=nc
+            )
+         }
+      })
+
+      ## _+ Table fields ----
+
+      ## _+ Table primary key ----
+      output$primaryKey <- renderUI({
+         selTable <- selection$tables
+         validate(need(length(selTable)==1, ""))
+         mt <- model$x[[selTable]]
+         fnames <- mt$fields$name
+         validate(need(fnames, ""))
+         fluidRow(
+            column(4, h4("Primary key")),
+            column(
+               8,
+               selectInput(
+                  "primaryKey", label=NULL,
+                  choices=fnames,
+                  selected=mt$primaryKey,
+                  multiple=TRUE
+               )
+            )
+         )
+      })
+      observe({
+         npk <- input$primaryKey
+         selTable <- isolate(selection$tables)
+         validate(need(length(selTable)==1, ""))
+         m <- isolate(model$x)
+         cpk <- m[[selTable]]$primaryKey
+         if(length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk))){
+            model$new <- m %>%
+               set_primary_key(tableName=selTable, fieldNames=npk)
+         }
+      })
+
+      ## _+ Table indexes ----
+      output$indexes <- renderUI({
+         selTable <- selection$tables
+         validate(need(length(selTable)==1, ""))
+         mt <- isolate(model$x[[selTable]])
+         fnames <- mt$fields$name
+         validate(need(fnames, ""))
+         list(
+            fluidRow(
+               column(4, h4("Indexes")),
+               column(
+                  4,
+                  actionButton(
+                     "addIndex", label="",
+                     icon=icon("plus-square", "fa-1x")
+                  ),
+                  style="text-align:right;"
+               )
+            ),
+            fluidRow(
+               column(8, DT::DTOutput("indexTable")),
+               column(4, uiOutput("updateIndex"))
+            )
+         )
+      })
+      output$indexTable <- DT::renderDT({
+         selTable <- selection$tables
+         # validate(need(length(selTable)==1, ""))
+         # mt <- isolate(model$x[[selTable]])
+         # validate(need(length(mt$indexes)>0, ""))
+         isolate(model$indexTable) %>%
+            DT::datatable(
+               rownames=TRUE,
+               selection=list(mode='single', selected=c(), target='row'),
+               options=list(
+                  dom=ifelse(nrow(.)>10, "tip", "t"),
+                  columnDefs = list(
+                     list(targets=c(0), visible=TRUE, width='10%'),
+                     list(targets=c(1), visible=TRUE, width='70%'),
+                     list(targets=c(2), visible=TRUE, width='20%')
+                  )
+               )
+            )
+      })
+      proxyIndexTable <- DT::dataTableProxy("indexTable")
+      observe({
+         selTable <- selection$tables
+         validate(need(length(selTable)==1, ""))
+         mt <- model$x[[selTable]]
+         if(length(mt$indexes)>0){
+            model$indexTable <- mt$indexes %>%
+               lapply(function(x){
+                  tibble(
+                     Fields=sprintf("[%s]", paste(x$fields, collapse="], [")),
+                     Unique=x$unique
+                  )
+               }) %>%
+               do.call(rbind, .)
+         }else{
+            model$indexTable <- tibble(
+               Fields=character(),
+               Unique=logical()
+            )
+         }
+      })
+      observe({
+         DT::replaceData(
+            proxyIndexTable,
+            data=model$indexTable,
+            clearSelection="all"
+         )
+      })
+      ## __- Update index ----
+      output$updateIndex <- renderUI({
+         seli <- input$indexTable_rows_selected
+         validate(need(length(seli)==1, ""))
+         validate(need(nrow(model$indexTable)>0, ""))
+         selTable <- isolate(selection$tables)
+         validate(need(length(selTable)==1, ""))
+         mt <- isolate(model$x[[selTable]])
+         validate(need(length(mt$indexes)>0, ""))
+         validate(need(seli>=1 & seli <= length(mt$indexes), ""))
+         ui <- mt$indexes[[seli]]$unique
+         fluidRow(
+            checkboxInput("setUniqueIndex", "Unique?", value=ui),
+            actionButton(
+               "removeIndex",
+               label=HTML(paste(
+                  '<i class="fa fa-minus-square fa-1x" style="color:red;">',
+                  '</i>'
+               ))
+            ),
+            style="text-align:right; margin-right:5px;"
+         )
+      })
+      observe({
+         ui <- input$setUniqueIndex
+         validate(need(!is.null(ui) && !is.na(ui), ""))
+         seli <- isolate(input$indexTable_rows_selected)
+         validate(need(length(seli)==1, ""))
+         selTable <- isolate(selection$tables)
+         validate(need(length(selTable)==1, ""))
+         m <- isolate(model$x)
+         mt <- m[[selTable]]
+         validate(need(length(mt$indexes)>0, ""))
+         if(mt$indexes[[seli]]$unique!=ui){
+            m <- m %>% set_unique_index(
+               tableName=selTable,
+               fieldNames=mt$indexes[[seli]]$fields,
+               unique=ui
+            )
+            model$new <- m
+         }
+      })
+      ## __- Remove index ----
+      observe({
+         validate(need(input$removeIndex>0, ""))
+         seli <- isolate(input$indexTable_rows_selected)
+         validate(need(length(seli)==1, ""))
+         selTable <- isolate(selection$tables)
+         validate(need(length(selTable)==1, ""))
+         m <- isolate(model$x)
+         mt <- m[[selTable]]
+         validate(need(length(mt$indexes)>0, ""))
+         m <- m %>% remove_index(
+            tableName=selTable,
+            fieldNames=mt$indexes[[seli]]$fields
+         )
+         model$new <- m
+      })
+      ## __- Add index ----
+      observeEvent(input$addIndex, {
+         selTable <- isolate(selection$tables)
+         validate(need(length(selTable)==1, ""))
+         mt <- isolate(model$x[[selTable]])
+         fnames <- mt$fields$name
+         showModal(modalDialog(
+            title="Add index",
+            div(
+               fluidRow(
+                  column(
+                     8,
+                     selectInput(
+                        "newIndexFields", label=NULL,
+                        choices=fnames,
+                        multiple=TRUE
+                     )
+                  ),
+                  column(
+                     2,
+                     checkboxInput("uniqueNewIndex", "Unique?", value=FALSE)
+                  ),
+                  column(2, actionButton("confirmAddIndex", "Add"))
+               )
+            ),
+            size="s",
+            easyClose=TRUE
+         ))
+      })
+      observe({
+         if(length(input$newIndexFields)==0){
+            disable("confirmAddIndex")
+         }else{
+            enable("confirmAddIndex")
+         }
+      })
+      observeEvent(input$confirmAddIndex, {
+         selTable <- isolate(selection$tables)
+         validate(need(length(selTable)==1, ""))
+         validate(need(length(input$newIndexFields)>0, ""))
+         nm <- isolate(model$x) %>%
+            add_index.RelDataModel(
+               tableName=selTable,
+               fieldNames=input$newIndexFields,
+               unique=input$uniqueNewIndex
+            )
+         if(!identical(nm, isolate(model$x))){
+            model$new <- nm
+         }
+         removeModal()
       })
 
       #########################################################################@
@@ -538,13 +863,21 @@ buildServer <- function(
          selTables <- isolate(selection$tables)
          validate(need(length(selTables)>0, ""))
          m <- isolate(model$x)
-         for(tn in selTables){
-            m <- m %>%  update_table_display(
-               tableName=tn,
-               color=newCol
-            )
+         tval <- lapply(
+            m,
+            function(x) x$display$color
+         ) %>% unlist()
+         tval <- tval[selTables] %>% unique()
+         if(length(tval)>1 || is.na(tval) || tval!=newCol){
+            print("New col")
+            for(tn in selTables){
+               m <- m %>%  update_table_display(
+                  tableName=tn,
+                  color=newCol
+               )
+            }
+            model$new <- m
          }
-         model$new <- m
       })
 
       #########################################################################@
@@ -580,7 +913,7 @@ buildServer <- function(
                      )),
                      style="color:red;"#font-weight: bold;"
                   ),
-                  size="m",
+                  size="s",
                   easyClose=TRUE
                ))
             }
@@ -610,7 +943,7 @@ buildServer <- function(
             showModal(modalDialog(
                title="Add foreign key",
                uiOutput("addForeignKey"),
-               size="l",
+               size="m",
                easyClose=TRUE
             ))
          }
@@ -624,7 +957,7 @@ buildServer <- function(
          foreignKey$toTable <- tns[length(tns)]
          div(
             fluidRow(
-               column(5, h2(tns[1]), style="text-align:center;"),
+               column(5, h4(tns[1]), style="text-align:center;"),
                if(length(tns)==1){
                   column(
                      2,
@@ -644,7 +977,7 @@ buildServer <- function(
                      style="text-align:center;"
                   )
                },
-               column(5, h2(tns[length(tns)]), style="text-align:center;"),
+               column(5, h4(tns[length(tns)]), style="text-align:center;"),
                style="border-bottom:solid;"
             ),
             fluidRow(
@@ -719,7 +1052,7 @@ buildServer <- function(
                   selectInput(
                      "fkFromField", "", ftfields, multiple=FALSE, width="100%"
                   ),
-                  style="width:300px; margin:auto;"
+                  style="width:100%; margin:auto;"
                )
             ),
             column(2, uiOutput("addFkFields"), style="text-align:center;"),
@@ -729,7 +1062,7 @@ buildServer <- function(
                   selectInput(
                      "fkToField", "", ttfields, multiple=FALSE, width="100%"
                   ),
-                  style="width:300px; margin:auto;"
+                  style="width:100%; margin:auto;"
                )
             )
          )
@@ -765,7 +1098,7 @@ buildServer <- function(
             }else{
                return(list(tags$br(), actionButton(
                   "addFkField", label="",
-                  icon=icon("plus-circle", "fa-2x")
+                  icon=icon("plus-square", "fa-1x")
                )))
             }
          }
@@ -786,13 +1119,13 @@ buildServer <- function(
          to <- foreignKey$toFields
          validate(need(from, ""))
          validate(need(to, ""))
-         div(
-            DT::DTOutput("fkFieldTable"),
-            div(
+         fluidRow(
+            column(1, ""),
+            column(10, DT::DTOutput("fkFieldTable")),
+            column(1,
                uiOutput("rmFkField"),
-               style="text-align:center;"
-            ),
-            style="width:50%; margin:auto"
+               style="text-align:right;"
+            )
          )
       })
       output$fkFieldTable <- DT::renderDT({
@@ -811,19 +1144,20 @@ buildServer <- function(
             right <- from
          }
          DT::datatable(
-            tibble(l=left, m="", r=right),
+            tibble(l=left, r=right),
             rownames=FALSE,
-            colnames=c("", "", ""),
+            # colnames=c(tns[1], tns[length(tns)]),
+            colnames=c("", ""),
             options=list(
                dom=ifelse(length(left)>10, "tip", "t"),
                columnDefs = list(
-                  list(targets=c(0), visible=TRUE, width='40%'),
-                  list(targets=c(1), visible=TRUE, width='20%'),
-                  list(targets=c(2), visible=TRUE, width='40%')
+                  list(targets=c(0), visible=TRUE, width='50%'),
+                  list(targets=c(1), visible=TRUE, width='50%')
                )
             )
          ) %>%
-            DT::formatStyle(c("l", "m", "r"), "text-align"="center")
+            DT::formatStyle(1, "text-align"="left") %>%
+            DT::formatStyle(2, "text-align"="right")
       })
       output$rmFkField <- renderUI({
          sel <- input$fkFieldTable_rows_selected
@@ -831,12 +1165,10 @@ buildServer <- function(
          return(
             actionButton(
                "confirmRmFkField",
-               # label="",
                label=HTML(paste(
-                  '<i class="fa fa-minus-circle fa-2x" style="color:red;">',
+                  '<i class="fa fa-minus-square fa-1x" style="color:red;">',
                   '</i>'
                ))
-               # icon=icon("minus-circle", "fa-2x")
             )
          )
       })
@@ -894,18 +1226,25 @@ buildServer <- function(
          dispNodes <- input$modelNet_nodes
          validate(need(dispNodes, ""))
          m <- isolate(model$x)
-         m <- lapply(
-            m,
-            function(n){
-               if(n$tableName %in% names(dispNodes)){
-                  n$display$x=dispNodes[[n$tableName]]$x
-                  n$display$y=dispNodes[[n$tableName]]$y
+         cp <- lapply(m, function(n)tibble(x=n$display$x, y=n$display$y)) %>%
+            do.call(rbind, .)
+         np <- lapply(dispNodes[names(m)], function(n)tibble(x=n$x, y=n$y)) %>%
+            do.call(rbind, .)
+         if(!all(np$x==cp$x & np$y==cp$y)){
+            m <- lapply(
+               m,
+               function(n){
+                  if(n$tableName %in% names(dispNodes)){
+                     n$display$x=dispNodes[[n$tableName]]$x
+                     n$display$y=dispNodes[[n$tableName]]$y
+                  }
+                  return(n)
                }
-               return(n)
-            }
-         )
-         class(m) <- c("RelDataModel", "list")
-         model$new <- m
+            )
+            class(m) <- c("RelDataModel", "list")
+            print("New pos")
+            model$new <- m
+         }
       })
 
       #########################################################################@
@@ -916,6 +1255,8 @@ buildServer <- function(
          nm <- model$new
          validate(need(nm, ""))
          dm <- isolate(model$x)
+         validate(need(!identical(nm, dm), ""))
+         print("updating")
 
          ##
          tdm <- nm
@@ -1074,7 +1415,7 @@ buildServer <- function(
 
       observeEvent(input$export, {
          showModal(modalDialog(
-            title="Import",
+            title="Export",
             uiOutput("export"),
             size="s",
             easyClose=TRUE
