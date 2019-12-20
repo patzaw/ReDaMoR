@@ -110,22 +110,32 @@ modelToVn <- function(
             sep="\n"
          )
          ftit <- paste(sprintf(
-            ' - %s%s%s',
+            '<li><strong>%s</strong>%s%s</li>',
             f$name,
             ifelse(is.na(f$comment)|f$comment=="", "", ": "),
             ifelse(is.na(f$comment)|f$comment=="", "", f$comment)
-         ), collapse="<br>")
+         ), collapse=" ")
          title <- paste(
             sprintf(
-               '<b>%s</b>%s',
+               '<p><strong style="text-decoration:underline;">%s</strong>%s</p>',
                m$tableName,
                ifelse(
                   is.na(m$display$comment), "",
                   sprintf(" (%s)", m$display$comment)
                )
             ),
-            ftit,
-            sep="<br>"
+            "<ul>", ftit, "</ul>",
+            sep=" "
+         )
+         title <- sprintf(
+            paste0(
+               '<div ',
+               'style="',
+               'max-width:400px; max-height:300px;',
+               'overflow:scroll;',
+               '">%s</div>'
+            ),
+            title
          )
          return(tibble(
             tableName=m$tableName,
