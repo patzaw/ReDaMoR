@@ -957,7 +957,8 @@ buildServer <- function(
                      value=fields$comment[seli],
                      placeholder="Field description",
                      width="100%"
-                  )
+                  ),
+                  uiOutput("updateFieldError")
                ),
                column(
                   2,
@@ -998,6 +999,7 @@ buildServer <- function(
          validate(need(nfn %in% fields$name[-seli], ""))
          p("Field name already used", style="color:red;font-weight: bold;")
       })
+      updateField <- reactiveValues(error=NULL)
       observeEvent(input$confirmUpdateField, {
          seli <- isolate(input$fieldTable_rows_selected)
          validate(need(length(seli)==1, ""))
@@ -1020,7 +1022,7 @@ buildServer <- function(
                new=nfn
             )
          }
-         nm <- nm %>%
+         nm <- try(nm %>%
             update_field(
                tableName=selTable,
                fieldName=nfn,
@@ -1028,12 +1030,23 @@ buildServer <- function(
                nullable=isolate(input$fieldNullable),
                unique=isolate(input$fieldUnique),
                comment=as.character(isolate(input$fieldComment))
-            )
-         if(!identical(nm, isolate(model$x))){
-            model$new <- nm
+            ), silent=TRUE)
+         if(is.RelDataModel(nm)){
+            updateField$error <- NULL
+            if(!identical(nm, isolate(model$x))){
+               model$new <- nm
+            }
+            removeModal()
+         }else{
+            updateField$error <- nm
          }
-         removeModal()
       })
+      output$updateFieldError <- renderUI({
+         e <- updateField$error
+         validate(need(!is.null(e), ""))
+         p(e, style="color:red;")
+      })
+
 
       ## _+ Table primary key ----
       output$primaryKey <- renderUI({
