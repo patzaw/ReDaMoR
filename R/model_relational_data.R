@@ -166,7 +166,8 @@ buildUi <- function(fromR){
 ###############################################################################@
 buildServer <- function(
    modelInput, fromR, bcko,
-   defaultColor, availableColors
+   defaultColor, availableColors,
+   example
 ){
 
    function(input, output, session) {
@@ -320,13 +321,26 @@ buildServer <- function(
 
       output$import <- renderUI({
          list(
-            fileInput(
-               "impModel", "Choose an sql or a json file",
-                multiple=FALSE,
-                accept=c(".sql", ".json", ".sql.gz", ".json.gz")
+            fluidRow(
+               column(6, fileInput(
+                  "impModel", "Choose an sql or a json file",
+                   multiple=FALSE,
+                   accept=c(".sql", ".json", ".sql.gz", ".json.gz")
+               )),
+               column(6, uiOutput("exampleModel"))
             ),
-            uiOutput("impModel")
+            fluidRow(uiOutput("impModel"))
          )
+      })
+
+      output$exampleModel <- renderUI({
+         validate(need(file.exists(example), ""))
+         m <- try(read_json_data_model(example), silent=TRUE)
+         if(!is.RelDataModel(m)){
+            m <- try(read_SQL_data_model(example), silent=TRUE)
+         }
+         validate(need(m, ""))
+         actionLink("exampleLink", label="Try an example")
       })
 
       output$impModel <- renderUI({
@@ -402,6 +416,16 @@ buildServer <- function(
          }else{
             model$toImport <- mi
          }
+      })
+
+      observeEvent(input$exampleLink, {
+         validate(need(file.exists(example), ""))
+         mi <- try(read_json_data_model(example), silent=TRUE)
+         if(!is.RelDataModel(mi)){
+            mi <- try(read_SQL_data_model(example), silent=TRUE)
+         }
+         validate(need(mi, ""))
+         model$toImport <-  auto_layout(mi, lengthMultiplier=45*length(mi))
       })
 
       observe({
@@ -1965,6 +1989,10 @@ model_relational_data <- function(
       "#C663CB", "#7CE65F", "#DF7442", "#E0B8A0", "#D4E355", "#7D76D9",
       "#6E9DCE", "#E747D7", "#77DFDE", "#CC8490", "#D991D6", "#D0E9CF",
       "#CAE095", "#6E8D65"
+   ),
+   example=system.file(
+      "examples/HPO-model.sql",
+      package = packageName()
    )
 ){
 
@@ -1982,7 +2010,8 @@ model_relational_data <- function(
    ui <- buildUi(fromR=fromR)
    server <- buildServer(
       modelInput=modelInput, fromR=fromR, bcko=bcko,
-      defaultColor=defaultColor, availableColors=availableColors
+      defaultColor=defaultColor, availableColors=availableColors,
+      example=example
    )
 
    if(fromR){

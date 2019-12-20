@@ -10,7 +10,8 @@ model_relational_data(
   defaultColor = "#D9D9D9",
   availableColors = c("#D9B661", "#E14D7D", "#75E4AE", "#9638E5", "#C6D1DC", "#D8B8E3",
     "#C663CB", "#7CE65F", "#DF7442", "#E0B8A0", "#D4E355", "#7D76D9", "#6E9DCE",
-    "#E747D7", "#77DFDE", "#CC8490", "#D991D6", "#D0E9CF", "#CAE095", "#6E8D65")
+    "#E747D7", "#77DFDE", "#CC8490", "#D991D6", "#D0E9CF", "#CAE095", "#6E8D65"),
+  example = system.file("examples/HPO-model.sql", package = packageName())
 )
 }
 \arguments{
