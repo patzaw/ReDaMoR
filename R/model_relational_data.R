@@ -125,15 +125,22 @@ buildUi <- function(fromR){
             fluidRow(
                column(
                   1,
-                  actionButton(
+                  div(actionButton(
                      "selectAll",
                      label=NULL,
                      icon=icon("object-group", "fa-2x")
-                  )
+                  ), title="Select all tables")
                ),
                column(
                   7,
-                  uiOutput("findTable")
+                  selectInput(
+                     "findTable",
+                     label=NULL,
+                     choices=NULL,
+                     multiple=TRUE,
+                     selected=NULL,
+                     width="100%"
+                  )
                ),
                column(
                   4,
@@ -142,8 +149,8 @@ buildUi <- function(fromR){
                style="padding-top:10px; padding-bottom:5px;"
             ),
             fluidRow(
-               visNetworkOutput("modelNet", height="80vh", width="100%"),
-               style="border:solid; min-height:80vh;"
+               visNetworkOutput("modelNet", height="75vh", width="100%"),
+               style="border:solid; min-height:75vh;"
             )
          ),
 
@@ -199,6 +206,7 @@ buildServer <- function(
          x=1                        # Replot the model
       )
       selection <- reactiveValues(
+         release=0,
          tables=NULL,               # Selected tables
          fk=NULL                    # Selected foreign keys
       )
@@ -220,71 +228,51 @@ buildServer <- function(
       })
 
       #########################################################################@
-      ## Model network ----
-      #########################################################################@
-
-      output$modelNet <- renderVisNetwork({
-         replot$x
-         selection$tables <- NULL
-         selection$fk <- NULL
-         plot(isolate(model$x), color=isolate(settings$defaultColor)) %>%
-            visEvents(
-               release="function(nodes) {
-                Shiny.onInputChange('modelNet_release', Math.random());
-                ;}"
-            ) # %>%
-            # visOptions(nodesIdSelection=list(useLabels=FALSE))
-      })
-
-      observe({
-         input$modelNet_release
-         visNetworkProxy("modelNet") %>% visGetSelectedNodes()
-         visNetworkProxy("modelNet") %>% visGetSelectedEdges()
-         visNetworkProxy("modelNet") %>% visGetNodes()
-      })
-
-      observe({
-         selection$tables <- intersect(
-            input$modelNet_selectedNodes,
-            names(model$x)
-         )
-      })
-
-      observe({
-         selection$fk <- intersect(
-            input$modelNet_selectedEdges,
-            modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id
-         )
-      })
-
-      #########################################################################@
       ## Model overview ----
       #########################################################################@
 
-      output$findTable <- renderUI({
+      observe({
          m <- model$x
-         selTables <- selection$tables
-         validate(need(length(names(m))>0, ""))
-         selectInput(
+         updateSelectInput(
+            session,
             "findTable",
-            label=NULL,
-            choices=names(m),
-            multiple=TRUE,
-            selected=selection$tables,
-            width="100%"
+            choices=sort(names(m)),
+            selected=intersect(isolate(selection$tables), names(m))
          )
       })
       observe({
-         selection$tables <- input$findTable
+         selTables <- selection$tables
+         updateSelectInput(
+            session,
+            "findTable",
+            selected=as.character(selTables)
+         )
+      })
+      observe({
+         selTables <- input$findTable
+         mn <- isolate(model$x) %>% modelToVn()
+         selFK <- mn$edges %>%
+            filter(from %in% selTables | to %in% selTables) %>%
+            pull(id)
+         if(length(selTables)==0){
+            selection$tables <- NULL
+         }else{
+            selection$tables <- sort(selTables)
+         }
+         if(length(selFK)==0){
+            selection$fk <- NULL
+         }else{
+            selection$fk <- sort(selFK)
+         }
+         selection$release <- isolate(selection$release)+1
       })
       observeEvent(input$selectAll, {
          m <- isolate(model$x)
-         selTables <- isolate(selection$tables)
-         if(length(selTables)==length(m)){
-            selection$tables <- NULL
-         }else{
-            selection$tables <- names(m)
-         }
+         updateSelectInput(
+            session,
+            "findTable",
+            selected=sort(names(m))
+         )
       })
 
       output$modelSummary <- renderUI({
@@ -305,6 +293,57 @@ buildServer <- function(
          )
       })
 
+      #########################################################################@
+      ## Model network ----
+      #########################################################################@
+
+      output$modelNet <- renderVisNetwork({
+         replot$x
+         selection$tables <- NULL
+         selection$fk <- NULL
+         plot(isolate(model$x), color=isolate(settings$defaultColor)) %>%
+            visEvents(
+               release="function(nodes) {
+                Shiny.onInputChange('modelNet_release', Math.random());
+                ;}"
+            ) # %>%
+            # visOptions(nodesIdSelection=list(useLabels=FALSE))
+      })
+
+      observe({
+         input$modelNet_release
+         selection$release <- isolate(selection$release)+1
+      })
+      observe({
+         selection$release
+         visNetworkProxy("modelNet") %>% visGetSelectedNodes()
+         visNetworkProxy("modelNet") %>% visGetSelectedEdges()
+         visNetworkProxy("modelNet") %>% visGetNodes()
+      })
+
+      observe({
+         selTables <- intersect(
+            input$modelNet_selectedNodes,
+            names(model$x)
+         ) %>% sort()
+         if(length(selTables)==0){
+            selection$tables <- NULL
+         }else{
+            selection$tables <- selTables
+         }
+      })
+
+      observe({
+         selFK <- intersect(
+            input$modelNet_selectedEdges,
+            modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id
+         ) %>% sort()
+         if(length(selFK)==0){
+            selection$fk <- NULL
+         }else{
+            selection$fk <- selFK
+         }
+      })
 
       #########################################################################@
       ## Import model ----
@@ -322,12 +361,16 @@ buildServer <- function(
       output$import <- renderUI({
          list(
             fluidRow(
-               column(6, fileInput(
-                  "impModel", "Choose an sql or a json file",
-                   multiple=FALSE,
-                   accept=c(".sql", ".json", ".sql.gz", ".json.gz")
-               )),
-               column(6, uiOutput("exampleModel"))
+               column(
+                  6,
+                  fileInput(
+                     "impModel", "Choose an sql or a json file",
+                      multiple=FALSE,
+                      accept=c(".sql", ".json", ".sql.gz", ".json.gz")
+                  ),
+                  style="text-align:left;"
+               ),
+               column(6, uiOutput("exampleModel"), style="text-align:right;")
             ),
             fluidRow(uiOutput("impModel"))
          )
@@ -563,8 +606,9 @@ buildServer <- function(
             tags$hr(style="border-color:#317EAC; border-width:3px;"),
             uiOutput("indexes"),
             style=paste(
-               "border:solid; border-radius:15px;",
-               # "min-height:85vh;",
+               "border:solid;", #"border-radius:15px;",
+               "max-height:75vh;",
+               "overflow:scroll;",
                "padding:15px;"
             )
          )
@@ -1801,24 +1845,24 @@ buildServer <- function(
       })
 
       observe({
-         selTables <- intersect(names(model$x), selection$tables)
-         selection$tables <- selTables
+         # selTables <- intersect(names(model$x), selection$tables)
+         # selection$tables <- sort(selTables)
+         selTables <- selection$tables
          visNetworkProxy("modelNet") %>%
-            visSelectNodes(selTables) # %>%
-            # visOptions(nodesIdSelection=list(useLabels=FALSE))
+            visSelectNodes(selTables)
       })
 
       observe({
-         selFK <- intersect(
-            modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id,
-            selection$fk
-         )
-         selection$fk <- selFK
+         # selFK <- intersect(
+         #    modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id,
+         #    selection$fk
+         # )
+         # selection$fk <- sort(selFK)
+         selFK <- selection$fk
          selTables <- intersect(names(model$x), selection$tables)
          if(length(selTables)==0){
             visNetworkProxy("modelNet") %>%
-               visSelectEdges(selFK) # %>%
-               # visOptions(nodesIdSelection=list(useLabels=FALSE))
+               visSelectEdges(selFK)
          }
       })
 
