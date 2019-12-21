@@ -259,11 +259,6 @@ buildServer <- function(
          }else{
             selection$tables <- sort(selTables)
          }
-         if(length(selFK)==0){
-            selection$fk <- NULL
-         }else{
-            selection$fk <- sort(selFK)
-         }
          selection$release <- isolate(selection$release)+1
       })
       observeEvent(input$selectAll, {
