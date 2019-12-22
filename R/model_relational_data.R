@@ -45,19 +45,24 @@ buildUi <- function(fromR){
             //     }
             // });
             '
+         ),
+         if(fromR) NULL else tags$script('
+            window.onbeforeunload = function() {
+               return "Your changes will be lost!";
+            };
+         '
          )
       ),
 
       ## Main menu ----
       fluidRow(
-         column(
-            2,
+         div(
+            style="display:inline-block; margin-left:5px; margin-right:10px",
             if(fromR){
                actionButton(
                   "done",
-                  list(icon("check", "fa-2x"), "Done"),
-                  style="margin-top:25px;margin-bottom:25px;"
-               )
+                  list(icon("check", "fa-2x"), "Done")
+               ) %>% div(title="Return the model in R session")
             }else{
                img(
                   src=paste(
@@ -67,54 +72,46 @@ buildUi <- function(fromR){
                         package = packageName()
                      ))
                   ),
-                  height="100px", style="margin-bottom:10px;margin-top:5px;"
+                  style="height:75px;"
                )
             }
          ),
-         column(
-            2,
+         div(
+            style="display:inline-block; margin-left:5px; margin-right:10px",
             actionButton(
                "import",
-               list(icon("file-import", "fa-2x"), "Import"),
-               style="margin-top:25px;margin-bottom:25px;"
-            )
-         ),
-         column(
-            2,
+               list(icon("file-import", "fa-2x"), "Import")
+            ),
             actionButton(
                "export",
-               list("Export", icon("file-export", "fa-2x")),
-               style="margin-top:25px;margin-bottom:25px;"
+               list("Export", icon("file-export", "fa-2x"))
             )
          ),
-         column(
-            3,
+         div(
+            style="display:inline-block; margin-left:5px; margin-right:10px",
             actionButton(
                "undo",
-               list("Undo", icon("undo", "fa-2x")),
-               style="margin-top:25px;margin-bottom:25px;"
+               list("Undo", icon("undo", "fa-2x"))
             ),
             actionButton(
                "redo",
-               list(icon("redo", "fa-2x"), "Redo"),
-               style="margin-top:25px;margin-bottom:25px;"
+               list(icon("redo", "fa-2x"), "Redo")
             )
          ),
-         column(
-            2,
+         div(
+            style="display:inline-block; margin-left:5px; margin-right:10px",
             actionButton(
                "addTable", "Add table",
-               icon=icon("plus-square", "fa-2x"),
-               style="margin-top:25px;margin-bottom:25px;"
+               icon=icon("plus-square", "fa-2x")
             )
          ),
-         column(
-            1,
+         div(
+            style="display:inline-block; margin-left:5px; margin-right:5px",
             actionButton(
-               "doc", "", icon=icon("question-circle", "fa-2x"),
-               style="margin-top:25px;margin-bottom:25px;"
-            )
-         )
+               "doc", "", icon=icon("question-circle", "fa-2x")
+            ) %>% div(title="Documentation")
+         ),
+         style="margin-top:25px;margin-bottom:20px;"
       ),
 
       fluidRow(
@@ -124,15 +121,8 @@ buildUi <- function(fromR){
             7,
             fluidRow(
                column(
-                  1,
-                  div(actionButton(
-                     "selectAll",
-                     label=NULL,
-                     icon=icon("object-group", "fa-2x")
-                  ), title="Select all tables")
-               ),
-               column(
-                  7,
+                  6,
+                  style="padding-left:0;",
                   selectInput(
                      "findTable",
                      label=NULL,
@@ -143,10 +133,35 @@ buildUi <- function(fromR){
                   )
                ),
                column(
+                  1,
+                  style="padding-left:0; text-align:left;",
+                  div(actionButton(
+                     "selectAll",
+                     label=NULL,
+                     icon=icon("object-group", "fa-2x")
+                  ), title="Select all tables"),
+                  tags$style(HTML(
+                     "#selectAll{padding-top:2px;padding-bottom:2px;}"
+                  ))
+               ),
+               column(
                   4,
+                  style="padding-left:0; padding-right:0;",
                   uiOutput("modelSummary")
                ),
-               style="padding-top:10px; padding-bottom:5px;"
+               column(
+                  1,
+                  style="text-align:right; padding-left:0; padding-right:0;",
+                  div(actionButton(
+                     "fitNet",
+                     label=NULL,
+                     icon=icon("vector-square", "fa-2x")
+                  ), title="Fit model"),
+                  tags$style(HTML(
+                     "#fitNet{padding-top:2px;padding-bottom:2px;}"
+                  ))
+               ),
+               style="margin-bottom:0;"
             ),
             fluidRow(
                visNetworkOutput("modelNet", height="75vh", width="100%"),
@@ -340,6 +355,10 @@ buildServer <- function(
          }
       })
 
+      observeEvent(input$fitNet, {
+         visNetworkProxy("modelNet") %>% visFit()
+      })
+
       #########################################################################@
       ## Import model ----
       #########################################################################@
@@ -360,12 +379,13 @@ buildServer <- function(
                   6,
                   fileInput(
                      "impModel", "Choose an sql or a json file",
-                      multiple=FALSE,
-                      accept=c(".sql", ".json", ".sql.gz", ".json.gz")
+                     multiple=FALSE,
+                     accept=c(".sql", ".json", ".sql.gz", ".json.gz"),
+                     width="100%"
                   ),
                   style="text-align:left;"
                ),
-               column(6, uiOutput("exampleModel"), style="text-align:right;")
+               column(6, uiOutput("exampleModel"), style="text-align:left;")
             ),
             fluidRow(uiOutput("impModel"))
          )
@@ -589,7 +609,8 @@ buildServer <- function(
                column(8, h3(selTable, style="margin-top:6px;")),
                column(
                   4,
-                  actionButton("renameTable", "Rename"),
+                  actionButton("renameTable", "Rename") %>%
+                     div(title="Rename the table"),
                   style="text-align:right;"
                )
             ),
@@ -685,7 +706,7 @@ buildServer <- function(
                   "refreshComment",
                   label=NULL,
                   icon=icon("sync-alt", "fa-1x")
-               ),
+               ) %>% div(title="Update table comment"),
                style="text-align:right;"
             )
          )
@@ -741,7 +762,11 @@ buildServer <- function(
                   actionButton(
                      "addField", label="",
                      icon=icon("plus-square", "fa-1x")
-                  ),
+                  ) %>%
+                     div(
+                        title="Add a new field",
+                        style="display:inline-block;"
+                     ),
                   style="text-align:right;"
                )
             ),
@@ -814,15 +839,19 @@ buildServer <- function(
                "updateField",
                label="",
                icon=icon("edit", "fa-1x")
-            ),
+            ) %>%
+               div(
+                  title="Edit field properties",
+                  style="display:inline-block;"
+               ),
             actionButton(
                "removeField",
                label=HTML(paste(
                   '<i class="fa fa-minus-square fa-1x" style="color:red;">',
                   '</i>'
                ))
-            ),
-            style="display:inline;"
+            ) %>% div(title="Remove field", style="display:inline-block;"),
+            style="display:inline-block;"
          )
       })
       # ## __- Remove field ----
@@ -967,7 +996,7 @@ buildServer <- function(
          fields <- mt$fields
          validate(need(nrow(fields)>0, ""))
          showModal(modalDialog(
-            title="Add field",
+            title="Update field",
             fluidRow(
                column(
                   10,
@@ -1135,7 +1164,8 @@ buildServer <- function(
                   actionButton(
                      "addIndex", label="",
                      icon=icon("plus-square", "fa-1x")
-                  ),
+                  ) %>%
+                     div(title="Add an index", style="display:inline-block;"),
                   style="text-align:right;"
                )
             ),
@@ -1206,14 +1236,18 @@ buildServer <- function(
                "updateIndex",
                label="",
                icon=icon("edit", "fa-1x")
-            ),
+            ) %>%
+               div(
+                  title="Update index properties",
+                  style="display:inline-block;"
+               ),
             actionButton(
                "removeIndex",
                label=HTML(paste(
                   '<i class="fa fa-minus-square fa-1x" style="color:red;">',
                   '</i>'
                ))
-            )
+            ) %>% div(title="Remove index", style="display:inline-block;")
          )
       })
       observeEvent(input$updateIndex,{
@@ -1345,7 +1379,7 @@ buildServer <- function(
                "rmTablesInput",
                style="display: inline-block;"
             ),
-            style="padding:15px; text-align:center;"
+            style="padding-bottom:5px; text-align:center;"
          ))
       })
       output$addFKInput <- renderUI({
@@ -1404,7 +1438,7 @@ buildServer <- function(
                "", isolate(settings$availableColors)
             ),
             allowTransparent=TRUE
-         )
+         ) %>% div(title="Select table color")
       })
       observe({
          newCol <- input$tableColor
@@ -1522,7 +1556,7 @@ buildServer <- function(
                      actionButton(
                         "fkDirection", "",
                         icon=icon("long-arrow-alt-right", "fa-2x")
-                     ),
+                     ) %>% div(title="Change foreign key direction"),
                      style="text-align:center;"
                   )
                },
@@ -1644,7 +1678,7 @@ buildServer <- function(
                return(list(tags$br(), actionButton(
                   "addFkField", label="",
                   icon=icon("plus-square", "fa-1x")
-               )))
+               ) %>% div(title="Add key field")))
             }
          }
       })
@@ -1714,7 +1748,7 @@ buildServer <- function(
                   '<i class="fa fa-minus-square fa-1x" style="color:red;">',
                   '</i>'
                ))
-            )
+            ) %>% div(title="Remove key field")
          )
       })
       observe({
