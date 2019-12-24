@@ -78,6 +78,7 @@ modelToVn <- function(
          if(!is.null(it)){
             it <- it %>% filter(index!=0)
             ind <- unique(it$field)
+            uind <- it %>% filter(uniqueIndex) %>% pull(field) %>% unique()
             # uq <- unique(it$field[which(it$unique)])
          }
          f$i <- unlist(lapply(
@@ -90,13 +91,18 @@ modelToVn <- function(
             '    - %s%s%s%s%s {%s%s}%s',
             ifelse(f$nullable, "(", ""),
             ifelse(f$name %in% pk, "<b>", ""),
-            ifelse(f$unique & !f$name %in% pk, "*", ""),
+            # ifelse(f$unique & !f$name %in% pk, "*", ""),
+            ifelse(f$unique, "*", ""),
             f$name,
             ifelse(f$name %in% pk, "</b>", ""),
             f$type,
             ifelse(
                f$name %in% ind,
-               paste0(" - idx.", f$i),
+               ifelse(
+                  f$name %in% uind,
+                  paste0(" - uidx.", f$i),
+                  paste0(" - idx.", f$i)
+               ),
                ""
             ),
             ifelse(f$nullable, ")", "")

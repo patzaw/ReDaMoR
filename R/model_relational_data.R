@@ -5,6 +5,7 @@ buildUi <- function(fromR){
 
       ## Settings ----
       useShinyjs(),
+      rintrojs::introjsUI(),
 
       ## HEAD ----
       tags$head(
@@ -62,7 +63,8 @@ buildUi <- function(fromR){
                actionButton(
                   "done",
                   list(icon("check", "fa-2x"), "Done")
-               ) %>% div(title="Return the model in R session")
+               ) %>%
+                  div(title="Return the model in R session")
             }else{
                img(
                   src=paste(
@@ -123,6 +125,7 @@ buildUi <- function(fromR){
                column(
                   6,
                   style="padding-left:0;",
+                  id="findTableDiv",
                   selectInput(
                      "findTable",
                      label=NULL,
@@ -192,7 +195,70 @@ buildServer <- function(
    example
 ){
 
+   rintrosteps <- jsonlite::fromJSON(system.file(
+      "Documentation/rintrojs-steps.json",
+      package = packageName()
+   )) %>% lapply(
+      function(x){
+         toRet <- as_tibble(x) %>%
+            select(element, intro)
+         if(!fromR){
+            toRet <- toRet %>%
+               filter(is.na(element) | element!="#done")
+         }
+         return(toRet)
+      }
+   )
+
+
    function(input, output, session) {
+
+      #########################################################################@
+      ## Documentation ----
+      #########################################################################@
+
+      context <- reactiveValues(
+         x="main"
+      )
+      observeEvent(input$doc, {
+         docx <- rintrosteps[context$x] %>%
+            do.call(rbind, .)
+         rintrojs::introjs(session, options = list(steps=docx))
+      })
+      observe(
+         if(length(selection$tables)==0 && length(selection$fk)==0){
+            context$x <- "main"
+         }else{
+            ctxt <- c()
+            if(length(selection$tables) > 0){
+               ctxt <- c(ctxt, "tables")
+               if(length(selection$tables)==2){
+                  ctxt <- c(ctxt, "twoTables")
+               }
+               if(length(selection$tables)==1){
+                  ctxt <- c(ctxt, "oneTable")
+                  if(nrow(model$x[[selection$tables]]$fields)>0){
+                     ctxt <- c(ctxt, "withFields")
+                  }
+                  if(length(model$x[[selection$tables]]$indexes)>0){
+                     ctxt <- c(ctxt, "withIndexes")
+                  }
+                  if(length(input$fieldTable_rows_selected)>0){
+                     ctxt <- c(ctxt, "selectedField")
+                  }
+                  if(length(input$indexTable_rows_selected)>0){
+                     ctxt <- c(ctxt, "selectedIndex")
+                  }
+               }
+            }
+            if(length(selection$fk)>0){
+               ctxt <- c(ctxt, "withFK")
+            }
+            context$x <- ctxt
+         }
+      )
+
+      rintrojs::introjs(session, options = list(steps=rintrosteps[["main"]]))
 
       #########################################################################@
       ## The model ----
@@ -314,10 +380,9 @@ buildServer <- function(
          plot(isolate(model$x), color=isolate(settings$defaultColor)) %>%
             visEvents(
                release="function(nodes) {
-                Shiny.onInputChange('modelNet_release', Math.random());
-                ;}"
-            ) # %>%
-            # visOptions(nodesIdSelection=list(useLabels=FALSE))
+                  Shiny.onInputChange('modelNet_release', Math.random());
+               }"
+            )
       })
 
       observe({
@@ -758,7 +823,7 @@ buildServer <- function(
                column(6, h4("Fields")),
                column(
                   6,
-                  uiOutput("updateField", inline=TRUE),
+                  uiOutput("updateFieldDiv", inline=TRUE),
                   actionButton(
                      "addField", label="",
                      icon=icon("plus-square", "fa-1x")
@@ -825,7 +890,7 @@ buildServer <- function(
          )
       })
       # ## __- Modify fields ----
-      output$updateField <- renderUI({
+      output$updateFieldDiv <- renderUI({
          seli <- input$fieldTable_rows_selected
          validate(need(length(seli)==1, ""))
          validate(need(nrow(model$fieldTable)>0, ""))
@@ -1160,7 +1225,7 @@ buildServer <- function(
                column(6, h4("Indexes")),
                column(
                   6,
-                  uiOutput("updateIndex", inline=TRUE),
+                  uiOutput("updateIndexDiv", inline=TRUE),
                   actionButton(
                      "addIndex", label="",
                      icon=icon("plus-square", "fa-1x")
@@ -1171,7 +1236,6 @@ buildServer <- function(
             ),
             fluidRow(
                column(12, DT::DTOutput("indexTable"))
-               # column(4, uiOutput("updateIndex"))
             )
          )
       })
@@ -1221,7 +1285,7 @@ buildServer <- function(
          )
       })
       ## __- Update index ----
-      output$updateIndex <- renderUI({
+      output$updateIndexDiv <- renderUI({
          seli <- input$indexTable_rows_selected
          validate(need(length(seli)==1, ""))
          validate(need(nrow(model$indexTable)>0, ""))
