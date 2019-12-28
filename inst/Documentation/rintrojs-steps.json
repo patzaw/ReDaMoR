@@ -36,6 +36,10 @@
        "intro": "Select all tables in your model."
      },
      {
+       "element": "#autoLayout",
+       "intro": "Redraw the model with an automatic layout."
+     },
+     {
        "element": "#fitNet",
        "intro": "Fit the model in the frame."
      }
@@ -71,7 +75,7 @@
       },
       {
          "element": "#tableCommentUI",
-         "intro": "Add or change a description of the table."
+         "intro": "Add or change a description of the table. Click on the check button on the right to validate your change."
       },
       {
          "element": "#fields",
@@ -89,7 +93,7 @@
       },
       {
          "element": "#primaryKey",
-         "intro": "Choose the primary key."
+         "intro": "Choose the primary key. Click on the check button on the right to validate your change."
       },
       {
          "element": "#indexes",

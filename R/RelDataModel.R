@@ -1212,7 +1212,9 @@ update_table_display.RelDataModel <- function(
 #' @param layout character name of igraph layout function to use
 #' (Default: "layout_nicely").
 #' @param lengthMultiplier a numeric value to scale x and y coordinate
-#' (default: 300)
+#' (default: 40*length(x))
+#' @param force if TRUE autolayout even if all tables have coordinates
+#' (default: FALSE)
 #'
 #' @return A [RelDataModel]
 #'
@@ -1221,9 +1223,17 @@ update_table_display.RelDataModel <- function(
 auto_layout.RelDataModel <- function(
    x,
    layout="layout_nicely",
-   lengthMultiplier=45*length(x)
+   lengthMultiplier=40*length(x),
+   force=FALSE
 ){
+   if(length(x)==0){
+      return(x)
+   }
    mn <- modelToVn(x)
+   if(force){
+      mn$nodes$x <- NA
+      mn$nodes$y <- NA
+   }
    if(any(is.na(mn$nodes$x)) || any(is.na(mn$nodes$y))){
       vp <- visNetwork(mn$nodes %>% select(-x, -y), mn$edges) %>%
          visIgraphLayout(layout=layout, randomSeed=2)

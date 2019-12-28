@@ -4,7 +4,12 @@
 \alias{auto_layout.RelDataModel}
 \title{Pre-compute \link{RelDataModel} layout when missing any x or y table position}
 \usage{
-\method{auto_layout}{RelDataModel}(x, layout = "layout_nicely", lengthMultiplier = 45 * length(x))
+\method{auto_layout}{RelDataModel}(
+  x,
+  layout = "layout_nicely",
+  lengthMultiplier = 40 * length(x),
+  force = FALSE
+)
 }
 \arguments{
 \item{x}{a \link{RelDataModel}}
@@ -13,7 +18,10 @@
 (Default: "layout_nicely").}
 
 \item{lengthMultiplier}{a numeric value to scale x and y coordinate
-(default: 300)}
+(default: 40*length(x))}
+
+\item{force}{if TRUE autolayout even if all tables have coordinates
+(default: FALSE)}
 }
 \value{
 A \link{RelDataModel}

@@ -58,7 +58,7 @@ buildUi <- function(fromR){
       ## Main menu ----
       fluidRow(
          div(
-            style="display:inline-block; margin-left:5px; margin-right:10px",
+            style="display:inline-block; margin-left:0px; margin-right:10px",
             if(fromR){
                actionButton(
                   "done",
@@ -108,6 +108,10 @@ buildUi <- function(fromR){
             )
          ),
          div(
+            style="display:inline-block; margin-left:5px; margin-right:10px",
+            uiOutput("modelSummary")
+         ),
+         div(
             style="display:inline-block; margin-left:5px; margin-right:5px",
             actionButton(
                "doc", "", icon=icon("question-circle", "fa-2x")
@@ -123,7 +127,7 @@ buildUi <- function(fromR){
             7,
             fluidRow(
                column(
-                  6,
+                  9,
                   style="padding-left:0;",
                   id="findTableDiv",
                   selectInput(
@@ -148,9 +152,16 @@ buildUi <- function(fromR){
                   ))
                ),
                column(
-                  4,
-                  style="padding-left:0; padding-right:0;",
-                  uiOutput("modelSummary")
+                  1,
+                  style="padding-left:0; padding-right:0; text-align:center;",
+                  div(actionButton(
+                     "autoLayout",
+                     label=NULL,
+                     icon=icon("pencil-ruler", "fa-2x")
+                  ), title="Auto layout the model"),
+                  tags$style(HTML(
+                     "#autoLayout{padding-top:2px;padding-bottom:2px;}"
+                  ))
                ),
                column(
                   1,
@@ -271,6 +282,7 @@ buildServer <- function(
          current=1,                 # The position of current model in history
          toImport=NULL,             # Model to import from file
          merged=NULL,               # merge: c(x, toImport)
+         table=NULL,
          indexTable=tibble(
             fields=character(),
             unique=logical()
@@ -352,6 +364,10 @@ buildServer <- function(
             "findTable",
             selected=sort(names(m))
          )
+      })
+      observeEvent(input$autoLayout, {
+         m <- auto_layout(isolate(model$x), force=TRUE)
+         model$new <- m
       })
 
       output$modelSummary <- renderUI({
@@ -671,10 +687,24 @@ buildServer <- function(
       ## Edit table ----
       #########################################################################@
 
+      observe({
+         selTables <- selection$tables
+         m <- model$x
+         if(!is.RelDataModel(m)){
+            model$table <- NULL
+         }else{
+            if(length(selTables)==1 && selTables %in% names(m)){
+               model$table <- m[[selTables]]
+            }else{
+               model$table <- NULL
+            }
+         }
+      })
+
       output$editTable <- renderUI({
-         selTable <- selection$tables
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- model$table
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          div(
             fluidRow(
                column(8, h3(selTable, style="margin-top:6px;")),
@@ -743,8 +773,9 @@ buildServer <- function(
       observe({
          validate(need(input$confirmRenameTable, ""))
          tn <- isolate(input$tableNewName)
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          m <- isolate(model$x)
          if(!is.null(tn) && tn!="" && !tn %in% names(m)){
             m <- rename_table(m, old=selTable, new=tn)
@@ -755,9 +786,9 @@ buildServer <- function(
 
       ## _+ Table commment ----
       output$tableCommentUI <- renderUI({
-         selTable <- selection$tables
-         validate(need(length(selTable)==1, ""))
-         mt <- model$x[[selTable]]
+         mt <- model$table
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fluidRow(
             column(
                10,
@@ -786,10 +817,11 @@ buildServer <- function(
       observe({
          input$refreshComment
          ntn <- input$tableComment
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         m <- isolate(model$x)
-         cc <- m[[selTable]]$display$comment
+         validate(need(length(ntn)>0, ""))
+         mt <- model$table
+         validate(need(mt, ""))
+         selTable <- mt$tableName
+         cc <- mt$display$comment
          ntn <- ifelse(is.na(ntn), "", ntn)
          cc <- ifelse(is.na(cc), "", cc)
          if(ntn==cc){
@@ -805,10 +837,11 @@ buildServer <- function(
          if(nc==""){
             nc <- NA
          }
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
+         cc <- mt$display$comment
          m <- isolate(model$x)
-         cc <- m[[selTable]]$display$comment
          if(
             xor(is.na(nc), is.na(cc)) ||
             (!is.na(nc) && !is.na(cc) && nc!=cc)
@@ -822,9 +855,9 @@ buildServer <- function(
 
       ## _+ Table fields ----
       output$fields <- renderUI({
-         selTable <- selection$tables
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- model$table
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          list(
             fluidRow(
                column(6, h4("Fields")),
@@ -849,7 +882,9 @@ buildServer <- function(
          )
       })
       output$fieldTable <- DT::renderDT({
-         selTable <- selection$tables
+         mt <- model$table
+         # validate(need(mt, ""))
+         # selTable <- mt$tableName
          isolate(model$fieldTable) %>%
             select(-comment) %>%
             DT::datatable(
@@ -869,9 +904,9 @@ buildServer <- function(
       })
       proxyFieldTable <- DT::dataTableProxy("fieldTable")
       observe({
-         selTable <- selection$tables
-         validate(need(length(selTable)==1, ""))
-         mt <- model$x[[selTable]]
+         mt <- model$table
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          model$fieldTable <- mt$fields
       })
       observe({
@@ -886,9 +921,9 @@ buildServer <- function(
          seli <- input$fieldTable_rows_selected
          validate(need(length(seli)==1, ""))
          validate(need(nrow(model$fieldTable)>0, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          validate(need(nrow(mt$fields)>0, ""))
          validate(need(seli>=1 & seli <= nrow(mt$fields), ""))
          p(
@@ -901,9 +936,9 @@ buildServer <- function(
          seli <- input$fieldTable_rows_selected
          validate(need(length(seli)==1, ""))
          validate(need(nrow(model$fieldTable)>0, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          validate(need(nrow(mt$fields)>0, ""))
          validate(need(seli>=1 & seli <= nrow(mt$fields), ""))
          div(
@@ -931,10 +966,10 @@ buildServer <- function(
          validate(need(input$removeField>0, ""))
          seli <- isolate(input$fieldTable_rows_selected)
          validate(need(length(seli)==1, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          m <- isolate(model$x)
-         mt <- m[[selTable]]
          validate(need(nrow(mt$fields)>0, ""))
          fn <- mt$fields$name[seli]
          m <- try(m %>% remove_field(
@@ -963,9 +998,9 @@ buildServer <- function(
       })
       ## __- Add field ----
       observeEvent(input$addField, {
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fields <- mt$fields
          showModal(modalDialog(
             title="Add field",
@@ -1008,9 +1043,9 @@ buildServer <- function(
       })
       observe({
          nfn <- input$newFieldName
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fields <- mt$fields
          if(
             length(nfn)==0 ||
@@ -1024,17 +1059,17 @@ buildServer <- function(
          }
       })
       output$existingNewField <- renderUI({
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fields <- mt$fields
          validate(need(input$newFieldName %in% fields$name, ""))
          p("Field name already used", style="color:red;font-weight: bold;")
       })
       observeEvent(input$confirmAddField, {
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fields <- mt$fields
          nfn <- isolate(input$newFieldName)
          validate(need(
@@ -1062,9 +1097,9 @@ buildServer <- function(
       observeEvent(input$updateField, {
          seli <- isolate(input$fieldTable_rows_selected)
          validate(need(length(seli)==1, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fields <- mt$fields
          validate(need(nrow(fields)>0, ""))
          showModal(modalDialog(
@@ -1113,9 +1148,9 @@ buildServer <- function(
          nfn <- input$fieldName
          seli <- isolate(input$fieldTable_rows_selected)
          validate(need(length(seli)==1, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fields <- mt$fields
          if(
             length(nfn)==0 ||
@@ -1132,9 +1167,9 @@ buildServer <- function(
          nfn <- input$fieldName
          seli <- isolate(input$fieldTable_rows_selected)
          validate(need(length(seli)==1, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fields <- mt$fields
          validate(need(nfn %in% fields$name[-seli], ""))
          p("Field name already used", style="color:red;font-weight: bold;")
@@ -1143,9 +1178,9 @@ buildServer <- function(
       observeEvent(input$confirmUpdateField, {
          seli <- isolate(input$fieldTable_rows_selected)
          validate(need(length(seli)==1, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fields <- mt$fields
          nfn <- isolate(input$fieldName)
          validate(need(
@@ -1190,9 +1225,9 @@ buildServer <- function(
 
       ## _+ Table primary key ----
       output$primaryKey <- renderUI({
-         selTable <- selection$tables
-         validate(need(length(selTable)==1, ""))
-         mt <- model$x[[selTable]]
+         mt <- model$table
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fnames <- mt$fields$name
          validate(need(fnames, ""))
          fluidRow(
@@ -1222,10 +1257,10 @@ buildServer <- function(
       observe({
          input$refreshPrimaryKey
          npk <- input$primaryKey
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         m <- isolate(model$x)
-         cpk <- m[[selTable]]$primaryKey
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
+         cpk <- mt$primaryKey
          if(length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk))){
             enable("refreshPrimaryKey")
          }else{
@@ -1236,10 +1271,11 @@ buildServer <- function(
          validate(need(input$refreshPrimaryKey>0, ""))
          npk <- isolate(input$primaryKey)
          # npk <- input$primaryKey
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          m <- isolate(model$x)
-         cpk <- m[[selTable]]$primaryKey
+         cpk <- mt$primaryKey
          if(length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk))){
             model$new <- m %>%
                set_primary_key(tableName=selTable, fieldNames=npk)
@@ -1248,9 +1284,9 @@ buildServer <- function(
 
       ## _+ Table indexes ----
       output$indexes <- renderUI({
-         selTable <- selection$tables
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- model$table
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fnames <- mt$fields$name
          validate(need(fnames, ""))
          list(
@@ -1273,7 +1309,9 @@ buildServer <- function(
          )
       })
       output$indexTable <- DT::renderDT({
-         selTable <- selection$tables
+         mt <- model$table
+         # validate(need(mt, ""))
+         # selTable <- mt$tableName
          isolate(model$indexTable) %>%
             DT::datatable(
                rownames=TRUE,
@@ -1291,9 +1329,9 @@ buildServer <- function(
       })
       proxyIndexTable <- DT::dataTableProxy("indexTable")
       observe({
-         selTable <- selection$tables
-         validate(need(length(selTable)==1, ""))
-         mt <- model$x[[selTable]]
+         mt <- model$table
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          if(length(mt$indexes)>0){
             model$indexTable <- mt$indexes %>%
                lapply(function(x){
@@ -1322,9 +1360,9 @@ buildServer <- function(
          seli <- input$indexTable_rows_selected
          validate(need(length(seli)==1, ""))
          validate(need(nrow(model$indexTable)>0, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          validate(need(length(mt$indexes)>0, ""))
          validate(need(seli>=1 & seli <= length(mt$indexes), ""))
          ui <- mt$indexes[[seli]]$unique
@@ -1351,9 +1389,9 @@ buildServer <- function(
          seli <- isolate(input$indexTable_rows_selected)
          validate(need(length(seli)==1, ""))
          validate(need(nrow(model$indexTable)>0, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          validate(need(length(mt$indexes)>0, ""))
          validate(need(seli>=1 & seli <= length(mt$indexes), ""))
          ui <- mt$indexes[[seli]]$unique
@@ -1369,11 +1407,11 @@ buildServer <- function(
          validate(need(!is.null(ui) && !is.na(ui), ""))
          seli <- isolate(input$indexTable_rows_selected)
          validate(need(length(seli)==1, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         m <- isolate(model$x)
-         mt <- m[[selTable]]
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          validate(need(length(mt$indexes)>0, ""))
+         m <- isolate(model$x)
          if(mt$indexes[[seli]]$unique!=ui){
             m <- m %>% set_unique_index(
                tableName=selTable,
@@ -1389,11 +1427,11 @@ buildServer <- function(
          validate(need(input$removeIndex>0, ""))
          seli <- isolate(input$indexTable_rows_selected)
          validate(need(length(seli)==1, ""))
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         m <- isolate(model$x)
-         mt <- m[[selTable]]
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          validate(need(length(mt$indexes)>0, ""))
+         m <- isolate(model$x)
          m <- m %>% remove_index(
             tableName=selTable,
             fieldNames=mt$indexes[[seli]]$fields
@@ -1402,9 +1440,9 @@ buildServer <- function(
       })
       ## __- Add index ----
       observeEvent(input$addIndex, {
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
-         mt <- isolate(model$x[[selTable]])
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          fnames <- mt$fields$name
          showModal(modalDialog(
             title="Add index",
@@ -1437,8 +1475,9 @@ buildServer <- function(
          }
       })
       observeEvent(input$confirmAddIndex, {
-         selTable <- isolate(selection$tables)
-         validate(need(length(selTable)==1, ""))
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
          validate(need(length(input$newIndexFields)>0, ""))
          nm <- isolate(model$x) %>%
             add_index(
@@ -1979,8 +2018,6 @@ buildServer <- function(
       })
 
       observe({
-         # selTables <- intersect(names(model$x), selection$tables)
-         # selection$tables <- sort(selTables)
          selTables <- selection$tables
          validate(need(!isolate(selection$fromVN), ""))
          visNetworkProxy("modelNet") %>%
@@ -1988,11 +2025,6 @@ buildServer <- function(
       })
 
       observe({
-         # selFK <- intersect(
-         #    modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id,
-         #    selection$fk
-         # )
-         # selection$fk <- sort(selFK)
          selFK <- selection$fk
          selTables <- intersect(names(model$x), selection$tables)
          validate(need(!isolate(selection$fromVN), ""))
@@ -2005,6 +2037,17 @@ buildServer <- function(
       #########################################################################@
       ## Manage history ----
       #########################################################################@
+
+      observe({
+         m <- model$x
+         mn <- modelToVn(m)
+         selection$tables <- sort(intersect(
+            isolate(selection$tables), names(m)
+         ))
+         selection$fk <- sort(intersect(
+            isolate(selection$fk), mn$edges$id
+         ))
+      })
 
       observe({
          validate(need(input$undo, ""))
