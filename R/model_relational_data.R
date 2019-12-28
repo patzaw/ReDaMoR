@@ -416,9 +416,12 @@ buildServer <- function(
          visNetworkProxy("modelNet") %>% visGetNodes()
       })
 
+
+      modelNet_selectedNodes <- reactive({input$modelNet_selectedNodes}) %>%
+         debounce(500)
       observe({
          selTables <- intersect(
-            input$modelNet_selectedNodes,
+            modelNet_selectedNodes(),
             names(model$x)
          ) %>% sort()
          selection$fromVN <- TRUE
@@ -429,9 +432,11 @@ buildServer <- function(
          }
       })
 
+      modelNet_selectedEdges <- reactive({input$modelNet_selectedEdges}) %>%
+         debounce(500)
       observe({
          selFK <- intersect(
-            input$modelNet_selectedEdges,
+            modelNet_selectedEdges(),
             modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id
          ) %>% sort()
          selection$fromVN <- TRUE
