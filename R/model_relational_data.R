@@ -289,7 +289,8 @@ buildServer <- function(
       selection <- reactiveValues(
          release=0,
          tables=NULL,               # Selected tables
-         fk=NULL                    # Selected foreign keys
+         fk=NULL,                   # Selected foreign keys
+         fromVN=FALSE
       )
 
       #########################################################################@
@@ -330,15 +331,17 @@ buildServer <- function(
          )
       })
       observe({
-         selTables <- input$findTable
+         selTables <- sort(input$findTable)
+         validate(need(!identical(selTables, isolate(selection$tables)), ""))
          mn <- isolate(model$x) %>% modelToVn()
          selFK <- mn$edges %>%
             filter(from %in% selTables | to %in% selTables) %>%
             pull(id)
+         selection$fromVN <- FALSE
          if(length(selTables)==0){
             selection$tables <- NULL
          }else{
-            selection$tables <- sort(selTables)
+            selection$tables <- selTables
          }
          selection$release <- isolate(selection$release)+1
       })
@@ -375,6 +378,7 @@ buildServer <- function(
 
       output$modelNet <- renderVisNetwork({
          replot$x
+         selection$fromVN <- FALSE
          selection$tables <- NULL
          selection$fk <- NULL
          plot(isolate(model$x), color=isolate(settings$defaultColor)) %>%
@@ -401,6 +405,7 @@ buildServer <- function(
             input$modelNet_selectedNodes,
             names(model$x)
          ) %>% sort()
+         selection$fromVN <- TRUE
          if(length(selTables)==0){
             selection$tables <- NULL
          }else{
@@ -413,6 +418,7 @@ buildServer <- function(
             input$modelNet_selectedEdges,
             modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id
          ) %>% sort()
+         selection$fromVN <- TRUE
          if(length(selFK)==0){
             selection$fk <- NULL
          }else{
@@ -770,7 +776,8 @@ buildServer <- function(
                actionButton(
                   "refreshComment",
                   label=NULL,
-                  icon=icon("sync-alt", "fa-1x")
+                  icon=icon("check", "fa-1x"),
+                  class="btn btn-default action-button shiny-bound-input disabled"
                ) %>% div(title="Update table comment"),
                style="text-align:right;"
             )
@@ -1189,20 +1196,46 @@ buildServer <- function(
          fnames <- mt$fields$name
          validate(need(fnames, ""))
          fluidRow(
-            column(4, h4("Primary key")),
+            column(3, h4("Primary key")),
             column(
-               8,
+               7,
                selectInput(
                   "primaryKey", label=NULL,
                   choices=fnames,
                   selected=mt$primaryKey,
-                  multiple=TRUE
+                  multiple=TRUE,
+                  width="100%"
                )
+            ),
+            column(
+               2,
+               actionButton(
+                  "refreshPrimaryKey",
+                  label=NULL,
+                  icon=icon("check", "fa-1x"),
+                  class="btn btn-default action-button shiny-bound-input disabled"
+               ) %>% div(title="Update table primary key"),
+               style="text-align:right;"
             )
          )
       })
       observe({
+         input$refreshPrimaryKey
          npk <- input$primaryKey
+         selTable <- isolate(selection$tables)
+         validate(need(length(selTable)==1, ""))
+         m <- isolate(model$x)
+         cpk <- m[[selTable]]$primaryKey
+         if(length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk))){
+            enable("refreshPrimaryKey")
+         }else{
+            disable("refreshPrimaryKey")
+         }
+      })
+      observe({
+         validate(need(input$refreshPrimaryKey>0, ""))
+         npk <- isolate(input$primaryKey)
+         # npk <- input$primaryKey
          selTable <- isolate(selection$tables)
          validate(need(length(selTable)==1, ""))
          m <- isolate(model$x)
@@ -1430,7 +1463,7 @@ buildServer <- function(
          return(div(
             uiOutput(
                "setTableColor",
-               style="display: inline-block; margin-right:15px; width:100px;"
+               style="display: inline-block; margin-right:15px; width:75px;"
             ),
             uiOutput(
                "addFKInput",
@@ -1450,9 +1483,9 @@ buildServer <- function(
          selTable <- selection$tables
          validate(need(length(selTable)>0 & length(selTable)<=2, ""))
          actionButton(
-            "addForeignKey", "Add foreign key",
+            "addForeignKey", "Add key",
             icon=icon("external-link-alt", "fa-2x")
-         )
+         ) %>% div(title="Add a foreign key")
       })
       output$rmFKInput <- renderUI({
          selFK <- selection$fk
@@ -1461,9 +1494,9 @@ buildServer <- function(
             "removeFK",
             label=HTML(paste(
                '<i class="far fa-trash-alt fa-2x"></i>',
-               'Remove foreign keys'
+               'Remove keys'
             ))
-         )
+         ) %>% div(title="Remove selected foreign keys")
       })
       output$rmTablesInput <- renderUI({
          selTable <- selection$tables
@@ -1474,7 +1507,7 @@ buildServer <- function(
                '<i class="fas fa-trash fa-2x"></i>',
                'Remove tables'
             ))
-         )
+         ) %>% div(title="Remove selected tables")
       })
 
       #########################################################################@
@@ -1885,6 +1918,7 @@ buildServer <- function(
                }
             )
             class(m) <- c("RelDataModel", "list")
+            attr(m, "updateVis") <- FALSE
             model$new <- m
          }
       })
@@ -1896,6 +1930,11 @@ buildServer <- function(
       observe({
          nm <- model$new
          validate(need(nm, ""))
+         updateVis <- attr(nm, "updateVis")
+         if(is.null(updateVis)){
+            updateVis <- TRUE
+         }
+         attr(nm, "updateVis") <- NULL
          dm <- isolate(model$x)
          validate(need(!identical(nm, dm), ""))
 
@@ -1905,21 +1944,23 @@ buildServer <- function(
             toReplot <- TRUE
          }else{
             toReplot <- FALSE
-            ndm <- modelToVn(dm, color=isolate(settings$defaultColor))
-            ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
-            edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
-            if(length(edgeToDel)>0){
+            if(updateVis){
+               ndm <- modelToVn(dm, color=isolate(settings$defaultColor))
+               ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
+               edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
+               if(length(edgeToDel)>0){
+                  visNetworkProxy("modelNet") %>%
+                     visRemoveEdges(edgeToDel)
+               }
+               nodeToDel <- setdiff(names(dm), names(tdm))
+               if(length(nodeToDel)>0){
+                  visNetworkProxy("modelNet") %>%
+                     visRemoveNodes(nodeToDel)
+               }
                visNetworkProxy("modelNet") %>%
-                  visRemoveEdges(edgeToDel)
+                  visUpdateNodes(ntdm$nodes) %>%
+                  visUpdateEdges(ntdm$edges)
             }
-            nodeToDel <- setdiff(names(dm), names(tdm))
-            if(length(nodeToDel)>0){
-               visNetworkProxy("modelNet") %>%
-                  visRemoveNodes(nodeToDel)
-            }
-            visNetworkProxy("modelNet") %>%
-               visUpdateNodes(ntdm$nodes) %>%
-               visUpdateEdges(ntdm$edges)
          }
          ##
 
@@ -1941,6 +1982,7 @@ buildServer <- function(
          # selTables <- intersect(names(model$x), selection$tables)
          # selection$tables <- sort(selTables)
          selTables <- selection$tables
+         validate(need(!isolate(selection$fromVN), ""))
          visNetworkProxy("modelNet") %>%
             visSelectNodes(selTables)
       })
@@ -1953,6 +1995,7 @@ buildServer <- function(
          # selection$fk <- sort(selFK)
          selFK <- selection$fk
          selTables <- intersect(names(model$x), selection$tables)
+         validate(need(!isolate(selection$fromVN), ""))
          if(length(selTables)==0){
             visNetworkProxy("modelNet") %>%
                visSelectEdges(selFK)

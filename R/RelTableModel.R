@@ -325,3 +325,40 @@ col_types.RelTableModel <- function(x){
       )
    )
 }
+
+###############################################################################@
+#' Correct the constraints of a table to make them consistent
+#'
+#' @param x a [RelTableModel] object
+#'
+#' @export
+#'
+correct_constraints.RelTableModel <- function(x){
+   ## Primary key uniqueness
+   if(length(x$primaryKey)==1){
+      x$fields[which(x$fields$name==x$primaryKey), "unique"] <- TRUE
+      x$fields[which(x$fields$name==x$primaryKey), "nullable"] <- FALSE
+   }
+   ## Index uniqueness
+   if(length(x$indexes)>0){
+      for(i in 1:length(x$indexes)){
+         if(x$indexes[[i]]$unique && length(x$indexes[[i]]$fields)==1){
+            x$fields[
+               which(x$fields$name==x$indexes[[i]]$fields), "unique"
+               ] <- TRUE
+         }
+      }
+   }
+   ## Field uniqueness
+   uniqueFields <- x$fields %>% filter(unique) %>% pull(name)
+   if(length(x$indexes)>0 && length(uniqueFields)>0){
+      for(i in 1:length(x$indexes)){
+         if(any(x$indexes[[i]]$fields %in% uniqueFields)){
+            x$indexes[[i]]$unique <- TRUE
+         }
+      }
+   }
+   ##
+   return(x)
+}
+

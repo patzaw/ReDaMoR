@@ -35,6 +35,7 @@ RelDataModel <- function(l, checkFK=TRUE){
       stop(sprintf("%s are reserved words", paste(PCKRESERVED, collapse=", ")))
    }
    names(toRet) <- tn
+   toRet <- lapply(toRet, correct_constraints)
    class(toRet) <- c("RelDataModel", class(toRet))
    if(checkFK){
       check_foreign_keys(toRet)

@@ -139,4 +139,9 @@ auto_layout <- function(x, ...){
    UseMethod("auto_layout", x)
 }
 
-
+###############################################################################@
+#' @export
+#'
+correct_constraints <- function(x, ...){
+   UseMethod("correct_constraints", x)
+}
