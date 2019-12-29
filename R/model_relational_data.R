@@ -112,7 +112,7 @@ buildUi <- function(fromR){
             uiOutput("modelSummary")
          ),
          div(
-            style="display:inline-block; margin-left:5px; margin-right:5px",
+            style="display:inline-block; margin-left:5px; margin-right:5px;",
             actionButton(
                "doc", "", icon=icon("question-circle", "fa-2x")
             ) %>% div(title="Documentation")
@@ -268,6 +268,11 @@ buildServer <- function(
             context$x <- ctxt
          }
       )
+      observeEvent(input$docImp, {
+         docx <- rintrosteps[c("Import")] %>%
+            do.call(rbind, .)
+         rintrojs::introjs(session, options = list(steps=docx))
+      })
 
       rintrojs::introjs(session, options = list(steps=rintrosteps[["main"]]))
 
@@ -468,7 +473,7 @@ buildServer <- function(
          list(
             fluidRow(
                column(
-                  6,
+                  4,
                   fileInput(
                      "impModel", "Choose an sql or a json file",
                      multiple=FALSE,
@@ -477,7 +482,31 @@ buildServer <- function(
                   ),
                   style="text-align:left;"
                ),
-               column(6, uiOutput("exampleModel"), style="text-align:left;")
+               column(2, uiOutput("exampleModel"), style="text-align:left;"),
+               column(
+                  4,
+                  fileInput(
+                     "infModel",
+                     paste(
+                        "Choose data files (text files) from which",
+                        "the data model should be inferred."
+                     ),
+                     multiple=TRUE,
+                     accept=c(".txt", ".csv", ".tsv"),
+                     width="100%"
+                  ),
+                  style="text-align:left;"
+               ),
+               column(
+                  2,
+                  div(
+                     style="display:inline-block; margin-right:5px;",
+                     actionButton(
+                        "docImp", "", icon=icon("question-circle", "fa-2x")
+                     ) %>% div(title="Documentation")
+                  ),
+                  style="text-align:right;"
+               )
             ),
             fluidRow(uiOutput("impModel"))
          )
@@ -539,6 +568,7 @@ buildServer <- function(
          }
       })
 
+      ## _+ From model ----
       observe({
          fi <- input$impModel
          validate(need(fi, ""))
@@ -568,6 +598,7 @@ buildServer <- function(
          }
       })
 
+      ## _+ From example ----
       observeEvent(input$exampleLink, {
          validate(need(file.exists(example), ""))
          mi <- try(read_json_data_model(example), silent=TRUE)
@@ -576,6 +607,70 @@ buildServer <- function(
          }
          validate(need(mi, ""))
          model$toImport <-  auto_layout(mi, lengthMultiplier=45*length(mi))
+      })
+
+      ## _+ From data files ----
+      observe({
+         fi <- input$infModel
+         validate(need(fi, ""))
+         fiext <- regexpr(
+            "(\\.[[:alnum:]]+)(\\.gz)?$", fi$name, ignore.case=TRUE
+         )
+         fiext <- substr(
+            fi$name, fiext, fiext+attr(fiext, "match.length")-1
+         ) %>% tolower() %>% unique()
+         if(length(fiext)==0){
+            model$toImport <- paste(
+               "Selected files have several extensions.",
+               "You should select files with the same extension:",
+               ".csv (comma separated values),",
+               "tsv or .txt (tab separated values)"
+            )
+         }
+         validate(need(length(fiext)==1, ""))
+         supportedExt <- c(".csv", ".tsv", ".txt")
+         if(!fiext %in% supportedExt){
+            model$toImport <- paste(
+               "File extension should be one of the following:",
+               ".csv (comma separated values),",
+               "tsv or .txt (tab separated values)"
+            )
+         }
+         validate(need(fiext %in% supportedExt, ""))
+         if(fiext==".csv"){
+            delim=","
+         }
+         if(fiext %in% c(".tsv", ".txt")){
+            delim="\t"
+         }
+         dfEnvir <- new.env()
+         for(i in 1:nrow(fi)){
+            tv <- try(
+               suppressMessages(
+                  readr::read_delim(file=fi$datapath[i], delim=delim)
+               ),
+               silent=TRUE
+            )
+            if(!is.data.frame(tv)){
+               dfEnvir <- tv
+               break()
+            }else{
+               assign(
+                  sub("(\\.[[:alnum:]]+)(\\.gz)?$", "", fi$name[i]),
+                  tv,
+                  envir=dfEnvir
+               )
+            }
+         }
+         if(!is.environment(dfEnvir)){
+            model$toImport <- dfEnvir
+         }else{
+            model$toImport <- df_to_model(
+               list=ls(envir=dfEnvir, all.names=TRUE),
+               envir=dfEnvir
+            ) %>%
+               auto_layout(lengthMultiplier=45*length(.))
+         }
       })
 
       observe({

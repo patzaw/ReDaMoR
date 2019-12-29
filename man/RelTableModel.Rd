@@ -32,6 +32,13 @@ as a list with the following elements:
 \item \emph{order}: character
 \item \emph{unique}: logical
 }
+\item \strong{display}: a list gathering:
+\itemize{
+\item \emph{x}: single numeric value for the x position of the table
+\item \emph{y}: single numeric value for the y position of the table
+\item \emph{color}: single character value corresponding to the color of the table
+\item \emph{comment}: single character value with some description of the table
+}
 }}
 }
 \value{

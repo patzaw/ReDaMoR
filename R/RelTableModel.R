@@ -19,6 +19,11 @@
 #'    + *field*: character (all in fields$name)
 #'    + *order*: character
 #'    + *unique*: logical
+#' - **display**: a list gathering:
+#'    + *x*: single numeric value for the x position of the table
+#'    + *y*: single numeric value for the y position of the table
+#'    + *color*: single character value corresponding to the color of the table
+#'    + *comment*: single character value with some description of the table
 #'
 #' @return A RelTableModel object.
 #'
