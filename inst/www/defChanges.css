@@ -40,3 +40,10 @@
 .modal-footer{
   display: none;
 }
+
+.introjs-fixParent.modal {
+  z-index:1050 !important;
+}
+.modal-open > .introjs-helperLayer {
+  background-color:transparent;
+}

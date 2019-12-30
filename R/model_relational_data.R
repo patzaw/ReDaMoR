@@ -473,32 +473,36 @@ buildServer <- function(
          list(
             fluidRow(
                column(
-                  4,
-                  fileInput(
+                  6,
+                  div(fileInput(
                      "impModel", "Choose an sql or a json file",
                      multiple=FALSE,
                      accept=c(".sql", ".json", ".sql.gz", ".json.gz"),
                      width="100%"
-                  ),
-                  style="text-align:left;"
-               ),
-               column(2, uiOutput("exampleModel"), style="text-align:left;"),
-               column(
-                  4,
-                  fileInput(
-                     "infModel",
-                     paste(
-                        "Choose data files (text files) from which",
-                        "the data model should be inferred."
-                     ),
-                     multiple=TRUE,
-                     accept=c(".txt", ".csv", ".tsv"),
-                     width="100%"
-                  ),
+                  ), id="impModelCol"),
                   style="text-align:left;"
                ),
                column(
                   2,
+                  uiOutput("exampleModel"),
+                  style="text-align:left;"
+               ),
+               # column(
+               #    4,
+               #    div(fileInput(
+               #       "infModel",
+               #       paste(
+               #          "Choose data files from which",
+               #          "the data model should be inferred."
+               #       ),
+               #       multiple=TRUE,
+               #       accept=c(".txt", ".csv", ".tsv"),
+               #       width="100%"
+               #    ), id="infModelCol"),
+               #    style="text-align:left;"
+               # ),
+               column(
+                  4,
                   div(
                      style="display:inline-block; margin-right:5px;",
                      actionButton(
@@ -512,33 +516,21 @@ buildServer <- function(
          )
       })
 
-      output$exampleModel <- renderUI({
-         validate(need(file.exists(example), ""))
-         m <- try(read_json_data_model(example), silent=TRUE)
-         if(!is.RelDataModel(m)){
-            m <- try(read_SQL_data_model(example), silent=TRUE)
-         }
-         validate(need(m, ""))
-         actionLink("exampleLink", label="Try an example")
-      })
-
+      ## _+ Import preview ----
       output$impModel <- renderUI({
          mi <- model$toImport
          validate(need(!is.null(mi), ""))
          if(!is.RelDataModel(mi)){
             list(p(mi, style="color:red;font-weight: bold;"))
          }else{
-
-         list(
-            div(
-               visNetworkOutput("impModelNet", height="65vh", width="100%"),
-               style="border:solid; min-height:65vh;"
-            ),
-            uiOutput("impMessage")
-         )
-
+            list(
+               div(
+                  visNetworkOutput("impModelNet", height="65vh", width="100%"),
+                  style="border:solid; min-height:65vh;"
+               ),
+               uiOutput("impMessage")
+            )
          }
-
       })
 
       output$impModelNet <- renderVisNetwork({
@@ -599,6 +591,15 @@ buildServer <- function(
       })
 
       ## _+ From example ----
+      output$exampleModel <- renderUI({
+         validate(need(file.exists(example), ""))
+         m <- try(read_json_data_model(example), silent=TRUE)
+         if(!is.RelDataModel(m)){
+            m <- try(read_SQL_data_model(example), silent=TRUE)
+         }
+         validate(need(m, ""))
+         actionLink("exampleLink", label="Try an example")
+      })
       observeEvent(input$exampleLink, {
          validate(need(file.exists(example), ""))
          mi <- try(read_json_data_model(example), silent=TRUE)
@@ -609,70 +610,71 @@ buildServer <- function(
          model$toImport <-  auto_layout(mi, lengthMultiplier=45*length(mi))
       })
 
-      ## _+ From data files ----
-      observe({
-         fi <- input$infModel
-         validate(need(fi, ""))
-         fiext <- regexpr(
-            "(\\.[[:alnum:]]+)(\\.gz)?$", fi$name, ignore.case=TRUE
-         )
-         fiext <- substr(
-            fi$name, fiext, fiext+attr(fiext, "match.length")-1
-         ) %>% tolower() %>% unique()
-         if(length(fiext)==0){
-            model$toImport <- paste(
-               "Selected files have several extensions.",
-               "You should select files with the same extension:",
-               ".csv (comma separated values),",
-               "tsv or .txt (tab separated values)"
-            )
-         }
-         validate(need(length(fiext)==1, ""))
-         supportedExt <- c(".csv", ".tsv", ".txt")
-         if(!fiext %in% supportedExt){
-            model$toImport <- paste(
-               "File extension should be one of the following:",
-               ".csv (comma separated values),",
-               "tsv or .txt (tab separated values)"
-            )
-         }
-         validate(need(fiext %in% supportedExt, ""))
-         if(fiext==".csv"){
-            delim=","
-         }
-         if(fiext %in% c(".tsv", ".txt")){
-            delim="\t"
-         }
-         dfEnvir <- new.env()
-         for(i in 1:nrow(fi)){
-            tv <- try(
-               suppressMessages(
-                  readr::read_delim(file=fi$datapath[i], delim=delim)
-               ),
-               silent=TRUE
-            )
-            if(!is.data.frame(tv)){
-               dfEnvir <- tv
-               break()
-            }else{
-               assign(
-                  sub("(\\.[[:alnum:]]+)(\\.gz)?$", "", fi$name[i]),
-                  tv,
-                  envir=dfEnvir
-               )
-            }
-         }
-         if(!is.environment(dfEnvir)){
-            model$toImport <- dfEnvir
-         }else{
-            model$toImport <- df_to_model(
-               list=ls(envir=dfEnvir, all.names=TRUE),
-               envir=dfEnvir
-            ) %>%
-               auto_layout(lengthMultiplier=45*length(.))
-         }
-      })
+      # ## _+ From data files ----
+      # observe({
+      #    fi <- input$infModel
+      #    validate(need(fi, ""))
+      #    fiext <- regexpr(
+      #       "(\\.[[:alnum:]]+)(\\.gz)?$", fi$name, ignore.case=TRUE
+      #    )
+      #    fiext <- substr(
+      #       fi$name, fiext, fiext+attr(fiext, "match.length")-1
+      #    ) %>% tolower() %>% unique()
+      #    if(length(fiext)==0){
+      #       model$toImport <- paste(
+      #          "Selected files have several extensions.",
+      #          "You should select files with the same extension:",
+      #          ".csv (comma separated values),",
+      #          "tsv or .txt (tab separated values)"
+      #       )
+      #    }
+      #    validate(need(length(fiext)==1, ""))
+      #    supportedExt <- c(".csv", ".tsv", ".txt")
+      #    if(!fiext %in% supportedExt){
+      #       model$toImport <- paste(
+      #          "File extension should be one of the following:",
+      #          ".csv (comma separated values),",
+      #          "tsv or .txt (tab separated values)"
+      #       )
+      #    }
+      #    validate(need(fiext %in% supportedExt, ""))
+      #    if(fiext==".csv"){
+      #       delim=","
+      #    }
+      #    if(fiext %in% c(".tsv", ".txt")){
+      #       delim="\t"
+      #    }
+      #    dfEnvir <- new.env()
+      #    for(i in 1:nrow(fi)){
+      #       tv <- try(
+      #          suppressMessages(
+      #             readr::read_delim(file=fi$datapath[i], delim=delim)
+      #          ),
+      #          silent=TRUE
+      #       )
+      #       if(!is.data.frame(tv)){
+      #          dfEnvir <- tv
+      #          break()
+      #       }else{
+      #          assign(
+      #             sub("(\\.[[:alnum:]]+)(\\.gz)?$", "", fi$name[i]),
+      #             tv,
+      #             envir=dfEnvir
+      #          )
+      #       }
+      #    }
+      #    if(!is.environment(dfEnvir)){
+      #       model$toImport <- dfEnvir
+      #    }else{
+      #       model$toImport <- df_to_model(
+      #          list=ls(envir=dfEnvir, all.names=TRUE),
+      #          envir=dfEnvir
+      #       ) %>%
+      #          auto_layout(lengthMultiplier=45*length(.))
+      #    }
+      # })
 
+      ## _+ Validate import ----
       observe({
          validate(need(input$importValidate, ""))
          mm <- isolate(model$merged)
