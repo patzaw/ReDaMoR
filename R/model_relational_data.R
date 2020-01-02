@@ -187,7 +187,24 @@ buildUi <- function(fromR){
             5,
 
             ## Multiple tables ----
-            uiOutput("multiTables"),
+            div(
+               uiOutput(
+                  "setTableColor",
+                  style="display: inline-block; margin-right:15px; width:75px;"
+               ),
+               uiOutput(
+                  "addFKInput",
+                  style="display: inline-block; margin-right:15px;"
+               ),
+               uiOutput(
+                  "rmFKInput",
+                  style="display: inline-block; margin-right:15px;"),
+               uiOutput(
+                  "rmTablesInput",
+                  style="display: inline-block;"
+               ),
+               style="padding-bottom:5px; text-align:center;"
+            ),
 
             ## Edit table ----
             uiOutput("editTable")
@@ -422,7 +439,9 @@ buildServer <- function(
       })
 
 
-      modelNet_selectedNodes <- reactive({input$modelNet_selectedNodes}) %>%
+      modelNet_selectedNodes <- reactive({
+         input$modelNet_selectedNodes
+      }) %>%
          debounce(500)
       observe({
          selTables <- intersect(
@@ -1597,29 +1616,6 @@ buildServer <- function(
       ## Multiple tables ----
       #########################################################################@
 
-      output$multiTables <- renderUI({
-         selTable <- selection$tables
-         selFK <- selection$fk
-         validate(need(length(selTable)>0 || length(selFK)>0, ""))
-         return(div(
-            uiOutput(
-               "setTableColor",
-               style="display: inline-block; margin-right:15px; width:75px;"
-            ),
-            uiOutput(
-               "addFKInput",
-               style="display: inline-block; margin-right:15px;"
-            ),
-            uiOutput(
-               "rmFKInput",
-               style="display: inline-block; margin-right:15px;"),
-            uiOutput(
-               "rmTablesInput",
-               style="display: inline-block;"
-            ),
-            style="padding-bottom:5px; text-align:center;"
-         ))
-      })
       output$addFKInput <- renderUI({
          selTable <- selection$tables
          validate(need(length(selTable)>0 & length(selTable)<=2, ""))
