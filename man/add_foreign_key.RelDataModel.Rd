@@ -4,7 +4,17 @@
 \alias{add_foreign_key.RelDataModel}
 \title{Add a foreign key between two tables}
 \usage{
-\method{add_foreign_key}{RelDataModel}(x, fromTable, fromFields, toTable, toFields)
+\method{add_foreign_key}{RelDataModel}(
+  x,
+  fromTable,
+  fromFields,
+  toTable,
+  toFields,
+  fmin = 0L,
+  fmax = -1L,
+  tmin = 1L,
+  tmax = 1L
+)
 }
 \arguments{
 \item{x}{a \link{RelDataModel}}
@@ -16,6 +26,14 @@
 \item{toTable}{the name of the referenced table}
 
 \item{toFields}{the names of the referenced fields}
+
+\item{fmin:}{from minimum cardinality (default: 0L)}
+
+\item{fmax:}{from maximum cardinality (default: -1L ==> Infinite)}
+
+\item{tmin:}{to minimum cardinality (default: 1L)}
+
+\item{tmax:}{to maximum cardinality (default: 1L)}
 }
 \value{
 A \link{RelDataModel}

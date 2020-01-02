@@ -184,23 +184,43 @@ modelToVn <- function(
             function(k){
                to <- k$refTable
                kt <- k$key %>% arrange(from, to)
+               kcard <- ifelse(k$cardinality==-1, "n", k$cardinality)
+               fcard <- paste(kcard["fmin"], kcard["fmax"], sep="..")
+               tcard <- paste(kcard["tmin"], kcard["tmax"], sep="..")
                title <- paste0(
-                  '<tr style="border: 1px solid black">',
-                  '<td style="border: 1px solid black">', kt$from,
+                  '<tr style="border: 1px solid black; padding:1px;">',
+                  '<td style="border: 1px solid black; padding:1px;">',
+                     c(kt$from),
                   '</td>',
-                  '<td style="border: 1px solid black">', kt$to,
+                  '<td style="border: 1px solid black; padding:1px;">',
+                     c(kt$to),
                   '</td>',
                   '</tr>'
                )
                title <- paste0(
-                  '<table style="border: 1px solid black">',
-                  '<tr style="border: 1px solid black">',
+                  '<table style="border: 1px solid black; padding:1px;">',
+                  '<tr style="border: 1px solid black; padding:1px;">',
                   sprintf(
-                     '<th style="border: 1px solid black">%s</th>', mt
+                     paste0(
+                        '<th style=',
+                        '"border: 1px solid black; padding:1px;',
+                        'text-align:center;"',
+                        '>',
+                        '%s<br>(%s)',
+                        '</th>'
+                     ),
+                     mt, fcard
                   ),
                   sprintf(
-                     '<th style="border: 1px solid black">%s</th>',
-                     k$refTable
+                     paste0(
+                        '<th style=',
+                        '"border: 1px solid black; padding:1px;',
+                        'text-align:center;"',
+                        '>',
+                        '%s<br>(%s)',
+                        '</th>'
+                     ),
+                     k$refTable, tcard
                   ),
                   '</tr>',
                   paste(title, collapse=""),

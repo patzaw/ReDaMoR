@@ -22,8 +22,15 @@ values should be in fields$name
 \item \strong{foreignKeys}: a list of foreign keys. Each foreigned key is defined
 as a list with the following elements:
 \itemize{
-\item \emph{refTable}: a character vector of lenght one (the referenced table)
+\item \emph{refTable}: a character vector of length one (the referenced table)
 \item \emph{key}: a tibble with a "from" and a "to" columns
+\item (\emph{cardinality}): an optional integer vector with 4 values:
+\itemize{
+\item fmin: from minimum cardinality
+\item fmax: from maximum cardinality
+\item tmin: to minimum cardinality
+\item tmax: to maximum cardinality
+}
 }
 \item \strong{indexes}: a list of indexes. Each index is defined by
 3 columns:

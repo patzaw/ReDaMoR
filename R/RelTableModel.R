@@ -12,8 +12,13 @@
 #' values should be in fields$name
 #' - **foreignKeys**: a list of foreign keys. Each foreigned key is defined
 #' as a list with the following elements:
-#'    + *refTable*: a character vector of lenght one (the referenced table)
+#'    + *refTable*: a character vector of length one (the referenced table)
 #'    + *key*: a tibble with a "from" and a "to" columns
+#'    + (*cardinality*): an optional integer vector with 4 values:
+#'       - fmin: from minimum cardinality
+#'       - fmax: from maximum cardinality
+#'       - tmin: to minimum cardinality
+#'       - tmax: to maximum cardinality
 #' - **indexes**: a list of indexes. Each index is defined by
 #' 3 columns:
 #'    + *field*: character (all in fields$name)
@@ -90,8 +95,8 @@ RelTableModel <- function(l){
       fkn <- c("refTable", "key")
       l$foreignKeys <- lapply(
          l$foreignKeys,
-         function(fk){
-            fk <- fk[fkn]
+         function(fko){
+            fk <- fko[fkn]
             stopifnot(
                all(names(fk) %in% fkn),
                all(fkn %in% names(fk)),
@@ -109,6 +114,33 @@ RelTableModel <- function(l){
                all(fk$key$from %in% l$fields$name)
             )
             fk$key <- as_tibble(fk$key)
+            cnames <- c("fmin", "fmax", "tmin", "tmax")
+            if("cardinality" %in% names(fko)){
+               stopifnot(
+                  is.integer(fko$cardinality),
+                  length(fko$cardinality)==4,
+                  all(
+                     cnames %in%
+                        names(fko$cardinality)
+                  ),
+                  all(!is.na(fko$cardinality)),
+                  all(fko$cardinality >= -1),
+                  fko$cardinality["fmin"] > -1,
+                  fko$cardinality["tmin"] > -1,
+                  fko$cardinality["fmax"]==-1 || (
+                     fko$cardinality["fmax"] > 0 &&
+                     fko$cardinality["fmax"] >= fko$cardinality["fmin"]
+                  ),
+                  fko$cardinality["tmax"]==-1 || (
+                     fko$cardinality["tmax"] > 0 &&
+                     fko$cardinality["tmax"] >= fko$cardinality["tmin"]
+                  )
+               )
+               fk$cardinality <- fko$cardinality[cnames]
+            }else{
+               fk$cardinality <- c(0, -1, 1, 1)
+               names(fk$cardinality) <- cnames
+            }
             return(fk)
          }
       )

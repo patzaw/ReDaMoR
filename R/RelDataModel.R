@@ -342,14 +342,26 @@ toDBM <- function(rdm){
             foreignKeys <- do.call(bind_rows, lapply(
                1:length(tm$foreignKeys),
                function(fki){
-                  tm$foreignKeys[[fki]]$key %>%
+                  fmin <- tm$foreignKeys[[fki]]$cardinality["fmin"]
+                  fmax <- tm$foreignKeys[[fki]]$cardinality["fmax"]
+                  tmin <- tm$foreignKeys[[fki]]$cardinality["tmin"]
+                  tmax <- tm$foreignKeys[[fki]]$cardinality["tmax"]
+                  toRet <- tm$foreignKeys[[fki]]$key %>%
                      mutate(
                         table=tm$tableName,
                         refTable=tm$foreignKeys[[fki]]$refTable,
-                        fki=fki
-                     ) %>%
+                        fki=fki,
+                        fmin=fmin,
+                        fmax=fmax,
+                        tmin=tmin,
+                        tmax=tmax
+                     )
+                  toRet %>%
                      rename("field"="from", "refField"="to") %>%
-                     select(table, fki, field, refTable, refField)
+                     select(
+                        table, fki, field, refTable, refField,
+                        fmin, fmax, tmin, tmax
+                     )
                }
             ))
          }
@@ -473,12 +485,24 @@ fromDBM <- function(dbm){
                   select(-fki) %>%
                   split(x$refTable) %>%
                   lapply(function(y){
-                     list(
+                     toRet <- list(
                         refTable=unique(y$refTable),
                         key=y %>%
                            select(field, refField) %>%
                            rename("from"="field", "to"="refField")
                      )
+                     cnames <- c("fmin", "fmax", "tmin", "tmax")
+                     if(
+                        all(cnames %in% colnames(y))
+                     ){
+                        toRet$cardinality=y %>%
+                           select(fmin, fmax, tmin, tmax) %>%
+                           unique() %>% unlist() %>% as.integer()
+                     }else{
+                        toRet$cardinality=c(0, -1, 1, 1) %>% as.integer()
+                     }
+                     names(toRet$cardinality) <- cnames
+                     return(toRet)
                   }) %>%
                   structure(.Names=NULL)
             }) %>%
@@ -737,13 +761,18 @@ fk_match <- function(
 #' @param fromFields the name of the referencing fields
 #' @param toTable the name of the referenced table
 #' @param toFields the names of the referenced fields
+#' @param fmin: from minimum cardinality (default: 0L)
+#' @param fmax: from maximum cardinality (default: -1L ==> Infinite)
+#' @param tmin: to minimum cardinality (default: 1L)
+#' @param tmax: to maximum cardinality (default: 1L)
 #'
 #' @return A [RelDataModel]
 #'
 #' @export
 #'
 add_foreign_key.RelDataModel <- function(
-   x, fromTable, fromFields, toTable, toFields
+   x, fromTable, fromFields, toTable, toFields,
+   fmin=0L, fmax=-1L, tmin=1L, tmax=1L
 ){
    stopifnot(
       is.character(fromTable), length(fromTable)==1,
@@ -757,7 +786,12 @@ add_foreign_key.RelDataModel <- function(
       all(
          x[[fromTable]]$fields$type[match(fromFields, x[[fromTable]]$fields$name)]==
             x[[toTable]]$fields$type[match(toFields, x[[toTable]]$fields$name)]
-      )
+      ),
+      all(!is.na(c(fmin, fmax, tmin, tmax))),
+      is.integer(fmin), is.integer(fmax), is.integer(tmin), is.integer(tmax),
+      fmin > -1, tmin > -1,
+      fmax==-1 || (fmax > 0 && fmax >= fmin),
+      tmax==-1 || (tmax > 0 && tmax >= tmin)
    )
    efk <- fk_match(x, fromTable, fromFields, toTable, toFields)
    if(length(efk)!=0){
@@ -772,6 +806,12 @@ add_foreign_key.RelDataModel <- function(
          key=tibble(
             from=fromFields,
             to=toFields
+         ),
+         cardinality=c(
+            "fmin"=as.integer(fmin),
+            "fmax"=as.integer(fmax),
+            "tmin"=as.integer(tmin),
+            "tmax"=as.integer(tmax)
          )
       ))
    )

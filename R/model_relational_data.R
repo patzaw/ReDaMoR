@@ -1745,7 +1745,11 @@ buildServer <- function(
          fromTable=NULL,
          toTable=NULL,
          fromFields=NULL,
-         toFields=NULL
+         toFields=NULL,
+         fmin=NULL,
+         fmax=NULL,
+         tmin=NULL,
+         tmax=NULL
       )
 
       observe({
@@ -1773,7 +1777,11 @@ buildServer <- function(
          foreignKey$toTable <- tns[length(tns)]
          div(
             fluidRow(
-               column(5, h4(tns[1]), style="text-align:center;"),
+               column(
+                  5,
+                  fluidRow(h4(tns[1]), style="text-align:center;"),
+                  fluidRow(uiOutput("ilcard"))
+               ),
                if(length(tns)==1){
                   column(
                      2,
@@ -1794,7 +1802,11 @@ buildServer <- function(
                      style="text-align:center;"
                   )
                },
-               column(5, h4(tns[length(tns)]), style="text-align:center;"),
+               column(
+                  5,
+                  fluidRow(h4(tns[length(tns)]), style="text-align:center;"),
+                  fluidRow(uiOutput("ircard"))
+               ),
                style="border-bottom:solid; border-color:#317EAC;"
             ),
             fluidRow(
@@ -2000,10 +2012,85 @@ buildServer <- function(
                fromTable=isolate(foreignKey$fromTable),
                toTable=isolate(foreignKey$toTable),
                fromFields=isolate(foreignKey$fromFields),
-               toFields=isolate(foreignKey$toFields)
+               toFields=isolate(foreignKey$toFields),
+               fmin=isolate(foreignKey$fmin),
+               fmax=isolate(foreignKey$fmax),
+               tmin=isolate(foreignKey$tmin),
+               tmax=isolate(foreignKey$tmax)
             )
          removeModal()
       })
+
+      ## _+ Cardinality ----
+      output$ilcard <- renderUI({
+         tns <- isolate(selection$tables)
+         ft <- foreignKey$fromTable
+         tt <- foreignKey$toTable
+         validate(need(ft, ""))
+         validate(need(tt, ""))
+         m <- isolate(model$x)
+         toRet <- list(
+            column(
+               6,
+               selectInput(
+                  ifelse(tns[1]==ft, "fcardmin", "tcardmin"),
+                  "Min. card.",
+                  choices=c("0", "1"),
+                  selected=ifelse(tns[1]==ft, "0", "1")
+               )
+            ),
+            column(
+               6,
+               selectInput(
+                  ifelse(tns[1]==ft, "fcardmax", "tcardmax"),
+                  "Max. card.",
+                  choices=c("1", "n"),
+                  selected=ifelse(tns[1]==ft, "n", "1")
+               )
+            )
+
+         )
+         return(toRet)
+      })
+      output$ircard <- renderUI({
+         tns <- isolate(selection$tables)
+         ft <- foreignKey$fromTable
+         tt <- foreignKey$toTable
+         validate(need(ft, ""))
+         validate(need(tt, ""))
+         m <- isolate(model$x)
+         toRet <- list(
+            column(
+               6,
+               selectInput(
+                  ifelse(tns[1]!=ft, "fcardmin", "tcardmin"),
+                  "Min. card.",
+                  choices=c("0", "1"),
+                  selected=ifelse(tns[1]!=ft, "0", "1")
+               )
+            ),
+            column(
+               6,
+               selectInput(
+                  ifelse(tns[1]!=ft, "fcardmax", "tcardmax"),
+                  "Max. card.",
+                  choices=c("1", "n"),
+                  selected=ifelse(tns[1]!=ft, "n", "1")
+               )
+            )
+
+         )
+         return(toRet)
+      })
+
+      observe({
+         cval <- c("0"=0L, "1"=1L, "n"=-1L)
+         foreignKey$fmin <- as.integer(cval[input$fcardmin])
+         foreignKey$fmax <- as.integer(cval[input$fcardmax])
+         foreignKey$tmin <- as.integer(cval[input$tcardmin])
+         foreignKey$tmax <- as.integer(cval[input$tcardmax])
+      })
+
 
       #########################################################################@
       ## Remove foreign keys ----
