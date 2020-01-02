@@ -2316,6 +2316,7 @@ buildServer <- function(
 #' @param fromR a logical indicating if the application is launched from R
 #' @param defaultColor a single color indicating the default table color
 #' @param availableColors a character of possible colors for tables
+#' @param example a file path to an sql or json model
 #'
 #' @export
 #'
@@ -2323,11 +2324,15 @@ model_relational_data <- function(
    modelInput=RelDataModel(list()), fromR=interactive(),
    defaultColor="#D9D9D9",
    availableColors=c(
-      "#D9B661", "#E14D7D", "#75E4AE", "#9638E5", "#C6D1DC", "#D8B8E3",
-      "#C663CB", "#7CE65F", "#DF7442", "#E0B8A0", "#D4E355", "#7D76D9",
-      "#6E9DCE", "#E747D7", "#77DFDE", "#CC8490", "#D991D6", "#D0E9CF",
-      "#CAE095", "#6E8D65"
+      "#9BC8FE", "#F67FC4", "#ACF1BC", "#C6BDF1", "#DFFB86",
+      "#F8DEC3", "#8FE6E0", "#FEFE8F", "#FAC6DC", "#A9ECC9"
    ),
+   # availableColors=c(
+   #    "#D9B661", "#E14D7D", "#75E4AE", "#9638E5", "#C6D1DC", "#D8B8E3",
+   #    "#C663CB", "#7CE65F", "#DF7442", "#E0B8A0", "#D4E355", "#7D76D9",
+   #    "#6E9DCE", "#E747D7", "#77DFDE", "#CC8490", "#D991D6", "#D0E9CF",
+   #    "#CAE095", "#6E8D65"
+   # ),
    example=system.file(
       "examples/HPO-model.sql",
       package = packageName()
