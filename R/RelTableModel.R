@@ -79,6 +79,9 @@ RelTableModel <- function(l){
    )
    l$fields <- as_tibble(l$fields) %>%
       select(c("name", "type", "nullable", "unique", "comment"))
+
+   ## * Primary key ----
+   l$primaryKey <- sort(l$primaryKey)
    if(length(l$primaryKey)==1){
       l$fields[
          which(l$fields$name==l$primaryKey),
@@ -166,7 +169,7 @@ RelTableModel <- function(l){
                length(ind$unique)==1,
                all(ind$fields %in% l$fields$name)
             )
-            ind$fields <- unique(ind$fields)
+            ind$fields <- sort(unique(ind$fields))
             return(ind)
          }
       )
@@ -191,6 +194,7 @@ RelTableModel <- function(l){
    ## Creating the object ----
    toRet <- l
    class(toRet) <- c("RelTableModel", class(toRet))
+   toRet <- correct_constraints(toRet)
    return(toRet)
 
 }
@@ -375,6 +379,31 @@ correct_constraints.RelTableModel <- function(x){
    if(length(x$primaryKey)==1){
       x$fields[which(x$fields$name==x$primaryKey), "unique"] <- TRUE
       x$fields[which(x$fields$name==x$primaryKey), "nullable"] <- FALSE
+   }
+   if(length(x$primaryKey)>0){
+      ei <- lapply(
+         x$indexes,
+         function(y){
+            identical(sort(y$fields), sort(x$primaryKey))
+         }
+      ) %>%
+         unlist() %>%
+         as.logical() %>%
+         which()
+      if(length(ei)>1) stop("Check this part of code")
+      if(length(ei)==0){
+         x$indexes <- unique(c(
+            x$indexes,
+            list(
+               list(
+                  fields=sort(x$primaryKey),
+                  unique=TRUE
+               )
+            )
+         ))
+      }else{
+         x$indexes[[ei]]$unique <- TRUE
+      }
    }
    ## Index uniqueness
    if(length(x$indexes)>0){

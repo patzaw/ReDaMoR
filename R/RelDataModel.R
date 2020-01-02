@@ -35,7 +35,81 @@ RelDataModel <- function(l, checkFK=TRUE){
       stop(sprintf("%s are reserved words", paste(PCKRESERVED, collapse=", ")))
    }
    names(toRet) <- tn
+
+   ## Correct constraints ----
+   for(ft in names(toRet)){
+      x <- toRet[[ft]]
+      if(length(x$foreignKey)>0) for(i in 1:length(x$foreignKey)){
+         fk <- x$foreignKey[[i]]
+         if(fk$cardinality["fmin"]>0 && nrow(fk$key)==1){
+            toRet[[fk$refTable]]$fields[
+               which(toRet[[fk$refTable]]$fields$name==fk$key$from),
+               "nullable"
+               ] <- FALSE
+         }
+         if(fk$cardinality["tmin"]>0 && nrow(fk$key)==1){
+            toRet[[ft]]$fields[
+               which(toRet[[ft]]$fields$name==fk$key$from),
+               "nullable"
+               ] <- FALSE
+         }
+
+         if(fk$cardinality["fmax"]==1){
+            ei <- lapply(
+               toRet[[ft]]$indexes,
+               function(y){
+                  identical(sort(y$fields), sort(fk$key$from))
+               }
+            ) %>%
+               unlist() %>%
+               as.logical() %>%
+               which()
+            if(length(ei)>1) stop("Check this part of code")
+            if(length(ei)==0){
+               toRet[[ft]]$indexes <- unique(c(
+                  toRet[[ft]]$indexes,
+                  list(
+                     list(
+                        fields=sort(fk$key$from),
+                        unique=TRUE
+                     )
+                  )
+               ))
+            }else{
+               toRet[[ft]]$indexes[[ei]]$unique <- TRUE
+            }
+         }
+
+         if(fk$cardinality["tmax"]==1){
+            ei <- lapply(
+               toRet[[fk$refTable]]$indexes,
+               function(y){
+                  identical(sort(y$fields), sort(fk$key$to))
+               }
+            ) %>%
+               unlist() %>%
+               as.logical() %>%
+               which()
+            if(length(ei)>1) stop("Check this part of code")
+            if(length(ei)==0){
+               toRet[[fk$refTable]]$indexes <- unique(c(
+                  toRet[[fk$refTable]]$indexes,
+                  list(
+                     list(
+                        fields=sort(fk$key$to),
+                        unique=TRUE
+                     )
+                  )
+               ))
+            }else{
+               toRet[[fk$refTable]]$indexes[[ei]]$unique <- TRUE
+            }
+         }
+      }
+   }
    toRet <- lapply(toRet, correct_constraints)
+
+   ## Return the results ----
    class(toRet) <- c("RelDataModel", class(toRet))
    if(checkFK){
       check_foreign_keys(toRet)
@@ -702,12 +776,13 @@ rename_field.RelDataModel <- function(x, tableName, current, new){
    ] <- new
    ## Adapting primary key ----
    tm$primaryKey[which(tm$primaryKey==current)] <- new
-   ## Adapting indexes
+   tm$primaryKey <- sort(tm$primaryKey)
+   ## Adapting indexes ----
    if(length(tm$indexes)>0) for(i in 1:length(tm$indexes)){
-      tm$indexes[[i]][
-         which(tm$indexes[[i]]$field==current),
-         "field"
+      tm$indexes[[i]]$fields[
+         which(tm$indexes[[i]]$fields==current)
       ] <- new
+      tm$indexes[[i]]$fields <- sort(tm$indexes[[i]]$fields)
    }
    ## Adapting foreign keys ----
    if(length(tm$foreignKeys)>0) for(i in 1:length(tm$foreignKeys)){
@@ -965,7 +1040,7 @@ set_primary_key.RelDataModel <- function(x, tableName, fieldNames){
       all(fieldNames %in% x[[tableName]]$fields$name)
    )
    x <- unclass(x)
-   x[[tableName]]$primaryKey <- fieldNames
+   x[[tableName]]$primaryKey <- sort(fieldNames)
    return(RelDataModel(x))
 }
 
@@ -1006,7 +1081,7 @@ add_index.RelDataModel <- function(x, tableName, fieldNames, unique){
    x <- unclass(x)
    x[[tableName]]$indexes <- c(
       x[[tableName]]$indexes,
-      list(list(fields=fieldNames, unique=unique))
+      list(list(fields=sort(fieldNames), unique=unique))
    )
    return(RelDataModel(x))
 }
