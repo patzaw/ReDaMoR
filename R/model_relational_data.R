@@ -441,8 +441,7 @@ buildServer <- function(
 
       modelNet_selectedNodes <- reactive({
          input$modelNet_selectedNodes
-      }) %>%
-         debounce(500)
+      })# %>% debounce(500)
       observe({
          selTables <- intersect(
             modelNet_selectedNodes(),
