@@ -8,8 +8,8 @@ model_relational_data(
   modelInput = RelDataModel(list()),
   fromR = interactive(),
   defaultColor = "#D9D9D9",
-  availableColors = c("#9BC8FE", "#F67FC4", "#ACF1BC", "#C6BDF1", "#DFFB86", "#F8DEC3",
-    "#8FE6E0", "#FEFE8F", "#FAC6DC", "#A9ECC9"),
+  availableColors = c("#9BC8FE", "#F67FC4", "#C6BDF1", "#DFFB86", "#F8DEC3", "#8FE6E0",
+    "#FEFE8F", "#FAC6DC", "#A9ECC9"),
   example = system.file("examples/HPO-model.sql", package = packageName())
 )
 }

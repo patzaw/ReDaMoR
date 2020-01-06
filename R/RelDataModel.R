@@ -41,7 +41,10 @@ RelDataModel <- function(l, checkFK=TRUE){
       x <- toRet[[ft]]
       if(length(x$foreignKey)>0) for(i in 1:length(x$foreignKey)){
          fk <- x$foreignKey[[i]]
-         if(fk$cardinality["fmin"]>0 && nrow(fk$key)==1){
+         if(
+            fk$cardinality["fmin"]>0 && nrow(fk$key)==1 &&
+            fk$refTable %in% names(fk)
+         ){
             toRet[[fk$refTable]]$fields[
                which(toRet[[fk$refTable]]$fields$name==fk$key$from),
                "nullable"
@@ -80,7 +83,7 @@ RelDataModel <- function(l, checkFK=TRUE){
             }
          }
 
-         if(fk$cardinality["tmax"]==1){
+         if(fk$cardinality["tmax"]==1 && fk$refTable %in% names(fk)){
             ei <- lapply(
                toRet[[fk$refTable]]$indexes,
                function(y){
@@ -1364,4 +1367,195 @@ auto_layout.RelDataModel <- function(
       class(x) <- c("RelDataModel", "list")
    }
    return(x)
+}
+
+###############################################################################@
+#' Confront a [RelDataModel] to actual data
+#'
+#' @param x a [RelDataModel]
+#' @param paths a character vector with file paths.
+#' The file [basename] without extension
+#' will be considered as the table name.
+#' @param returnData a logical indicating if the data should be returned
+#' with the report (default: FALSE).
+#' @param n_max maximum number of records to read (default: Inf).
+#' @param checks a character vector with the name of optional checks to be done
+#' (Default: if n_max==Inf ==> all of them, else ==> none)
+#' @param delim single character used to separate fields within a record
+#' (default: "\\t")
+#' @param ... supplementary parameters for the [read_delim] function.
+#'
+#' @return A report as a list
+#'
+#' @export
+#'
+confront_data.RelDataModel <- function(
+   x,
+   data=list(),
+   paths=NULL,
+   returnData=FALSE,
+   n_max=Inf,
+   checks=if(n_max==Inf){
+      c("unique", "not nullable", "foreign keys")
+   }else{
+      as.character()
+   },
+   delim="\t",
+   ...
+){
+   ## Optional checks ----
+   if(length(checks)>0){
+      checks <- match.arg(
+         checks,
+         c("unique", "not nullable", "foreign keys"),
+         several.ok=TRUE
+      )
+   }
+   ## Data files ----
+   if(length(data)==0){
+      stopifnot(is.character(paths), length(paths)>0)
+      nf <- paths[which(!file.exists(paths))]
+      if(length(nf)>0){
+         stop(
+            "Cannot find the following files:\n   - ",
+            paste(nf, collapse="\n   - ")
+         )
+      }
+      names(paths) <- basename(paths) %>%
+         sub("(\\.[[:alnum:]]+)(\\.gz)?$", "", .)
+      dtn <- names(paths)
+   }else{
+      dtn <- names(data)
+      stopifnot(length(dtn)>0)
+   }
+
+   ## Available tables ----
+   missingTables <- setdiff(names(x), dtn)
+   suppTables <- setdiff(dtn, names(x))
+   availableTables <- intersect(names(x), dtn)
+   toRet <- list(
+      model=x,
+      checks=checks,
+      n_max=n_max,
+      missingTables=missingTables,
+      suppTables=suppTables,
+      availableTables=availableTables,
+      constraints=list(),
+      success=length(missingTables)==0
+   )
+
+   ## Table checks ----
+   for(ti in 1:length(availableTables)){
+      tn <- availableTables[ti]
+      message(sprintf(
+         'Processing "%s" (table %s / %s) ',
+         tn, ti, length(availableTables)
+      ))
+      tm <- x[[tn]]
+      if(tn %in% names(data)){
+         td <- data[[tn]]
+      }else{
+         td <- readr::read_delim(
+            paths[tn],
+            delim=delim, n_max=n_max,
+            col_types=col_types(tm),
+            ...
+         )
+         if(returnData){
+            data[[tn]] <- td
+         }
+      }
+      ## _+ Simple table ----
+      tr <- confront_data.RelTableModel(x=tm, d=td, checks=checks)
+      toRet$success <- toRet$success && tr$success
+      ## _+ Foreign keys ----
+      tfk <- tm$foreignKeys
+      if("foreign keys" %in% checks && length(tfk)>0){
+         fkr <- list()
+         for(i in 1:length(tfk)){
+            tfki <- tfk[[i]]
+            rtn <- tfki$refTable
+            if(rtn %in% missingTables){
+               fkr[[i]] <- list(
+                  "success"=FALSE,
+                  "message"="Missing reference table."
+               )
+               tr$success <- FALSE
+               toRet$success <- FALSE
+               next()
+            }
+            ##
+            if(tfki$cardinality["fmin"]==0 && tfki$cardinality["tmin"]==0){
+               fkr[[i]] <- list("success"=TRUE)
+               next()
+            }
+            ##
+            if(rtn==tn){
+               rtd <- td
+            }else{
+               if(rtn %in% names(data)){
+                  rtd <- data[[rtn]]
+               }else{
+                  rtd <- readr::read_delim(
+                     paths[rtn], delim=delim, n_max=n_max,
+                     col_types=col_types(x[[rtn]]),
+                     ...
+                  )
+                  if(returnData){
+                     data[[rtn]] <- rtd
+                  }
+               }
+            }
+            ##
+            tfki_fid <- apply(
+               td[, tfki$key$from, drop=FALSE],
+               1,
+               paste,
+               collapse="_"
+            )
+            tfki_tid <- apply(
+               rtd[, tfki$key$to, drop=FALSE],
+               1,
+               paste,
+               collapse="_"
+            )
+            success <- TRUE
+            message <- NULL
+            if(tfki$cardinality["fmin"]>0){
+               if(any(!tfki_tid %in% tfki_fid)){
+                  success <- FALSE
+                  message <- paste(c(
+                     message,
+                     sprintf(
+                        "All keys of %s should be available in %s.",
+                        rtn, tn
+                     )
+                  ), collapse=" ")
+               }
+            }
+            if(tfki$cardinality["tmin"]>0){
+               if(any(!tfki_fid %in% tfki_tid)){
+                  success <- FALSE
+                  message <- paste(c(
+                     message,
+                     sprintf(
+                        "All keys of %s should be available in %s.",
+                        tn, rtn
+                     )
+                  ), collapse=" ")
+               }
+            }
+            fkr[[i]] <- list(success=success, message=message)
+            tr$success <- tr$success && success
+            toRet$success <- toRet$success && success
+         }
+         tr$foreignKey <- fkr
+      }
+      toRet$constraints[[tn]] <- tr
+   }
+   if(returnData){
+      toRet$data <- data
+   }
+   ## Return the results ----
+   return(toRet)
 }

@@ -30,6 +30,8 @@ read_json_data_model <- function(txt){
             function(y){
                y$refTable <- unlist(y$refTable)
                y$key <- lapply(y$key, as_tibble) %>% do.call(rbind, .)
+               y$cardinality <- as.integer(unlist(y$cardinality))
+               names(y$cardinality) <- c("fmin", "fmax", "tmin", "tmax")
                return(y)
             }
          )

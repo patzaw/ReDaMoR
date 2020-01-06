@@ -2405,8 +2405,16 @@ buildServer <- function(
 model_relational_data <- function(
    modelInput=RelDataModel(list()), fromR=interactive(),
    defaultColor="#D9D9D9",
+   # availableColors=c(
+   #    "#7CE65F", "#D9B661", "#75E4AE", "#8FE6E0",
+   #    "#DFFB86", "#FEFE8F", "#A9ECC9", "#F8DEC3",
+   #    "#E0B8A0", "#FAC6DC", "#CC8490", "#F67FC4",
+   #    "#C6BDF1", "#D8B8E3", "#9BC8FE", "#C6D1DC",
+   #    "#9638E5", "#7D76D9", "#6E9DCE"
+   # ),
    availableColors=c(
-      "#9BC8FE", "#F67FC4", "#ACF1BC", "#C6BDF1", "#DFFB86",
+      "#9BC8FE", "#F67FC4", #"#ACF1BC",
+      "#C6BDF1", "#DFFB86",
       "#F8DEC3", "#8FE6E0", "#FEFE8F", "#FAC6DC", "#A9ECC9"
    ),
    # availableColors=c(

@@ -428,3 +428,111 @@ correct_constraints.RelTableModel <- function(x){
    return(x)
 }
 
+###############################################################################@
+#' Confront a [RelTableModel] to actual data
+#'
+#' @param x a [RelTableModel]
+#' @param d a data frame
+#' @param checks a character vector with the name of optional checks to be done
+#' (Default: all of them)
+#'
+#' @return A report as a list
+#'
+#' @export
+#'
+confront_data.RelTableModel <- function(
+   x,
+   d,
+   checks=c("unique", "not nullable")
+){
+   stopifnot(
+      is.data.frame(d)
+   )
+   ## Optional checks ----
+   if(length(checks)>0){
+      checks <- match.arg(
+         checks,
+         c("unique", "not nullable"),
+         several.ok=TRUE
+      )
+   }
+   ## Available fields ----
+   missingFields <- setdiff(x$fields$name, colnames(d))
+   suppFields <- setdiff(colnames(d), x$fields$name)
+   availableFields <- intersect(colnames(d), x$fields$name)
+   toRet <- list(
+      missingFields=missingFields,
+      suppFields=suppFields,
+      availableFields=availableFields,
+      fields=list(),
+      success=length(missingFields)==0
+   )
+   ## Fields ----
+   for(i in 1:nrow(x$fields)){
+      fn <- x$fields$name[i]
+      ft <- x$fields$type[i]
+      fe <- x$fields$nullable[i]
+      fu <- x$fields$unique[i]
+      toRet$fields[[fn]] <- list(success=TRUE, message=NULL)
+      if(!inherits(pull(d, !!fn), ft)){
+         toRet$fields[[fn]]$success <- FALSE
+         toRet$success <- FALSE
+         toRet$fields[[fn]]$message <- paste(c(
+            toRet$fields[[fn]]$message,
+            sprintf(
+               'Unexpected "%s"',
+               paste(class(pull(d, !!fn)), collapse=", ")
+            )
+         ), collapse=" ")
+      }
+      if("not nullable" %in% checks){
+         mis <- sum(is.na(pull(d, !!fn)))
+         if(mis!=0){
+            toRet$fields[[fn]]$message <- paste(c(
+               toRet$fields[[fn]]$message,
+               sprintf(
+                  'Missing values %s/%s = %s%s',
+                  mis, nrow(d), round(mis*100/nrow(d)), "%"
+               )
+            ), collapse=" ")
+            if(!fe){
+               toRet$fields[[fn]]$success <- FALSE
+               toRet$success <- FALSE
+            }
+         }
+      }
+      if("unique" %in% checks && fu && any(duplicated(pull(d, !!fn)))){
+         toRet$fields[[fn]]$success <- FALSE
+         toRet$success <- FALSE
+         toRet$fields[[fn]]$message <- paste(c(
+            toRet$fields[[fn]]$message,
+            "Some values are duplicated"
+         ), collapse=" ")
+      }
+   }
+   ## Indexes ----
+   if("unique" %in% checks && length(x$indexes)>0){
+      toRet$indexes <- list()
+      for(i in 1:length(x$indexes)){
+         toRet$indexes[[i]] <- list()
+         idx <- x$indexes[[i]]
+         if(!idx$unique){
+            toRet$indexes[[i]]$success <- TRUE
+         }else{
+            if(any(duplicated(d[,idx$fields]))){
+               toRet$indexes[[i]]$success <- FALSE
+               toRet$indexes[[i]]$message <- paste(c(
+                  toRet$indexes[[i]]$message,
+                  "Some values are duplicated"
+               ), collapse=" ")
+               toRet$success <- FALSE
+            }else{
+               toRet$indexes[[i]]$success <- TRUE
+            }
+         }
+      }
+   }
+
+   ## Return the results ----
+   return(toRet)
+}
