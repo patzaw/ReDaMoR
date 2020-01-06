@@ -2032,7 +2032,7 @@ buildServer <- function(
             column(
                6,
                selectInput(
-                  ifelse(tns[1]==ft, "fcardmin", "tcardmin"),
+                  "leftcardmin",
                   "Min. card.",
                   choices=c("0", "1"),
                   selected=ifelse(tns[1]==ft, "0", "1")
@@ -2041,7 +2041,7 @@ buildServer <- function(
             column(
                6,
                selectInput(
-                  ifelse(tns[1]==ft, "fcardmax", "tcardmax"),
+                  "leftcardmax",
                   "Max. card.",
                   choices=c("1", "n"),
                   selected=ifelse(tns[1]==ft, "n", "1")
@@ -2062,7 +2062,7 @@ buildServer <- function(
             column(
                6,
                selectInput(
-                  ifelse(tns[1]!=ft, "fcardmin", "tcardmin"),
+                  "rightcardmin",
                   "Min. card.",
                   choices=c("0", "1"),
                   selected=ifelse(tns[1]!=ft, "0", "1")
@@ -2071,7 +2071,7 @@ buildServer <- function(
             column(
                6,
                selectInput(
-                  ifelse(tns[1]!=ft, "fcardmax", "tcardmax"),
+                  "rightcardmax",
                   "Max. card.",
                   choices=c("1", "n"),
                   selected=ifelse(tns[1]!=ft, "n", "1")
@@ -2084,10 +2084,32 @@ buildServer <- function(
 
       observe({
          cval <- c("0"=0L, "1"=1L, "n"=-1L)
-         foreignKey$fmin <- as.integer(cval[input$fcardmin])
-         foreignKey$fmax <- as.integer(cval[input$fcardmax])
-         foreignKey$tmin <- as.integer(cval[input$tcardmin])
-         foreignKey$tmax <- as.integer(cval[input$tcardmax])
+         tns <- isolate(selection$tables)
+         ft <- foreignKey$fromTable
+         tt <- foreignKey$toTable
+         validate(need(tns, ""))
+         validate(need(ft, ""))
+         validate(need(tt, ""))
+         lftmin <- input$leftcardmin
+         lftmax <- input$leftcardmax
+         rgtmin <- input$rightcardmin
+         rgtmax <- input$rightcardmax
+         validate(need(lftmin,""))
+         validate(need(lftmax,""))
+         validate(need(rgtmin,""))
+         validate(need(rgtmax,""))
+         foreignKey$fmin <- as.integer(cval[ifelse(
+            tns[1]==ft, lftmin, rgtmin
+         )])
+         foreignKey$fmax <- as.integer(cval[ifelse(
+            tns[1]==ft, lftmax, rgtmax
+         )])
+         foreignKey$tmin <- as.integer(cval[ifelse(
+            tns[1]!=ft, lftmin, rgtmin
+         )])
+         foreignKey$tmax <- as.integer(cval[ifelse(
+            tns[1]!=ft, lftmax, rgtmax
+         )])
       })
 
 
