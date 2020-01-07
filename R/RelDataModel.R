@@ -1441,7 +1441,7 @@ confront_data.RelDataModel <- function(
       suppTables=suppTables,
       availableTables=availableTables,
       constraints=list(),
-      success=length(missingTables)==0
+      success=length(missingTables)==0 && length(suppTables)==0
    )
 
    ## Table checks ----
