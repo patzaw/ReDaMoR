@@ -21,7 +21,8 @@ Imports:
    colourpicker,
    rintrojs,
    markdown,
-   rstudioapi
+   rstudioapi,
+   crayon
 Suggests:
    knitr,
    rmarkdown,

@@ -2,22 +2,16 @@
 % Please edit documentation in R/format_confrontation_report.R
 \name{format_confrontation_report}
 \alias{format_confrontation_report}
-\title{Format confrontation report in markdown format}
+\title{Format confrontation report for printing in console}
 \usage{
-format_confrontation_report(
-  cr,
-  title = "Model",
-  bgSuccess = "green",
-  txSuccess = "black",
-  bgFailure = "red",
-  txFailure = "white",
-  bgMessage = "#FFBB33",
-  txMessage = "white"
-)
+format_confrontation_report(cr, title = "Model")
 }
 \arguments{
 \item{cr}{the confrontation report from \link{confront_data.RelDataModel}}
+
+\item{title}{a character with a single value corresponding to the report
+title (e.g. database/model name)}
 }
 \description{
-Format confrontation report in markdown format
+Format confrontation report for printing in console
 }

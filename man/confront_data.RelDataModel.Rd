@@ -29,7 +29,9 @@ with the report (default: FALSE).}
 \item{n_max}{maximum number of records to read (default: Inf).}
 
 \item{checks}{a character vector with the name of optional checks to be done
-(Default: if n_max==Inf ==> all of them, else ==> none)}
+(Default: if n_max==Inf ==> all of
+them c("unique", "not nullable", "foreign keys"),
+else ==> none)}
 
 \item{delim}{single character used to separate fields within a record
 (default: "\\t")}

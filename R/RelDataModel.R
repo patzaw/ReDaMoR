@@ -1380,7 +1380,9 @@ auto_layout.RelDataModel <- function(
 #' with the report (default: FALSE).
 #' @param n_max maximum number of records to read (default: Inf).
 #' @param checks a character vector with the name of optional checks to be done
-#' (Default: if n_max==Inf ==> all of them, else ==> none)
+#' (Default: if n_max==Inf ==> all of
+#' them c("unique", "not nullable", "foreign keys"),
+#' else ==> none)
 #' @param delim single character used to separate fields within a record
 #' (default: "\\t")
 #' @param ... supplementary parameters for the [read_delim] function.
@@ -1445,7 +1447,7 @@ confront_data.RelDataModel <- function(
    )
 
    ## Table checks ----
-   for(ti in 1:length(availableTables)){
+   if(length(availableTables)>0) for(ti in 1:length(availableTables)){
       tn <- availableTables[ti]
       message(sprintf(
          'Processing "%s" (table %s / %s) ',

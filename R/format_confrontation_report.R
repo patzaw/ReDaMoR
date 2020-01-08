@@ -1,11 +1,224 @@
 ###############################################################################@
-#' Format confrontation report in markdown format
+#' Format confrontation report for printing in console
 #'
 #' @param cr the confrontation report from [confront_data.RelDataModel]
+#' @param title a character with a single value corresponding to the report
+#' title (e.g. database/model name)
 #'
 #' @export
 #'
 format_confrontation_report <- function(
+   cr,
+   title="Model"
+){
+
+   ## Helpers ----
+   successTag <- function(s){
+      if(s) crayon::bgGreen(crayon::white('SUCCESS'))
+      else crayon::bgRed(crayon::white('FAILURE'))
+   }
+   messageTag <- function(m){
+      crayon::bgMagenta(crayon::white(m))
+   }
+
+   toRet <- c()
+
+   ## Title ----
+   toRet <- c(toRet, crayon::bold(crayon::underline(title)))
+
+   ## Global success ----
+   toRet <- c(toRet, successTag(cr$success))
+
+   ## Global config ----
+   toRet <- c(
+      toRet,
+      '',
+      crayon::bold('Check configuration'),
+      sprintf('   - Optional checks: %s', paste(cr$checks, collapse=", ")),
+      sprintf('   - Maximum number of records: %s', cr$n_max),
+      ''
+   )
+
+   ## Missing tables ----
+   if(length(cr$missingTables)>0){
+      toRet <- c(
+         toRet,
+         crayon::bold('Missing tables'),
+         'The following tables are missing:',
+         paste("   -", cr$missingTable),
+         ''
+      )
+   }
+
+   ## Supplementary tables ----
+   if(length(cr$suppTables)>0){
+      toRet <- c(
+         toRet,
+         crayon::bold('Not supported tables'),
+         'The following tables are not supported by the model:',
+         '',
+         paste("   -", cr$suppTables),
+         ''
+      )
+   }
+
+   ## Table information ----
+   ttoRet <- unlist(lapply(
+      names(cr$constraints),
+      function(tn){
+         tcr <- cr$constraints[[tn]]
+         toRet <- c()
+
+         ## _+ Missing fields ----
+         if(length(tcr$missingFields)>0){
+            toRet <- c(
+               toRet,
+               crayon::underline('Missing fields'),
+               'The following fields are missing:',
+               paste("   -", tcr$missingFields),
+               ''
+            )
+         }
+
+         ## _+ Supplementary fields ----
+         if(length(tcr$suppFields)>0){
+            toRet <- c(
+               toRet,
+               crayon::underline('Not supported fields'),
+               'The following fields are not supported by the model:',
+               paste("   -", tcr$suppFields),
+               ''
+            )
+         }
+
+         ## _+ Field information ----
+         ftoRet <- unlist(lapply(
+            names(tcr$fields),
+            function(fn){
+               s <- tcr$fields[[fn]]$success
+               m <- tcr$fields[[fn]]$message
+               if(!s || (!is.null(m) && !is.na(m) && m!="")){
+                  return(paste0(
+                     '   - ', fn, ': ',
+                     successTag(s), ' ',
+                     messageTag(m)
+                  ))
+               }else{
+                  return(NULL)
+               }
+            }
+         ))
+         if(length(ftoRet)>0){
+            toRet <- c(
+               toRet,
+               crayon::underline('Field issues or warnings'),
+               ftoRet,
+               ''
+            )
+         }
+
+         ## _+ Index information ----
+         if(length(tcr$indexes)>0){
+            itoRet <- unlist(lapply(
+               1:length(tcr$indexes),
+               function(i){
+                  idx <- paste(cr$model[[tn]]$indexes[[i]]$fields, collapse="+")
+                  if(cr$model[[tn]]$indexes[[i]]$unique){
+                     idx <- paste(idx, '(unique)')
+                  }
+                  s <- tcr$indexes[[i]]$success
+                  m <- tcr$indexes[[i]]$message
+                  if(!s || (!is.null(m) && !is.na(m) && m!="")){
+                     return(paste0(
+                        '   - ', idx, ': ',
+                        successTag(s), ' ',
+                        messageTag(m)
+                     ))
+                  }else{
+                     return(NULL)
+                  }
+               }
+            ))
+            if(length(itoRet)>0){
+               toRet <- c(
+                  toRet,
+                  crayon::underline('Index issues or warnings'),
+                  itoRet,
+                  ''
+               )
+            }
+         }
+
+         ## _+ Foreign key information ----
+         if(length(tcr$foreignKey)>0){
+            fktoRet <- unlist(lapply(
+               1:length(tcr$foreignKey),
+               function(i){
+                  fk <- paste(
+                     cr$model[[tn]]$foreignKey[[i]]$key$from,
+                     cr$model[[tn]]$foreignKey[[i]]$key$to,
+                     sep="->"
+                  ) %>% paste(collapse=" + ")
+                  fk <- paste0(
+                     cr$model[[tn]]$foreignKey[[i]]$refTable,
+                     ' [', fk, ']'
+                  )
+                  s <- tcr$foreignKey[[i]]$success
+                  if(is.null(s)) print(tcr)
+                  m <- tcr$foreignKey[[i]]$message
+                  if(!s || (!is.null(m) && !is.na(m) && m!="")){
+                     return(paste0(
+                        '   - ', fk, ': ',
+                        successTag(s), ' ',
+                        messageTag(m)
+                     ))
+                  }else{
+                     return(NULL)
+                  }
+               }
+            ))
+            if(length(fktoRet)>0){
+               toRet <- c(
+                  toRet,
+                  crayon::underline('Foreign keys issues or warnings'),
+                  fktoRet,
+                  ''
+               )
+            }
+         }
+
+         ## _+ Results if anything to show ----
+         if(length(toRet)>0 || !tcr$success){
+            toRet <- c(
+               crayon::bold(tn),
+               successTag(tcr$success),
+               toRet,
+               ''
+            )
+         }
+      }
+   ))
+
+   if(length(ttoRet)>0){
+      toRet <- c(
+         toRet,
+         ttoRet
+      )
+   }
+
+   ## Concatenate the result ----
+   return(paste(toRet, collapse="\n"))
+}
+
+###############################################################################@
+#' Format confrontation report in markdown format
+#'
+#' @param cr the confrontation report from [confront_data.RelDataModel]
+#' @param title a character with a single value corresponding to the report
+#'
+#' @export
+#'
+format_confrontation_report_md <- function(
    cr,
    title="Model",
    bgSuccess="green",
@@ -61,7 +274,7 @@ format_confrontation_report <- function(
          '## Missing tables',
          'The following tables are missing:',
          '',
-         paste(paste("-", cr$missingTable)),
+         paste("-", cr$missingTable),
          ''
       )
    }
@@ -73,7 +286,7 @@ format_confrontation_report <- function(
          '## Not supported tables',
          'The following tables are not supported by the model:',
          '',
-         paste(paste("-", cr$suppTables)),
+         paste("-", cr$suppTables),
          ''
       )
    }
@@ -118,7 +331,7 @@ format_confrontation_report <- function(
                if(!s || (!is.null(m) && !is.na(m) && m!="")){
                   return(paste0(
                      '- ', fn, ': ',
-                     successTag(s),
+                     successTag(s), ' ',
                      messageTag(m)
                   ))
                }else{
@@ -149,7 +362,7 @@ format_confrontation_report <- function(
                   if(!s || (!is.null(m) && !is.na(m) && m!="")){
                      return(paste0(
                         '- ', idx, ': ',
-                        successTag(s),
+                        successTag(s), ' ',
                         messageTag(m)
                      ))
                   }else{
@@ -187,7 +400,7 @@ format_confrontation_report <- function(
                   if(!s || (!is.null(m) && !is.na(m) && m!="")){
                      return(paste0(
                         '- ', fk, ': ',
-                        successTag(s),
+                        successTag(s), ' ',
                         messageTag(m)
                      ))
                   }else{
@@ -239,7 +452,7 @@ format_confrontation_report <- function(
 #'
 view_confrontation_report <- function(cr, ...){
    tf <- tempfile(fileext=".html")
-   format_confrontation_report(cr, ...) %>%
+   format_confrontation_report_md(cr, ...) %>%
       markdown::renderMarkdown(text=.) %>%
       writeLines(tf)
    rstudioapi::viewer(tf)

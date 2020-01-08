@@ -434,7 +434,7 @@ correct_constraints.RelTableModel <- function(x){
 #' @param x a [RelTableModel]
 #' @param d a data frame
 #' @param checks a character vector with the name of optional checks to be done
-#' (Default: all of them)
+#' (Default: all of them c("unique", "not nullable"))
 #'
 #' @return A report as a list
 #'

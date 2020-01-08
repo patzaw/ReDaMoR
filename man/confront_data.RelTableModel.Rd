@@ -12,7 +12,7 @@
 \item{d}{a data frame}
 
 \item{checks}{a character vector with the name of optional checks to be done
-(Default: all of them)}
+(Default: all of them c("unique", "not nullable"))}
 }
 \value{
 A report as a list
