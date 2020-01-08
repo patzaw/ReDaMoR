@@ -1378,6 +1378,8 @@ auto_layout.RelDataModel <- function(
 #' will be considered as the table name.
 #' @param returnData a logical indicating if the data should be returned
 #' with the report (default: FALSE).
+#' @param verbose a single logical value indicating if some process information
+#' should be displayed (default: TRUE)
 #' @param n_max maximum number of records to read (default: Inf).
 #' @param checks a character vector with the name of optional checks to be done
 #' (Default: if n_max==Inf ==> all of
@@ -1396,6 +1398,7 @@ confront_data.RelDataModel <- function(
    data=list(),
    paths=NULL,
    returnData=FALSE,
+   verbose=TRUE,
    n_max=Inf,
    checks=if(n_max==Inf){
       c("unique", "not nullable", "foreign keys")
@@ -1449,10 +1452,12 @@ confront_data.RelDataModel <- function(
    ## Table checks ----
    if(length(availableTables)>0) for(ti in 1:length(availableTables)){
       tn <- availableTables[ti]
-      message(sprintf(
-         'Processing "%s" (table %s / %s) ',
-         tn, ti, length(availableTables)
-      ))
+      if(verbose){
+         message(sprintf(
+            'Processing "%s" (table %s / %s) ',
+            tn, ti, length(availableTables)
+         ))
+      }
       tm <- x[[tn]]
       if(tn %in% names(data)){
          td <- data[[tn]]

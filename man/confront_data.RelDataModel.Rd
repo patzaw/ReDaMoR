@@ -9,6 +9,7 @@
   data = list(),
   paths = NULL,
   returnData = FALSE,
+  verbose = TRUE,
   n_max = Inf,
   checks = if (n_max == Inf) {     c("unique", "not nullable", "foreign keys") } else { 
        as.character() },
@@ -25,6 +26,9 @@ will be considered as the table name.}
 
 \item{returnData}{a logical indicating if the data should be returned
 with the report (default: FALSE).}
+
+\item{verbose}{a single logical value indicating if some process information
+should be displayed (default: TRUE)}
 
 \item{n_max}{maximum number of records to read (default: Inf).}
 
