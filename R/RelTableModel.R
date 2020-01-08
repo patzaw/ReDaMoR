@@ -536,3 +536,117 @@ confront_data.RelTableModel <- function(
    ## Return the results ----
    return(toRet)
 }
+
+
+###############################################################################@
+#' Check if two [RelTableModel] are identical
+#'
+#' @param x a [RelTableModel]
+#' @param y a [RelTableModel]
+#' @param includeDisplay a single logical (default: TRUE) indicating if
+#' the display should be included in the comparison
+#'
+#' @return A logical: TRUE if the 2 models are identical
+#'
+#' @export
+#'
+identical_RelTableModel <- function(x, y, includeDisplay=TRUE){
+   stopifnot(is.RelTableModel(x), is.RelTableModel(y))
+
+   ## Name ----
+   toRet <- x$tableName==y$tableName
+
+   ## Fields ----
+   toRet <- toRet && identical(
+      x$fields %>% arrange(name),
+      y$fields %>% arrange(name)
+   )
+
+   ## Primary key ----
+   toRet <- toRet && length(x$primaryKey)==length(y$primaryKey) &&
+      all(x$primaryKey==y$primaryKey)
+
+   ## Indexes ----
+   toRet <- toRet && length(x$indexes)==length(y$indexes)
+   if(toRet && length(x$indexes)>0){
+      xidx <- lapply(
+         x$indexes,
+         function(z){
+            z$fields <- sort(z$fields)
+            return(z)
+         }
+      )
+      xidx <- xidx[order(unlist(lapply(
+         xidx,
+         function(z) paste(z$fields, collapse=", ")
+      )))]
+      yidx <- lapply(
+         y$indexes,
+         function(z){
+            z$fields <- sort(z$fields)
+            return(z)
+         }
+      )
+      yidx <- yidx[order(unlist(lapply(
+         yidx,
+         function(z) paste(z$fields, collapse=", ")
+      )))]
+      toRet <- identical(xidx, yidx)
+   }
+
+   ## Foreign keys ----
+   toRet <- toRet && length(x$foreignKeys)==length(y$foreignKeys)
+   if(toRet && length(x$foreignKeys)>0){
+      xfk <- lapply(
+         x$foreignKeys,
+         function(z){
+            z$key <- z$key %>% arrange(from, to)
+            return(z)
+         }
+      )
+      xfk <- xfk[order(unlist(lapply(
+         xfk,
+         function(z){
+            paste0(
+               z$refTable, " [",
+               paste(
+                  paste(z$key$from, z$key$to, sep="->"),
+                  collapse=", "
+               ),
+               "]"
+            )
+         }
+      )))]
+      yfk <- lapply(
+         y$foreignKeys,
+         function(z){
+            z$key <- z$key %>% arrange(from, to)
+            return(z)
+         }
+      )
+      yfk <- yfk[order(unlist(lapply(
+         yfk,
+         function(z){
+            paste0(
+               z$refTable, " [",
+               paste(
+                  paste(z$key$from, z$key$to, sep="->"),
+                  collapse=", "
+               ),
+               "]"
+            )
+         }
+      )))]
+      toRet <- identical(xfk, yfk)
+   }
+
+   ## Display ----
+   if(includeDisplay){
+      toRet <- toRet && length(x$display)==length(y$display) &&
+         (length(x$display)==0 || identical(
+            x$display[order(names(x$display))],
+            y$display[order(names(y$display))]
+         ))
+   }
+   return(toRet)
+}

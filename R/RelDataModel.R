@@ -1566,3 +1566,35 @@ confront_data.RelDataModel <- function(
    ## Return the results ----
    return(toRet)
 }
+
+###############################################################################@
+#' Check if two [RelDataModel] are identical
+#'
+#' @param x a [RelDataModel]
+#' @param y a [RelDataModel]
+#' @param ... additional parameters for [identical_RelTableModel()]
+#'
+#' @return A logical: TRUE if the 2 models are identical
+#'
+#' @export
+#'
+identical_RelDataModel <- function(x, y, ...){
+   stopifnot(is.RelDataModel(x), is.RelDataModel(y))
+   toRet <- length(x)==length(y) && all(sort(names(x))==sort(names(y)))
+   if(toRet && length(x)>0){
+      i <- 1
+      while(toRet && i <= length(x)){
+         toRet <- identical_RelTableModel(
+            x[[names(x)[i]]], y[[names(x)[i]]],
+            ...
+         )
+         if(!toRet){
+            message(sprintf("Tables %s are different", names(x)[i]))
+         }
+         i <- i+1
+      }
+   }else{
+      message("Not the same tables")
+   }
+   return(toRet)
+}
