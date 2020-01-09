@@ -1514,18 +1514,23 @@ confront_data.RelDataModel <- function(
                }
             }
             ##
-            tfki_fid <- apply(
-               td[, tfki$key$from, drop=FALSE],
-               1,
-               paste,
-               collapse="_"
-            )
-            tfki_tid <- apply(
-               rtd[, tfki$key$to, drop=FALSE],
-               1,
-               paste,
-               collapse="_"
-            )
+            if(length(tfki$key$from)==1){
+               tfki_fid <- td %>% pull(tfki$key$from)
+               tfki_tid <- rtd %>% pull(tfki$key$to)
+            }else{
+               tfki_fid <- apply(
+                  unique(td[, tfki$key$from, drop=FALSE]),
+                  1,
+                  paste,
+                  collapse="_"
+               )
+               tfki_tid <- apply(
+                  unique(rtd[, tfki$key$to, drop=FALSE]),
+                  1,
+                  paste,
+                  collapse="_"
+               )
+            }
             success <- TRUE
             message <- NULL
             if(tfki$cardinality["fmin"]>0){
@@ -1563,7 +1568,7 @@ confront_data.RelDataModel <- function(
    if(returnData){
       toRet$data <- data
    }
-   ## Return the results ----
+   ## Return the results
    return(toRet)
 }
 
@@ -1582,16 +1587,15 @@ identical_RelDataModel <- function(x, y, ...){
    stopifnot(is.RelDataModel(x), is.RelDataModel(y))
    toRet <- length(x)==length(y) && all(sort(names(x))==sort(names(y)))
    if(toRet && length(x)>0){
-      i <- 1
-      while(toRet && i <= length(x)){
-         toRet <- identical_RelTableModel(
+      for(i in 1:length(x)){
+         itoRet <- identical_RelTableModel(
             x[[names(x)[i]]], y[[names(x)[i]]],
             ...
          )
-         if(!toRet){
+         if(!itoRet){
             message(sprintf("Tables %s are different", names(x)[i]))
          }
-         i <- i+1
+         toRet <- toRet && itoRet
       }
    }else{
       message("Not the same tables")
