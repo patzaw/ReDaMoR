@@ -252,7 +252,7 @@ format_confrontation_report_md <- function(
    toRet <- c()
 
    ## Title ----
-   toRet <- c(toRet, '<hr>', sprintf('# %s', title[1]), '')
+   toRet <- c(toRet, '', sprintf('# %s', title[1]), '')
 
    ## Global success ----
    toRet <- c(toRet, successTag(cr$success))
@@ -260,6 +260,7 @@ format_confrontation_report_md <- function(
    ## Global config ----
    toRet <- c(
       toRet,
+      '',
       '## Check configuration',
       '',
       sprintf('- **Optional checks**: %s', paste(cr$checks, collapse=", ")),
@@ -271,7 +272,9 @@ format_confrontation_report_md <- function(
    if(length(cr$missingTables)>0){
       toRet <- c(
          toRet,
+         '',
          '## Missing tables',
+         '',
          'The following tables are missing:',
          '',
          paste("-", cr$missingTable),
@@ -283,7 +286,9 @@ format_confrontation_report_md <- function(
    if(length(cr$suppTables)>0){
       toRet <- c(
          toRet,
+         '',
          '## Not supported tables',
+         '',
          'The following tables are not supported by the model:',
          '',
          paste("-", cr$suppTables),
@@ -302,7 +307,9 @@ format_confrontation_report_md <- function(
          if(length(tcr$missingFields)>0){
             toRet <- c(
                toRet,
+               '',
                '### Missing fields',
+               '',
                'The following fields are missing:',
                '',
                paste(paste("-", tcr$missingFields)),
@@ -314,7 +321,9 @@ format_confrontation_report_md <- function(
          if(length(tcr$suppFields)>0){
             toRet <- c(
                toRet,
+               '',
                '### Not supported fields',
+               '',
                'The following fields are not supported by the model:',
                '',
                paste(paste("-", tcr$suppFields)),
@@ -342,7 +351,9 @@ format_confrontation_report_md <- function(
          if(length(ftoRet)>0){
             toRet <- c(
                toRet,
+               '',
                '### Field issues or warnings',
+               '',
                ftoRet,
                ''
             )
@@ -373,7 +384,9 @@ format_confrontation_report_md <- function(
             if(length(itoRet)>0){
                toRet <- c(
                   toRet,
+                  '',
                   '### Index issues or warnings',
+                  '',
                   itoRet,
                   ''
                )
@@ -411,7 +424,9 @@ format_confrontation_report_md <- function(
             if(length(fktoRet)>0){
                toRet <- c(
                   toRet,
+                  '',
                   '### Foreign keys issues or warnings',
+                  '',
                   fktoRet,
                   ''
                )
@@ -421,8 +436,11 @@ format_confrontation_report_md <- function(
          ## _+ Results if anything to show ----
          if(length(toRet)>0 || !tcr$success){
             toRet <- c(
+               '',
                sprintf('## %s', tn),
+               '',
                successTag(tcr$success),
+               '',
                toRet,
                ''
             )
