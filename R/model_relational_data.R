@@ -179,7 +179,7 @@ buildUi <- function(fromR){
             ),
             fluidRow(
                visNetworkOutput("modelNet", height="75vh", width="100%"),
-               style="border:solid; min-height:75vh;"
+               style="border:solid; min-height:80vh;"
             )
          ),
 
@@ -190,20 +190,20 @@ buildUi <- function(fromR){
             div(
                uiOutput(
                   "setTableColor",
-                  style="display: inline-block; margin-right:15px; width:75px;"
+                  style="display: inline-block;"
                ),
                uiOutput(
                   "addFKInput",
-                  style="display: inline-block; margin-right:15px;"
+                  style="display: inline-block;"
                ),
                uiOutput(
                   "rmFKInput",
-                  style="display: inline-block; margin-right:15px;"),
+                  style="display: inline-block;"),
                uiOutput(
                   "rmTablesInput",
                   style="display: inline-block;"
                ),
-               style="padding-bottom:5px; text-align:center;"
+               style="padding-bottom:0px; text-align:center;"
             ),
 
             ## Edit table ----
@@ -844,7 +844,7 @@ buildServer <- function(
             uiOutput("indexes"),
             style=paste(
                "border:solid;", #"border-radius:15px;",
-               "max-height:75vh;",
+               "height:80vh;",
                "overflow:scroll;",
                "padding:15px;"
             )
@@ -1621,7 +1621,13 @@ buildServer <- function(
          actionButton(
             "addForeignKey", "Add key",
             icon=icon("external-link-alt", "fa-2x")
-         ) %>% div(title="Add a foreign key")
+         ) %>% div(
+            title="Add a foreign key",
+            style="margin-right:15px;",
+            tags$style(HTML(
+               "#addForeignKey{padding-top:2px;padding-bottom:2px;}"
+            ))
+         )
       })
       output$rmFKInput <- renderUI({
          selFK <- selection$fk
@@ -1632,7 +1638,13 @@ buildServer <- function(
                '<i class="far fa-trash-alt fa-2x"></i>',
                'Remove keys'
             ))
-         ) %>% div(title="Remove selected foreign keys")
+         ) %>% div(
+            title="Remove selected foreign keys",
+            style="margin-right:15px;",
+            tags$style(HTML(
+               "#removeFK{padding-top:2px;padding-bottom:2px;}"
+            ))
+         )
       })
       output$rmTablesInput <- renderUI({
          selTable <- selection$tables
@@ -1643,7 +1655,13 @@ buildServer <- function(
                '<i class="fas fa-trash fa-2x"></i>',
                'Remove tables'
             ))
-         ) %>% div(title="Remove selected tables")
+         ) %>% div(
+            title="Remove selected tables",
+            # style="margin-right:15px;",
+            tags$style(HTML(
+               "#removeTables{padding-top:2px;padding-bottom:2px;}"
+            ))
+         )
       })
 
       #########################################################################@
@@ -1671,7 +1689,10 @@ buildServer <- function(
                "", isolate(settings$availableColors)
             ),
             allowTransparent=TRUE
-         ) %>% div(title="Select table color")
+         ) %>% div(
+            title="Select table color",
+            style="margin-right:15px; width:75px;"
+         )
       })
       observe({
          newCol <- input$tableColor
