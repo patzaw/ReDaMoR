@@ -479,7 +479,7 @@ confront_data.RelTableModel <- function(
       suppFields=suppFields,
       availableFields=availableFields,
       fields=list(),
-      success=length(missingFields)==0
+      success=length(missingFields)==0 && length(suppFields)==0
    )
    ## Fields ----
    for(i in 1:nrow(x$fields)){
