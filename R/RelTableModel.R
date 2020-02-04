@@ -77,6 +77,13 @@ RelTableModel <- function(l){
       all(!is.na(l$primaryKey)),
       all(l$primaryKey %in% l$fields$name)
    )
+   for(
+      att in setdiff(
+         names(attributes(l$fields)), c("row.names", "names", "class")
+      )
+   ){
+      attr(l$fields, att) <- NULL
+   }
    l$fields <- as_tibble(l$fields) %>%
       select(c("name", "type", "nullable", "unique", "comment"))
 
@@ -116,6 +123,13 @@ RelTableModel <- function(l){
                all(!is.na(fk$key$to)),
                all(fk$key$from %in% l$fields$name)
             )
+            for(
+               att in setdiff(
+                  names(attributes(fk$key)), c("row.names", "names", "class")
+               )
+            ){
+               attr(fk$key, att) <- NULL
+            }
             fk$key <- as_tibble(fk$key)
             cnames <- c("fmin", "fmax", "tmin", "tmax")
             if("cardinality" %in% names(fko)){
