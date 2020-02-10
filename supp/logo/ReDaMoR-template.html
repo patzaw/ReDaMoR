@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ReDaMoR logo</title>
+        <script src="Deps/d3.v3.min.js" charset="utf-8"></script>
+        <script src="download.js"></script>
+    </head>
+
+    <body bgcolor="transparent">
+        <div id='techContainer' hidden=""></div>
+        <div id='wholeTitle' class='drawings'>
+            {{svg}}
+
+            <p>
+                 Scale: <input id="scale1" type="text" value="5"/>
+                <script>
+                    function checkScale1(){
+                        if(!scale1){
+                            d3.select("#bWtPng").attr("disabled", "disabled");
+                        }else if(scale1>0){
+                            d3.select("#bWtPng").attr("disabled", null);
+                        }else{
+                            d3.select("#bWtPng").attr("disabled", "disabled");
+                        }
+                    }
+                    var sc1 = d3.select("#scale1")[0][0];
+                    var scale1 = Number(sc1.value);
+                    checkScale1();
+                    sc1.addEventListener("input",function(){
+                        scale1 = Number(sc1.value);
+                        checkScale1();
+                    });
+                </script>
+                <button id="bWtPng" onclick="saveToPng('logo', scale1, 'ReDaMoR.png');">Save to PNG</button>
+                <button id="bWtSvg" onclick="saveToSvg('logo', 'ReDaMoR.svg');">Save to SVG</button>
+            </p>
+        </div>
+    </body>
+</html>
