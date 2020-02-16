@@ -24,6 +24,9 @@ model_relational_data(
 
 \item{example}{a file path to an sql or json model}
 }
+\value{
+The \link{RelDataModel} designed with the GUI.
+}
 \description{
 Relational data modeler GUI
 }

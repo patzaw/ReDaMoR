@@ -2420,9 +2420,9 @@ buildServer <- function(
       #########################################################################@
 
       if(fromR){
-         ## _+ Cache object ----
+         ## _+ Autosaved object ----
          observe({
-            assign(bcko, model$x, envir=.GlobalEnv)
+            assign(bcko, model$x, envir=modelEnv)
          })
          ## _+ Done button ----
          observeEvent(input$done, {
@@ -2442,6 +2442,8 @@ buildServer <- function(
 #' @param defaultColor a single color indicating the default table color
 #' @param availableColors a character of possible colors for tables
 #' @param example a file path to an sql or json model
+#'
+#' @return The [RelDataModel] designed with the GUI.
 #'
 #' @export
 #'
@@ -2472,13 +2474,17 @@ model_relational_data <- function(
    )
 ){
 
-   bcko <- paste(
-      c(".RelDataModel_", sample(letters, 10, replace=TRUE)), collapse=""
-   )
-   while(exists(bcko, where=.GlobalEnv)){
-      bcko <- paste(
-         c(".RelDataModel_", sample(letters, 10, replace=TRUE)), collapse=""
+   bcko <- NA
+   if(fromR){
+      bcko <- paste0(
+         "Model_", format(Sys.time(), format="%Y_%m_%d_%H_%M_%S")
       )
+      while(exists(bcko, where=modelEnv)){
+         Sys.sleep(1)
+         bcko <- paste0(
+            "Model_", format(Sys.time(), format="%Y_%m_%d_%H_%M_%S")
+         )
+      }
    }
 
    modelInput <- auto_layout(modelInput, lengthMultiplier=300)
@@ -2493,14 +2499,27 @@ model_relational_data <- function(
    if(fromR){
       ## From R ----
       on.exit(
-         message(
+         cat(
             sprintf(
-               "Your model has been saved in the '%s' object in .GlobalEnv",
-               bcko
+               "The returned model has also been autosaved as %s",
+               crayon::green(bcko)
             ),
-            "\n Use `list_RelDataModel_in_cache()`",
-            " and `clean_RelDataModel_in_cache()`",
-            " to list and remove them respectively."
+            sprintf(
+               "\n  - Use %s to get it back.",
+               crayon::yellow(
+                  sprintf('bring_back_RelDataModel("%s")', bcko)
+               )
+            ),
+            sprintf(
+               "\n  - Use %s",
+               crayon::yellow("list_autosaved_RelDataModel()")
+            ),
+            sprintf(
+               " and %s",
+               crayon::yellow("clean_autosaved_RelDataModels()")
+            ),
+            " to respectively list and remove all autosaved models.",
+            "\n"
          )
       )
       runApp(shinyApp(ui, server))
@@ -2512,20 +2531,37 @@ model_relational_data <- function(
 }
 
 ###############################################################################@
-#' List cached [RelDataModel] in .GlobalEnv
+#' Bring back an autosaved [RelDataModel]
+#'
+#' @param name The name of the autosaved [RelDataModel] to bring back.
+#' Available autosaved [RelDataModel] can be listed using
+#' the [list_autosaved_RelDataModel()]
 #'
 #' @export
 #'
-list_RelDataModel_in_cache <- function(){
-   ls(envir=.GlobalEnv, all.names=TRUE ) %>%
-      grep("[.]RelDataModel_", ., value=TRUE)
+bring_back_RelDataModel <- function(name){
+   get(name, envir=modelEnv)
 }
 
 ###############################################################################@
-#' Remove all cached [RelDataModel] from .GlobalEnv
+#' List autosaved [RelDataModel]
+#'
+#' @seealso [clean_autosaved_RelDataModels()] to clean this list.
 #'
 #' @export
 #'
-clean_RelDataModel_in_cache <- function(){
-   rm(list=list_RelDataModel_in_cache(), envir=.GlobalEnv)
+list_autosaved_RelDataModel <- function(){
+   ls(envir=modelEnv, all.names=TRUE)
 }
+
+###############################################################################@
+#' Remove all autosaved [RelDataModel]
+#'
+#' @export
+#'
+clean_autosaved_RelDataModels <- function(){
+   rm(list=list_autosaved_RelDataModel(), envir=modelEnv)
+}
+
+###############################################################################@
+modelEnv <- new.env(hash=TRUE, parent=emptyenv())
