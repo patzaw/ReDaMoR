@@ -69,7 +69,8 @@ buildUi <- function(fromR){
             actionButton(
                "redo",
                list(icon("redo", "fa-2x"), "Redo")
-            )
+            ),
+            title="Undo (Ctrl+Z) / Redo (Ctrl+Shift+Z)"
          ),
          div(
             class="mainButton",
@@ -1530,7 +1531,7 @@ buildServer <- function(
             )),
             class="shrunkenButton"
          ) %>% div(
-            title="Remove selected foreign keys"
+            title="Remove selected foreign keys (del)"
          )
       })
       output$rmTablesInput <- renderUI({
@@ -1544,7 +1545,7 @@ buildServer <- function(
             )),
             class="shrunkenButton"
          ) %>% div(
-            title="Remove selected tables"
+            title="Remove selected tables (del)"
          )
       })
 
