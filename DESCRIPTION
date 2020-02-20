@@ -4,7 +4,8 @@ Title: Relational Data ModeleR
 Version: 0.4.0
 Author: Patrice Godard
 Maintainer: Patrice Godard <patrice.godard@gmail.com>
-Description: Design, explore and import relational data model.
+Description: The aim of ReDaMoR is to manipulate relational data models in R.
+   It provides functions to create, import and check data models.
 Depends:
    R (>= 3.5),
    dplyr,
@@ -15,7 +16,6 @@ Depends:
    shinyjs
 Imports:
    readr,
-   base64enc,
    jsonlite,
    DT,
    colourpicker,

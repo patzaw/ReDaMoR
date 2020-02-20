@@ -1,7 +1,15 @@
 ###############################################################################@
 buildUi <- function(fromR){
+
+   addResourcePath(
+      "www",
+      system.file("www", package=packageName())
+   )
+
    shinyUI(fluidPage(
       title="ReDaMoR",
+      windowTitle="ReDaMoR",
+      id="MainApp",
 
       ## Settings ----
       useShinyjs(),
@@ -11,54 +19,26 @@ buildUi <- function(fromR){
       tags$head(
          tags$link(
             rel="icon",
-            href=paste(
-               "data:image/png;base64,",
-               base64enc::base64encode(system.file(
-                  "www/ReDaMoR.png",
-                  package = packageName()
-               ))
-            )
+            href='www/ReDaMoR.png'
          ),
-         includeCSS(system.file(
-            "www/cerulean.css",
-            package = packageName()
-         )),
-         includeCSS(system.file(
-            "www/defChanges.css",
-            package = packageName()
-         )),
-         tags$script(
-            '
-            $(document).keyup(function(event) {
-                if ($("#newTableName").is(":focus") * (event.key == "Enter")) {
-                    $("#confirmAddTable").click();
-                }
-            });
-            $(document).keyup(function(event) {
-                if ($("#tableNewName").is(":focus") * (event.key == "Enter")) {
-                    $("#confirmRenameTable").click();
-                }
-            });
-            // $(document).keyup(function(event) {
-            //     if ($("#tableComment").is(":focus") * (event.key == "Enter")) {
-            //     console.log("here");
-            //         $("#refreshComment").click();
-            //     }
-            // });
-            '
+         tags$link(
+            rel="stylesheet", type="text/css", href="www/cerulean.css"
          ),
-         if(fromR) NULL else tags$script('
-            window.onbeforeunload = function() {
-               return "Your changes will be lost!";
-            };
-         '
-         )
+         tags$link(
+            rel="stylesheet", type="text/css", href="www/defChanges.css"
+         ),
+         tags$link(
+            rel="stylesheet", type="text/css", href="www/appElements.css"
+         ),
+         tags$script(src='www/interactions.js'),
+         if(fromR) NULL else tags$script(src='www/fromWeb.js')
       ),
 
       ## Main menu ----
       fluidRow(
+         id="mainMenu",
          div(
-            style="display:inline-block; margin-left:0px; margin-right:10px",
+            id="mainDone",
             if(fromR){
                actionButton(
                   "done",
@@ -66,20 +46,11 @@ buildUi <- function(fromR){
                ) %>%
                   div(title="Return the model in R session")
             }else{
-               img(
-                  src=paste(
-                     "data:image/png;base64,",
-                     base64enc::base64encode(system.file(
-                        "www/ReDaMoR.png",
-                        package = packageName()
-                     ))
-                  ),
-                  style="height:75px;"
-               )
+               img(src='www/ReDaMoR.png', id="mainLogo")
             }
          ),
          div(
-            style="display:inline-block; margin-left:5px; margin-right:10px",
+            class="mainButton",
             actionButton(
                "import",
                list(icon("file-import", "fa-2x"), "Import")
@@ -90,7 +61,7 @@ buildUi <- function(fromR){
             )
          ),
          div(
-            style="display:inline-block; margin-left:5px; margin-right:10px",
+            class="mainButton",
             actionButton(
                "undo",
                list("Undo", icon("undo", "fa-2x"))
@@ -101,23 +72,22 @@ buildUi <- function(fromR){
             )
          ),
          div(
-            style="display:inline-block; margin-left:5px; margin-right:10px",
+            class="mainButton",
             actionButton(
                "addTable", "Add table",
                icon=icon("plus-square", "fa-2x")
             )
          ),
          div(
-            style="display:inline-block; margin-left:5px; margin-right:10px",
+            class="mainButton",
             uiOutput("modelSummary")
          ),
          div(
-            style="display:inline-block; margin-left:5px; margin-right:5px;",
+            class="mainButton",
             actionButton(
                "doc", "", icon=icon("question-circle", "fa-2x")
-            ) %>% div(title="Documentation")
-         ),
-         style="margin-top:25px;margin-bottom:20px;"
+            ) %>% div(title="Help tour")
+         )
       ),
 
       fluidRow(
@@ -126,9 +96,9 @@ buildUi <- function(fromR){
          column(
             7,
             fluidRow(
+               id="viewMenu",
                column(
-                  9,
-                  style="padding-left:0;",
+                  8,
                   id="findTableDiv",
                   selectInput(
                      "findTable",
@@ -140,70 +110,65 @@ buildUi <- function(fromR){
                   )
                ),
                column(
-                  1,
-                  style="padding-left:0; text-align:left;",
-                  div(actionButton(
-                     "selectAll",
-                     label=NULL,
-                     icon=icon("object-group", "fa-2x")
-                  ), title="Select all tables"),
-                  tags$style(HTML(
-                     "#selectAll{padding-top:2px;padding-bottom:2px;}"
-                  ))
-               ),
-               column(
-                  1,
-                  style="padding-left:0; padding-right:0; text-align:center;",
-                  div(actionButton(
-                     "autoLayout",
-                     label=NULL,
-                     icon=icon("pencil-ruler", "fa-2x")
-                  ), title="Auto layout the model"),
-                  tags$style(HTML(
-                     "#autoLayout{padding-top:2px;padding-bottom:2px;}"
-                  ))
-               ),
-               column(
-                  1,
-                  style="text-align:right; padding-left:0; padding-right:0;",
-                  div(actionButton(
-                     "fitNet",
-                     label=NULL,
-                     icon=icon("vector-square", "fa-2x")
-                  ), title="Fit model"),
-                  tags$style(HTML(
-                     "#fitNet{padding-top:2px;padding-bottom:2px;}"
-                  ))
-               ),
-               style="margin-bottom:0;"
+                  4,
+                  id="viewButtons",
+                  div(
+                     class="viewButton",
+                     actionButton(
+                        "selectAll",
+                        label=NULL,
+                        icon=icon("object-group", "fa-2x"),
+                        class="shrunkenButton"
+                     ) %>% div(title="Select all tables")
+                  ),
+                  div(
+                     class="viewButton",
+                     actionButton(
+                        "autoLayout",
+                        label=NULL,
+                        icon=icon("pencil-ruler", "fa-2x"),
+                        class="shrunkenButton"
+                     ) %>% div(title="Auto layout the model")
+                  ),
+                  div(
+                     class="viewButton",
+                     actionButton(
+                        "fitNet",
+                        label=NULL,
+                        icon=icon("vector-square", "fa-2x"),
+                        class="shrunkenButton"
+                     ) %>% div(title="Fit model")
+                  )
+               )
             ),
             fluidRow(
-               visNetworkOutput("modelNet", height="75vh", width="100%"),
-               style="border:solid; min-height:80vh;"
+               id="modelFrame",
+               visNetworkOutput("modelNet", height="75vh", width="100%")
             )
          ),
 
          column(
             5,
 
-            ## Multiple tables ----
+            ## Edit menu ----
             div(
+               id="editMenu",
                uiOutput(
                   "setTableColor",
-                  style="display: inline-block;"
+                  class="editMenuSection"
                ),
                uiOutput(
                   "addFKInput",
-                  style="display: inline-block;"
+                  class="editMenuSection"
                ),
                uiOutput(
                   "rmFKInput",
-                  style="display: inline-block;"),
+                  class="editMenuSection"
+               ),
                uiOutput(
                   "rmTablesInput",
-                  style="display: inline-block;"
-               ),
-               style="padding-bottom:0px; text-align:center;"
+                  class="editMenuSection"
+               )
             ),
 
             ## Edit table ----
@@ -242,7 +207,7 @@ buildServer <- function(
    function(input, output, session) {
 
       #########################################################################@
-      ## Documentation ----
+      ## Help tour ----
       #########################################################################@
 
       context <- reactiveValues(
@@ -304,12 +269,12 @@ buildServer <- function(
          current=1,                 # The position of current model in history
          toImport=NULL,             # Model to import from file
          merged=NULL,               # merge: c(x, toImport)
-         table=NULL,
-         indexTable=tibble(
+         table=NULL,                # The table to edit
+         indexTable=tibble(         # Indexes of the table to edit
             fields=character(),
             unique=logical()
          ),
-         fieldTable=tibble(
+         fieldTable=tibble(         # Fields of the table to edit
             name=character(),
             type=character(),
             nullable=logical(),
@@ -318,13 +283,13 @@ buildServer <- function(
          )
       )
       replot <- reactiveValues(
-         x=1                        # Replot the model
+         x=1                        # Used for triggering model re-plot
       )
       selection <- reactiveValues(
-         release=0,
+         release=0,                 # Used for refreshing the visNetwork
          tables=NULL,               # Selected tables
          fk=NULL,                   # Selected foreign keys
-         fromVN=FALSE
+         fromVN=FALSE               # Used for refreshing the visNetwork
       )
 
       #########################################################################@
@@ -344,7 +309,7 @@ buildServer <- function(
       })
 
       #########################################################################@
-      ## Model overview ----
+      ## Model view ----
       #########################################################################@
 
       observe({
@@ -398,15 +363,10 @@ buildServer <- function(
          nt <- length(m)
          nfk <- nrow(mn$edges)
          np <- lapply(m, function(x) nrow(x$fields)) %>% unlist() %>% sum()
-         p(
+         tagList(
             tags$strong("Tables:"), nt, "-",
             tags$strong("Foreign keys:"), nfk, "-",
-            tags$strong("Fields:"), np,
-            style=paste(
-               "padding:5px;",
-               "border:solid; border-radius:8px;",
-               "background:#E3E3E3;"
-            )
+            tags$strong("Fields:"), np
          )
       })
 
@@ -420,11 +380,7 @@ buildServer <- function(
          selection$tables <- NULL
          selection$fk <- NULL
          plot(isolate(model$x), color=isolate(settings$defaultColor)) %>%
-            visEvents(
-               release="function(nodes) {
-                  Shiny.onInputChange('modelNet_release', Math.random());
-               }"
-            )
+            visEvents(release="releaseVn")
       })
 
       observe({
@@ -441,7 +397,7 @@ buildServer <- function(
 
       modelNet_selectedNodes <- reactive({
          input$modelNet_selectedNodes
-      })# %>% debounce(500)
+      })
       observe({
          selTables <- intersect(
             modelNet_selectedNodes(),
@@ -455,8 +411,7 @@ buildServer <- function(
          }
       })
 
-      modelNet_selectedEdges <- reactive({input$modelNet_selectedEdges}) %>%
-         debounce(500)
+      modelNet_selectedEdges <- reactive({input$modelNet_selectedEdges})
       observe({
          selFK <- intersect(
             modelNet_selectedEdges(),
@@ -492,42 +447,29 @@ buildServer <- function(
             fluidRow(
                column(
                   6,
-                  div(fileInput(
+                  class="leftBox",
+                  fileInput(
                      "impModel", "Choose an sql or a json file",
                      multiple=FALSE,
                      accept=c(".sql", ".json", ".sql.gz", ".json.gz"),
                      width="100%"
-                  ), id="impModelCol"),
-                  style="text-align:left;"
+                  )
                ),
                column(
                   2,
-                  uiOutput("exampleModel"),
-                  style="text-align:left;"
+                  class="leftBox",
+                  uiOutput("exampleModel")
                ),
-               # column(
-               #    4,
-               #    div(fileInput(
-               #       "infModel",
-               #       paste(
-               #          "Choose data files from which",
-               #          "the data model should be inferred."
-               #       ),
-               #       multiple=TRUE,
-               #       accept=c(".txt", ".csv", ".tsv"),
-               #       width="100%"
-               #    ), id="infModelCol"),
-               #    style="text-align:left;"
-               # ),
                column(
                   4,
+                  class="rightBox",
                   div(
-                     style="display:inline-block; margin-right:5px;",
+                     class="mainButton",
                      actionButton(
                         "docImp", "", icon=icon("question-circle", "fa-2x")
-                     ) %>% div(title="Documentation")
-                  ),
-                  style="text-align:right;"
+                     ),
+                     title="Help tour"
+                  )
                )
             ),
             fluidRow(uiOutput("impModel"))
@@ -539,12 +481,12 @@ buildServer <- function(
          mi <- model$toImport
          validate(need(!is.null(mi), ""))
          if(!is.RelDataModel(mi)){
-            list(p(mi, style="color:red;font-weight: bold;"))
+            list(p(mi, class="errorMessage"))
          }else{
             list(
                div(
                   visNetworkOutput("impModelNet", height="65vh", width="100%"),
-                  style="border:solid; min-height:65vh;"
+                  id="impModelFrame"
                ),
                uiOutput("impMessage")
             )
@@ -570,11 +512,10 @@ buildServer <- function(
          if(is.RelDataModel(mm)){
             actionButton(
                "importValidate",
-               list(icon("file-import", "fa-2x"), "Merge with current model"),
-               style="margin-top:25px;margin-bottom:25px;"
+               list(icon("file-import", "fa-2x"), "Merge with current model")
             )
          }else{
-            list(p(mm, style="color:red;font-weight: bold;"))
+            list(p(mm, class="errorMessage"))
          }
       })
 
@@ -627,70 +568,6 @@ buildServer <- function(
          validate(need(mi, ""))
          model$toImport <-  auto_layout(mi, lengthMultiplier=45*length(mi))
       })
-
-      # ## _+ From data files ----
-      # observe({
-      #    fi <- input$infModel
-      #    validate(need(fi, ""))
-      #    fiext <- regexpr(
-      #       "(\\.[[:alnum:]]+)(\\.gz)?$", fi$name, ignore.case=TRUE
-      #    )
-      #    fiext <- substr(
-      #       fi$name, fiext, fiext+attr(fiext, "match.length")-1
-      #    ) %>% tolower() %>% unique()
-      #    if(length(fiext)==0){
-      #       model$toImport <- paste(
-      #          "Selected files have several extensions.",
-      #          "You should select files with the same extension:",
-      #          ".csv (comma separated values),",
-      #          "tsv or .txt (tab separated values)"
-      #       )
-      #    }
-      #    validate(need(length(fiext)==1, ""))
-      #    supportedExt <- c(".csv", ".tsv", ".txt")
-      #    if(!fiext %in% supportedExt){
-      #       model$toImport <- paste(
-      #          "File extension should be one of the following:",
-      #          ".csv (comma separated values),",
-      #          "tsv or .txt (tab separated values)"
-      #       )
-      #    }
-      #    validate(need(fiext %in% supportedExt, ""))
-      #    if(fiext==".csv"){
-      #       delim=","
-      #    }
-      #    if(fiext %in% c(".tsv", ".txt")){
-      #       delim="\t"
-      #    }
-      #    dfEnvir <- new.env()
-      #    for(i in 1:nrow(fi)){
-      #       tv <- try(
-      #          suppressMessages(
-      #             readr::read_delim(file=fi$datapath[i], delim=delim)
-      #          ),
-      #          silent=TRUE
-      #       )
-      #       if(!is.data.frame(tv)){
-      #          dfEnvir <- tv
-      #          break()
-      #       }else{
-      #          assign(
-      #             sub("(\\.[[:alnum:]]+)(\\.gz)?$", "", fi$name[i]),
-      #             tv,
-      #             envir=dfEnvir
-      #          )
-      #       }
-      #    }
-      #    if(!is.environment(dfEnvir)){
-      #       model$toImport <- dfEnvir
-      #    }else{
-      #       model$toImport <- df_to_model(
-      #          list=ls(envir=dfEnvir, all.names=TRUE),
-      #          envir=dfEnvir
-      #       ) %>%
-      #          auto_layout(lengthMultiplier=45*length(.))
-      #    }
-      # })
 
       ## _+ Validate import ----
       observe({
@@ -775,7 +652,7 @@ buildServer <- function(
          ntn <- input$newTableName
          m <- isolate(model$x)
          if(ntn %in% names(m)){
-            p("Table name already used", style="color:red;font-weight: bold;")
+            p("Table name already used", class="errorMessage")
          }else{
             list()
          }
@@ -827,27 +704,21 @@ buildServer <- function(
          selTable <- mt$tableName
          div(
             fluidRow(
-               column(8, h3(selTable, style="margin-top:6px;")),
+               column(8, h3(selTable)),
                column(
                   4,
+                  class="rightBox",
                   actionButton("renameTable", "Rename") %>%
-                     div(title="Rename the table"),
-                  style="text-align:right;"
+                     div(title="Rename the table")
                )
             ),
             uiOutput("tableCommentUI"),
-            tags$hr(style="border-color:#317EAC; border-width:3px;"),
+            tags$hr(class="editSeparator"),
             uiOutput("fields"),
-            tags$hr(style="border-color:#317EAC; border-width:3px;"),
+            tags$hr(class="editSeparator"),
             uiOutput("primaryKey"),
-            tags$hr(style="border-color:#317EAC; border-width:3px;"),
-            uiOutput("indexes"),
-            style=paste(
-               "border:solid;", #"border-radius:15px;",
-               "height:80vh;",
-               "overflow:scroll;",
-               "padding:15px;"
-            )
+            tags$hr(class="editSeparator"),
+            uiOutput("indexes")
          )
       })
 
@@ -876,7 +747,7 @@ buildServer <- function(
          ntn <- input$tableNewName
          m <- isolate(model$x)
          if(ntn %in% names(m)){
-            p("Table name already used", style="color:red;font-weight: bold;")
+            p("Table name already used", class="errorMessage")
          }else{
             list()
          }
@@ -928,9 +799,9 @@ buildServer <- function(
                   "refreshComment",
                   label=NULL,
                   icon=icon("check", "fa-1x"),
-                  class="btn btn-default action-button shiny-bound-input disabled"
+                  class="disabled"
                ) %>% div(title="Update table comment"),
-               style="text-align:right;"
+               class="rightBox"
             )
          )
       })
@@ -990,9 +861,9 @@ buildServer <- function(
                   ) %>%
                      div(
                         title="Add a new field",
-                        style="display:inline-block;"
+                        class="iblock"
                      ),
-                  style="text-align:right;"
+                  class="rightBox"
                )
             ),
             fluidRow(
@@ -1046,10 +917,7 @@ buildServer <- function(
          selTable <- mt$tableName
          validate(need(nrow(mt$fields)>0, ""))
          validate(need(seli>=1 & seli <= nrow(mt$fields), ""))
-         p(
-            mt$fields$comment[seli],
-            style="font-weight: bold; padding-top:5px; padding-bottom:5px;"
-         )
+         p(mt$fields$comment[seli])
       })
       # ## __- Modify fields ----
       output$updateFieldDiv <- renderUI({
@@ -1069,16 +937,14 @@ buildServer <- function(
             ) %>%
                div(
                   title="Edit field properties",
-                  style="display:inline-block;"
+                  class="iblock"
                ),
             actionButton(
                "removeField",
-               label=HTML(paste(
-                  '<i class="fa fa-minus-square fa-1x" style="color:red;">',
-                  '</i>'
-               ))
-            ) %>% div(title="Remove field", style="display:inline-block;"),
-            style="display:inline-block;"
+               label="",
+               icon=icon("minus-square", "fa-1x")
+            ) %>% div(title="Remove field", class="iblock"),
+            class="iblock"
          )
       })
       # ## __- Remove field ----
@@ -1103,13 +969,11 @@ buildServer <- function(
                title="Unable to remove field",
                p(
                   HTML(paste(
-                     sprintf(
-                        "%s is used in a foreign key.",
-                        sprintf("<strong>%s</strong>", fn)
-                     ),
-                     "<br>Remove foreign keys before removing this fields."
+                     sprintf("<u>%s</u> is used in foreign key(s).", fn),
+                     "Remove the foreign key(s) before removing this fields.",
+                     sep="<br>"
                   )),
-                  style="color:red;"#font-weight: bold;"
+                  class="errorMessage"
                ),
                size="s",
                easyClose=TRUE
@@ -1184,7 +1048,7 @@ buildServer <- function(
          selTable <- mt$tableName
          fields <- mt$fields
          validate(need(input$newFieldName %in% fields$name, ""))
-         p("Field name already used", style="color:red;font-weight: bold;")
+         p("Field name already used", class="errorMessage")
       })
       observeEvent(input$confirmAddField, {
          mt <- isolate(model$table)
@@ -1292,7 +1156,7 @@ buildServer <- function(
          selTable <- mt$tableName
          fields <- mt$fields
          validate(need(nfn %in% fields$name[-seli], ""))
-         p("Field name already used", style="color:red;font-weight: bold;")
+         p("Field name already used", class="errorMessage")
       })
       updateField <- reactiveValues(error=NULL)
       observeEvent(input$confirmUpdateField, {
@@ -1339,7 +1203,7 @@ buildServer <- function(
       output$updateFieldError <- renderUI({
          e <- updateField$error
          validate(need(!is.null(e), ""))
-         p(e, style="color:red;")
+         p(e, class="errorMessage")
       })
 
 
@@ -1370,7 +1234,7 @@ buildServer <- function(
                   icon=icon("check", "fa-1x"),
                   class="btn btn-default action-button shiny-bound-input disabled"
                ) %>% div(title="Update table primary key"),
-               style="text-align:right;"
+               class="rightBox"
             )
          )
       })
@@ -1419,8 +1283,8 @@ buildServer <- function(
                      "addIndex", label="",
                      icon=icon("plus-square", "fa-1x")
                   ) %>%
-                     div(title="Add an index", style="display:inline-block;"),
-                  style="text-align:right;"
+                     div(title="Add an index", class="iblock"),
+                  class="rightBox"
                )
             ),
             fluidRow(
@@ -1494,15 +1358,13 @@ buildServer <- function(
             ) %>%
                div(
                   title="Update index properties",
-                  style="display:inline-block;"
+                  class="iblock"
                ),
             actionButton(
                "removeIndex",
-               label=HTML(paste(
-                  '<i class="fa fa-minus-square fa-1x" style="color:red;">',
-                  '</i>'
-               ))
-            ) %>% div(title="Remove index", style="display:inline-block;")
+               label="",
+               icon=icon("minus-square", "fa-1x")
+            ) %>% div(title="Remove index", class="iblock")
          )
       })
       observeEvent(input$updateIndex,{
@@ -1612,21 +1474,18 @@ buildServer <- function(
       })
 
       #########################################################################@
-      ## Multiple tables ----
+      ## Edit menu ----
       #########################################################################@
 
       output$addFKInput <- renderUI({
          selTable <- selection$tables
          validate(need(length(selTable)>0 & length(selTable)<=2, ""))
          actionButton(
-            "addForeignKey", "Add key",
-            icon=icon("external-link-alt", "fa-2x")
+            "addForeignKey", "Key",
+            icon=icon("external-link-alt", "fa-2x"),
+            class="shrunkenButton"
          ) %>% div(
-            title="Add a foreign key",
-            style="margin-right:15px;",
-            tags$style(HTML(
-               "#addForeignKey{padding-top:2px;padding-bottom:2px;}"
-            ))
+            title="Add a foreign key"
          )
       })
       output$rmFKInput <- renderUI({
@@ -1636,14 +1495,11 @@ buildServer <- function(
             "removeFK",
             label=HTML(paste(
                '<i class="far fa-trash-alt fa-2x"></i>',
-               'Remove keys'
-            ))
+               'keys'
+            )),
+            class="shrunkenButton"
          ) %>% div(
-            title="Remove selected foreign keys",
-            style="margin-right:15px;",
-            tags$style(HTML(
-               "#removeFK{padding-top:2px;padding-bottom:2px;}"
-            ))
+            title="Remove selected foreign keys"
          )
       })
       output$rmTablesInput <- renderUI({
@@ -1653,14 +1509,11 @@ buildServer <- function(
             "removeTables",
             label=HTML(paste(
                '<i class="fas fa-trash fa-2x"></i>',
-               'Remove tables'
-            ))
+               'tables'
+            )),
+            class="shrunkenButton"
          ) %>% div(
-            title="Remove selected tables",
-            # style="margin-right:15px;",
-            tags$style(HTML(
-               "#removeTables{padding-top:2px;padding-bottom:2px;}"
-            ))
+            title="Remove selected tables"
          )
       })
 
@@ -1690,8 +1543,8 @@ buildServer <- function(
             ),
             allowTransparent=TRUE
          ) %>% div(
-            title="Select table color",
-            style="margin-right:15px; width:75px;"
+            id="tabColPick",
+            title="Select table color"
          )
       })
       observe({
@@ -1741,13 +1594,11 @@ buildServer <- function(
                   title="Unable to remove table",
                   p(
                      HTML(paste(
-                        sprintf(
-                           "%s is referenced by other tables.",
-                           sprintf("<strong>%s</strong>", tn)
-                        ),
-                        "<br>Remove foreign keys before removing this table."
+                        sprintf("<u>%s</u> is referenced by other tables.", tn),
+                        "Remove foreign key(s) before removing this table.",
+                        sep="<br>"
                      )),
-                     style="color:red;"#font-weight: bold;"
+                     class="errorMessage"
                   ),
                   size="s",
                   easyClose=TRUE
@@ -1799,7 +1650,7 @@ buildServer <- function(
             fluidRow(
                column(
                   5,
-                  fluidRow(h4(tns[1]), style="text-align:center;"),
+                  fluidRow(h4(tns[1]), class="centerBox"),
                   fluidRow(uiOutput("ilcard"))
                ),
                if(length(tns)==1){
@@ -1808,7 +1659,7 @@ buildServer <- function(
                      actionButton("confirmAddFK", "Add", disabled=TRUE),
                      tags$br(),
                      icon("long-arrow-alt-right", "fa-2x"),
-                     style="text-align:center;"
+                     class="centerBox"
                   )
                }else{
                   column(
@@ -1819,30 +1670,22 @@ buildServer <- function(
                         "fkDirection", "",
                         icon=icon("long-arrow-alt-right", "fa-2x")
                      ) %>% div(title="Change foreign key direction"),
-                     style="text-align:center;"
+                     class="centerBox"
                   )
                },
                column(
                   5,
-                  fluidRow(h4(tns[length(tns)]), style="text-align:center;"),
+                  fluidRow(h4(tns[length(tns)]), class="centerBox"),
                   fluidRow(uiOutput("ircard"))
-               ),
-               style="border-bottom:solid; border-color:#317EAC;"
-            ),
-            fluidRow(
-              uiOutput("fkFields"),
-              style=paste(
-                 "border-bottom:solid ;border-color:#317EAC;",
-                 "margin:15px; padding:15px;"
-              )
-            ),
-            fluidRow(
-               uiOutput("possibleFkFields"),
-               style=paste(
-                  "border-bottom:solid; border-color:#317EAC;",
-                  "margin:15px; padding:15px;"
                )
-            )
+            ),
+            tags$hr(class="editSeparator"),
+            ##
+            fluidRow(uiOutput("fkFields")),
+            tags$hr(class="editSeparator"),
+            ##
+            fluidRow(uiOutput("possibleFkFields")),
+            tags$hr(class="editSeparator")
          )
       })
 
@@ -1897,17 +1740,17 @@ buildServer <- function(
                   selectInput(
                      "fkFromField", "", ftfields, multiple=FALSE, width="100%"
                   ),
-                  style="width:100%; margin:auto;"
+                  class="fkFieldSel"
                )
             ),
-            column(2, uiOutput("addFkFields"), style="text-align:center;"),
+            column(2, uiOutput("addFkFields"), class="centerBox"),
             column(
                5,
                div(
                   selectInput(
                      "fkToField", "", ttfields, multiple=FALSE, width="100%"
                   ),
-                  style="width:100%; margin:auto;"
+                  class="fkFieldSel"
                )
             )
          )
@@ -1933,18 +1776,26 @@ buildServer <- function(
             ftfields[which(ftfields$name==from),]$type !=
             ttfields[which(ttfields$name==to),]$type
          ){
-            return(list(tags$br(), p("Incompatible types", style="color:red;")))
+            return(tagList(
+               tags$br(),
+               p("Incompatible types", class="errorMessage")
+            ))
          }else{
             selFrom <- foreignKey$fromFields
             selTo <- foreignKey$toFields
             alreadyIn <- length(which(selFrom==from & selTo==to))>0
             if(alreadyIn){
-               return(list(tags$br(), p("Already in key", style="color:red;")))
+               return(tagList(
+                  tags$br(),
+                  p("Already in key", class="errorMessage")
+               ))
             }else{
-               return(list(tags$br(), actionButton(
-                  "addFkField", label="",
-                  icon=icon("plus-square", "fa-1x")
-               ) %>% div(title="Add key field")))
+               return(tagList(
+                  tags$br(),
+                  actionButton(
+                     "addFkField", label="",
+                     icon=icon("plus-square", "fa-1x")
+                  ) %>% div(title="Add key field")))
             }
          }
       })
@@ -1969,7 +1820,7 @@ buildServer <- function(
             column(10, DT::DTOutput("fkFieldTable")),
             column(1,
                uiOutput("rmFkField"),
-               style="text-align:right;"
+               class="rightBox"
             )
          )
       })
@@ -2010,10 +1861,8 @@ buildServer <- function(
          return(
             actionButton(
                "confirmRmFkField",
-               label=HTML(paste(
-                  '<i class="fa fa-minus-square fa-1x" style="color:red;">',
-                  '</i>'
-               ))
+               label="",
+               icon=icon("minus-square", "fa-1x")
             ) %>% div(title="Remove key field")
          )
       })
@@ -2381,12 +2230,12 @@ buildServer <- function(
             column(6, downloadButton(
                "exportJson",
                list(icon("file-code", "fa-2x"), "JSON"),
-               style="margin-top:25px;margin-bottom:25px;"
+               class="exportButtons"
             )),
             column(6, downloadButton(
                "exportHtml",
                list(icon("map", "fa-2x"), "HTML"),
-               style="margin-top:25px;margin-bottom:25px;"
+               class="exportButtons"
             ))
          )
       })

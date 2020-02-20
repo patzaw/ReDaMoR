@@ -1,0 +1,173 @@
+/******************************************************************************/
+/* General */
+
+.mainButton {
+   display:inline-block;
+   margin-left:5px;
+   margin-right:10px;
+}
+
+.shrunkenButton {
+   padding-top:2px;
+   padding-bottom:2px;
+}
+
+.errorMessage {
+   color:red;
+   font-weight:bold;
+}
+
+h3 {
+   margin-top:6px;
+}
+
+.leftBox {
+   text-align:left;
+}
+.rightBox {
+   text-align:right;
+}
+.centerBox {
+   text-align:center;
+}
+
+.iblock {
+   display:inline-block;
+}
+
+.editSeparator {
+   border-color:#317EAC;
+   border-width:3px;
+}
+
+.fa-minus-square {
+   color:red;
+}
+
+/******************************************************************************/
+/* Main menu */
+
+#mainMenu {
+   margin-top:25px;
+   margin-bottom:20px;
+}
+
+#mainDone {
+   display:inline-block;
+   margin-left:0;
+   margin-right:10px;
+}
+
+#mainLogo {
+   height:75px;
+}
+
+#modelSummary {
+   padding:5px;
+   border:solid;
+   border-radius:8px;
+   background:#E3E3E3;
+}
+
+/******************************************************************************/
+/* Model view */
+
+#viewMenu {
+   margin-bottom:0;
+}
+
+#findTableDiv {
+   padding-left:0;
+   padding-right:5px;
+}
+
+#viewButtons {
+   padding-left:5px;
+   padding-right:0;
+}
+
+.viewButton {
+   display:inline-block;
+   margin-left:10px;
+   margin-right:0;
+}
+
+#modelFrame {
+   border:solid;
+   min-height:80vh;
+}
+
+/******************************************************************************/
+/* Import */
+
+#impModelFrame {
+   border:solid;
+   min-height:65vh;
+}
+
+#importValidate {
+   margin-top:25px;
+   margin-bottom:25px;
+}
+
+/******************************************************************************/
+/* Edit menu */
+
+#editMenu {
+   padding-bottom:0;
+   text-align:left;
+}
+
+.editMenuSection {
+   display: inline-block;
+}
+
+#editMenu > div > div{
+   margin-right:15px;
+}
+
+#tabColPick {
+   width:50px;
+}
+
+/******************************************************************************/
+/* Edit table */
+
+#editTable > div {
+   border:solid;
+   height:80vh;
+   overflow:scroll;
+   padding:15px;
+}
+
+#fieldCommentDisplay > p {
+   font-weight: bold;
+   padding-top:5px;
+   padding-bottom:5px;
+}
+
+/******************************************************************************/
+/* Foreign keys */
+
+#fkFields {
+   margin:15px;
+   padding:15px;
+}
+
+#possibleFkFields {
+   margin:15px;
+   padding:15px;
+}
+
+.fkFieldSel {
+   width:200px;
+   margin:auto;
+}
+
+/******************************************************************************/
+/* Export model */
+
+.exportButtons {
+   margin-top:25px;
+   margin-bottom:25px;
+}

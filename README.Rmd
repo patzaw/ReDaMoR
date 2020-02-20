@@ -1,0 +1,30 @@
+---
+title: "README"
+output:
+  md_document:
+    variant: markdown_github
+    toc: true
+    toc_depth: 2
+editor_options: 
+  chunk_output_type: console
+---
+
+<!----------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+# ReDaMoR
+
+<img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px" />
+
+The aim of ReDaMoR is to manipulate relational data models in R.
+It provides functions to create, import and check data models.
+
+Another R package, [datamodelr](https://github.com/bergant/datamodelr),
+is available on github to model relational data. The approach is quite
+different from ReDaMoR.
+
+# Install
+
+## From github
+
+# Model your relational data
+
