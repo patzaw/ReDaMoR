@@ -785,7 +785,7 @@ buildServer <- function(
          selTable <- mt$tableName
          fluidRow(
             column(
-               10,
+               8,
                textAreaInput(
                   "tableComment",
                   label=NULL,
@@ -797,13 +797,14 @@ buildServer <- function(
                )
             ),
             column(
-               2,
+               4,
+               uiOutput("refreshCommentH", class="updateHighlight"),
                actionButton(
                   "refreshComment",
                   label=NULL,
                   icon=icon("check", "fa-1x"),
                   class="disabled"
-               ) %>% div(title="Update table comment"),
+               ) %>% div(title="Update table comment", class="iblock"),
                class="rightBox"
             )
          )
@@ -823,6 +824,19 @@ buildServer <- function(
          }else{
             enable("refreshComment")
          }
+      })
+      output$refreshCommentH <- renderUI({
+         input$refreshComment
+         ntn <- input$tableComment
+         validate(need(length(ntn)>0, ""))
+         mt <- model$table
+         validate(need(mt, ""))
+         selTable <- mt$tableName
+         cc <- mt$display$comment
+         ntn <- ifelse(is.na(ntn), "", ntn)
+         cc <- ifelse(is.na(cc), "", cc)
+         validate(need(ntn!=cc, ""))
+         icon("arrow-right", "fa-1x")
       })
       observe({
          input$refreshComment
@@ -1220,7 +1234,7 @@ buildServer <- function(
          fluidRow(
             column(3, h4("Primary key")),
             column(
-               7,
+               5,
                selectInput(
                   "primaryKey", label=NULL,
                   choices=fnames,
@@ -1230,13 +1244,14 @@ buildServer <- function(
                )
             ),
             column(
-               2,
+               4,
+               uiOutput("refreshPKH", class="updateHighlight"),
                actionButton(
                   "refreshPrimaryKey",
                   label=NULL,
                   icon=icon("check", "fa-1x"),
-                  class="btn btn-default action-button shiny-bound-input disabled"
-               ) %>% div(title="Update table primary key"),
+                  class="disabled"
+               ) %>% div(title="Update table primary key", class="iblock"),
                class="rightBox"
             )
          )
@@ -1253,6 +1268,19 @@ buildServer <- function(
          }else{
             disable("refreshPrimaryKey")
          }
+      })
+      output$refreshPKH <- renderUI({
+         input$refreshPrimaryKey
+         npk <- input$primaryKey
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
+         cpk <- mt$primaryKey
+         validate(need(
+            length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk)),
+            ""
+         ))
+         icon("arrow-right", "fa-1x")
       })
       observe({
          validate(need(input$refreshPrimaryKey>0, ""))

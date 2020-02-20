@@ -1,6 +1,12 @@
 /******************************************************************************/
 /* General */
 
+:root {
+  --neutral-color:#317EAC;
+  --neg-color:red;
+  --box-bg-color:#E3E3E3;
+}
+
 .mainButton {
    display:inline-block;
    margin-left:5px;
@@ -13,7 +19,7 @@
 }
 
 .errorMessage {
-   color:red;
+   color:var(--neg-color);
    font-weight:bold;
 }
 
@@ -36,12 +42,12 @@ h3 {
 }
 
 .editSeparator {
-   border-color:#317EAC;
+   border-color: var(--neutral-color);
    border-width:3px;
 }
 
 .fa-minus-square {
-   color:red;
+   color:var(--neg-color);
 }
 
 /******************************************************************************/
@@ -66,7 +72,7 @@ h3 {
    padding:5px;
    border:solid;
    border-radius:8px;
-   background:#E3E3E3;
+   background:var(--box-bg-color);
 }
 
 /******************************************************************************/
@@ -144,6 +150,21 @@ h3 {
    font-weight: bold;
    padding-top:5px;
    padding-bottom:5px;
+}
+
+.updateHighlight {
+   display:inline-block;
+   color:var(--neutral-color);
+   font-weight:bold;
+   animation:blinkingText 1s infinite;
+}
+
+@keyframes blinkingText{
+    0%{     color: var(--neutral-color);    }
+    49%{    color: var(--neutral-color); }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: var(--neutral-color);    }
 }
 
 /******************************************************************************/
