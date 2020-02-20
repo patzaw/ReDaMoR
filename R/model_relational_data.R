@@ -259,11 +259,28 @@ buildServer <- function(
       rintrojs::introjs(session, options = list(steps=rintrosteps[["main"]]))
 
       #########################################################################@
+      ## Settings ----
+      #########################################################################@
+
+      settings <- reactiveValues()
+      settings$defaultColor <- defaultColor
+      settings$availableColors <- availableColors
+      observe({
+         settings$availableColors <- unique(c(
+            settings$defaultColor,
+            lapply(model$x, function(x) x$display$color) %>%
+               unlist() %>% setdiff(NA),
+            isolate(settings$availableColors)
+         ))
+      })
+
+      #########################################################################@
       ## The model ----
       #########################################################################@
 
       model <- reactiveValues(
          x=modelInput,              # The current model
+         vn=modelToVn(modelInput),  # VisNet representation
          new=NULL,                  # A new model to add in history
          history=list(modelInput),  # The model history
          current=1,                 # The position of current model in history
@@ -282,6 +299,10 @@ buildServer <- function(
             comment=character()
          )
       )
+      observe(
+         model$vn <- modelToVn(model$x, color=isolate(settings$defaultColor))
+      )
+
       replot <- reactiveValues(
          x=1                        # Used for triggering model re-plot
       )
@@ -291,22 +312,6 @@ buildServer <- function(
          fk=NULL,                   # Selected foreign keys
          fromVN=FALSE               # Used for refreshing the visNetwork
       )
-
-      #########################################################################@
-      ## Settings ----
-      #########################################################################@
-
-      settings <- reactiveValues()
-      settings$defaultColor <- defaultColor
-      settings$availableColors <- availableColors
-      observe({
-         settings$availableColors <- unique(c(
-            settings$defaultColor,
-            lapply(model$x, function(x) x$display$color) %>%
-               unlist() %>% setdiff(NA),
-            isolate(settings$availableColors)
-         ))
-      })
 
       #########################################################################@
       ## Model view ----
@@ -332,7 +337,7 @@ buildServer <- function(
       observe({
          selTables <- sort(input$findTable)
          validate(need(!identical(selTables, isolate(selection$tables)), ""))
-         mn <- isolate(model$x) %>% modelToVn()
+         mn <- isolate(model$vn)
          selFK <- mn$edges %>%
             filter(from %in% selTables | to %in% selTables) %>%
             pull(id)
@@ -359,7 +364,7 @@ buildServer <- function(
 
       output$modelSummary <- renderUI({
          m <- model$x
-         mn <- modelToVn(m)
+         mn <- model$vn
          nt <- length(m)
          nfk <- nrow(mn$edges)
          np <- lapply(m, function(x) nrow(x$fields)) %>% unlist() %>% sum()
@@ -415,7 +420,7 @@ buildServer <- function(
       observe({
          selFK <- intersect(
             modelNet_selectedEdges(),
-            modelToVn(model$x, color=isolate(settings$defaultColor))$edges$id
+            model$vn$edges$id
          ) %>% sort()
          selection$fromVN <- TRUE
          if(length(selFK)==0){
@@ -575,9 +580,7 @@ buildServer <- function(
          mm <- isolate(model$merged)
          validate(need(mm, ""))
 
-         cmn <- modelToVn(
-            isolate(model$x), color=isolate(settings$defaultColor)
-         )
+         cmn <- isolate(model$vn)
          if(
             !is.null(cmn$nodes)>0 && nrow(cmn$nodes)>0 &&
             all(!is.na(cmn$nodes$x)) && all(!is.na(cmn$nodes$y))
@@ -1994,7 +1997,7 @@ buildServer <- function(
          validate(need(takeAction, ""))
          fks <- isolate(selection$fk)
          m <- isolate(model$x)
-         mne <- modelToVn(m, color=isolate(settings$defaultColor))$edges
+         mne <- isolate(model$vn)$edges
          if(length(fks)>0 && all(fks!="") && all(fks %in% mne$id)){
             for(fk in fks){
                i <- which(mne$id==fk)
@@ -2060,7 +2063,7 @@ buildServer <- function(
          }else{
             toReplot <- FALSE
             if(updateVis){
-               ndm <- modelToVn(dm, color=isolate(settings$defaultColor))
+               ndm <- isolate(model$vn)
                ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
                edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
                if(length(edgeToDel)>0){
@@ -2116,7 +2119,7 @@ buildServer <- function(
 
       observe({
          m <- model$x
-         mn <- modelToVn(m)
+         mn <- model$vn
          selection$tables <- sort(intersect(
             isolate(selection$tables), names(m)
          ))
@@ -2142,7 +2145,7 @@ buildServer <- function(
 
          dm <- isolate(model$x)
          tdm <- ch[[cm]]
-         ndm <- modelToVn(dm, color=isolate(settings$defaultColor))
+         ndm <- isolate(model$vn)
          ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
          edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
          if(length(edgeToDel)>0){
@@ -2178,7 +2181,7 @@ buildServer <- function(
 
          dm <- isolate(model$x)
          tdm <- ch[[cm]]
-         ndm <- modelToVn(dm, color=isolate(settings$defaultColor))
+         ndm <- isolate(model$vn)
          ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
          edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
          if(length(edgeToDel)>0){
