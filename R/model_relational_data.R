@@ -875,7 +875,8 @@ buildServer <- function(
                   uiOutput("updateFieldDiv", inline=TRUE),
                   actionButton(
                      "addField", label="",
-                     icon=icon("plus-square", "fa-1x")
+                     icon=icon("plus-square", "fa-1x"),
+                     class="shrunkenButton"
                   ) %>%
                      div(
                         title="Add a new field",
@@ -949,9 +950,30 @@ buildServer <- function(
          validate(need(seli>=1 & seli <= nrow(mt$fields), ""))
          div(
             actionButton(
+               "moveFieldUp",
+               label="",
+               icon=icon("arrow-alt-circle-up", "fa-1x"),
+               class="shrunkenButton"
+            ) %>%
+               div(
+                  title="Move up",
+                  class="iblock"
+               ),
+            actionButton(
+               "moveFieldDown",
+               label="",
+               icon=icon("arrow-alt-circle-down", "fa-1x"),
+               class="shrunkenButton"
+            ) %>%
+               div(
+                  title="Move up",
+                  class="iblock"
+               ),
+            actionButton(
                "updateField",
                label="",
-               icon=icon("edit", "fa-1x")
+               icon=icon("edit", "fa-1x"),
+               class="shrunkenButton"
             ) %>%
                div(
                   title="Edit field properties",
@@ -960,7 +982,8 @@ buildServer <- function(
             actionButton(
                "removeField",
                label="",
-               icon=icon("minus-square", "fa-1x")
+               icon=icon("minus-square", "fa-1x"),
+               class="shrunkenButton"
             ) %>% div(title="Remove field", class="iblock"),
             class="iblock"
          )
@@ -997,6 +1020,55 @@ buildServer <- function(
                easyClose=TRUE
             ))
          }
+      })
+      # ## __- Move field ----
+      observe({
+         validate(need(input$moveFieldUp>0, ""))
+         seli <- isolate(input$fieldTable_rows_selected)
+         validate(need(length(seli)==1, ""))
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
+         m <- isolate(model$x)
+         validate(need(nrow(mt$fields)>0, ""))
+         fn <- mt$fields$name[seli]
+         alli <- 1:nrow(m[[selTable]]$fields)
+         fi <- which(m[[selTable]]$fields$name==fn)
+         validate(need(fi>1, ""))
+         o <- c(
+            alli[which(alli < (fi-1))],
+            fi, fi-1,
+            alli[which(alli > fi)]
+         )
+         m <- m %>% order_fields(
+            tableName=selTable,
+            order=o
+         )
+         model$new <- m
+      })
+      observe({
+         validate(need(input$moveFieldDown>0, ""))
+         seli <- isolate(input$fieldTable_rows_selected)
+         validate(need(length(seli)==1, ""))
+         mt <- isolate(model$table)
+         validate(need(mt, ""))
+         selTable <- mt$tableName
+         m <- isolate(model$x)
+         validate(need(nrow(mt$fields)>0, ""))
+         fn <- mt$fields$name[seli]
+         alli <- 1:nrow(m[[selTable]]$fields)
+         fi <- which(m[[selTable]]$fields$name==fn)
+         validate(need(fi<length(alli), ""))
+         o <- c(
+            alli[which(alli < fi)],
+            fi+1, fi,
+            alli[which(alli > (fi+1))]
+         )
+         m <- m %>% order_fields(
+            tableName=selTable,
+            order=o
+         )
+         model$new <- m
       })
       ## __- Add field ----
       observeEvent(input$addField, {
@@ -1313,7 +1385,8 @@ buildServer <- function(
                   uiOutput("updateIndexDiv", inline=TRUE),
                   actionButton(
                      "addIndex", label="",
-                     icon=icon("plus-square", "fa-1x")
+                     icon=icon("plus-square", "fa-1x"),
+                     class="shrunkenButton"
                   ) %>%
                      div(title="Add an index", class="iblock"),
                   class="rightBox"
@@ -1386,7 +1459,8 @@ buildServer <- function(
             actionButton(
                "updateIndex",
                label="",
-               icon=icon("edit", "fa-1x")
+               icon=icon("edit", "fa-1x"),
+               class="shrunkenButton"
             ) %>%
                div(
                   title="Update index properties",
@@ -1395,8 +1469,13 @@ buildServer <- function(
             actionButton(
                "removeIndex",
                label="",
-               icon=icon("minus-square", "fa-1x")
-            ) %>% div(title="Remove index", class="iblock")
+               icon=icon("minus-square", "fa-1x"),
+               class="shrunkenButton"
+            ) %>%
+               div(
+                  title="Remove index",
+                  class="iblock"
+               )
          )
       })
       observeEvent(input$updateIndex,{

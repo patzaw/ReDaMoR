@@ -79,6 +79,13 @@ remove_field <- function(x, ...){
 ###############################################################################@
 #' @export
 #'
+order_fields <- function(x, ...){
+   UseMethod("order_fields", x)
+}
+
+###############################################################################@
+#' @export
+#'
 set_primary_key <- function(x, ...){
    UseMethod("set_primary_key", x)
 }

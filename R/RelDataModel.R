@@ -395,7 +395,8 @@ toDBM <- function(rdm){
          ##
          fields <- tm$fields %>%
             mutate(
-               table=tm$tableName
+               table=tm$tableName,
+               fieldOrder=1:nrow(tm$fields)
             )
          ##
          if(length(tm$primaryKey)==0){
@@ -545,6 +546,11 @@ fromDBM <- function(dbm){
       tm$fields <- dbm$fields %>%
          filter(table==tn) %>%
          select(-table)
+      if("fieldOrder" %in% colnames(tm$fields)){
+         tm$fields <- tm$fields %>%
+            arrange(fieldOrder) %>%
+            select(-fieldOrder)
+      }
       tm$primaryKey <- dbm$primaryKeys %>%
          filter(table==tn) %>%
          pull(field)
@@ -1022,6 +1028,34 @@ remove_field.RelDataModel <- function(
    ## Returning the results ----
    return(RelDataModel(x))
 
+}
+
+###############################################################################@
+#' Order fields in a table in a [RelDataModel]
+#'
+#' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param order a vector of integers all in (1:number_of_fields)
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+order_fields.RelDataModel <- function(
+   x,
+   tableName,
+   order
+){
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      is.numeric(order),
+      length(order)==nrow(x[[tableName]]$fields),
+      all(order %in% 1:nrow(x[[tableName]]$fields))
+   )
+   x <- unclass(x)
+   x[[tableName]]$fields <- x[[tableName]]$fields[order,]
+   return(RelDataModel(x))
 }
 
 ###############################################################################@
