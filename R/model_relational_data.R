@@ -328,6 +328,44 @@ buildServer <- function(
       )
 
       #########################################################################@
+      ## Notifications ----
+      #########################################################################@
+
+      warningMessage <- reactiveValues(
+         n=0,
+         message=NULL
+      )
+      sendWarning <- function(message){
+         warningMessage$n <- isolate(warningMessage$n) + 1
+         warningMessage$message <- message
+      }
+      observe({
+         validate(need(warningMessage$n>0, ""))
+         showNotification(
+            isolate(warningMessage$message),
+            duration=5,
+            type="warning"
+         )
+      })
+
+      errorMessage <- reactiveValues(
+         n=0,
+         message=NULL
+      )
+      sendError <- function(message){
+         errorMessage$n <- isolate(errorMessage$n) + 1
+         errorMessage$message <- message
+      }
+      observe({
+         validate(need(errorMessage$n>0, ""))
+         showNotification(
+            isolate(errorMessage$message),
+            duration=5,
+            type="error"
+         )
+      })
+
+      #########################################################################@
       ## Model view ----
       #########################################################################@
 
@@ -1297,6 +1335,15 @@ buildServer <- function(
             updateField$error <- NULL
             if(!identical(nm, isolate(model$x))){
                model$new <- nm
+               sendWarning(paste(
+                  "Some modifications may not have been taken into account",
+                  "if they did not respect existing constraints"
+               ))
+            }else{
+               sendError(paste(
+                  "The field has not been modified because the modifications",
+                  "did not respect the existing constraints"
+               ))
             }
             removeModal()
          }else{
@@ -1380,6 +1427,10 @@ buildServer <- function(
          if(length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk))){
             model$new <- m %>%
                set_primary_key(tableName=selTable, fieldNames=npk)
+            sendWarning(paste(
+               "Some constraints may have been added to support",
+               "the primary key"
+            ))
          }
       })
 
@@ -1895,7 +1946,7 @@ buildServer <- function(
          validate(need(ft, ""))
          validate(need(tt, ""))
          validate(need(ft!=tt, ""))
-         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
+         tns <- sort(c(ft, tt))
          foreignKey$fromTable <- ft
          foreignKey$toTable <- tt
          foreignKey$fromFields <- foreignKey$toFields <- NULL
@@ -1917,7 +1968,7 @@ buildServer <- function(
          tt <- foreignKey$toTable
          validate(need(ft, ""))
          validate(need(tt, ""))
-         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
+         tns <- sort(c(ft, tt))
          m <- isolate(model$x)
          ftfields <- m[[ft]]$fields$name
          ttfields <- m[[tt]]$fields$name
@@ -2019,7 +2070,7 @@ buildServer <- function(
          validate(need(to, ""))
          ft <- isolate(foreignKey$fromTable)
          tt <- isolate(foreignKey$toTable)
-         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
+         tns <- sort(c(ft, tt))
          if(tns[1]==ft){
             left <- from
             right <- to
@@ -2063,18 +2114,33 @@ buildServer <- function(
 
       observe({
          validate(need(input$confirmAddFK > 0, ""))
-         model$new <- isolate(model$x) %>%
-            add_foreign_key(
-               fromTable=isolate(foreignKey$fromTable),
-               toTable=isolate(foreignKey$toTable),
-               fromFields=isolate(foreignKey$fromFields),
-               toFields=isolate(foreignKey$toFields),
-               fmin=isolate(foreignKey$fmin),
-               fmax=isolate(foreignKey$fmax),
-               tmin=isolate(foreignKey$tmin),
-               tmax=isolate(foreignKey$tmax)
-            )
+         m <- isolate(model$x)
+         suppressWarnings(
+               nm <- m %>%
+               add_foreign_key(
+                  fromTable=isolate(foreignKey$fromTable),
+                  toTable=isolate(foreignKey$toTable),
+                  fromFields=isolate(foreignKey$fromFields),
+                  toFields=isolate(foreignKey$toFields),
+                  fmin=isolate(foreignKey$fmin),
+                  fmax=isolate(foreignKey$fmax),
+                  tmin=isolate(foreignKey$tmin),
+                  tmax=isolate(foreignKey$tmax)
+               )
+         )
          removeModal()
+         if(identical(nm, m)){
+            sendError(paste(
+               "The foreign key could not be added:",
+               "it may already exist or it may not fit other constraints."
+            ))
+         }else{
+            sendWarning(paste(
+               "Constraints may have been added to tables",
+               "to support the foreign key cardinalities."
+            ))
+         }
+         model$new <- nm
          foreignKey$fromTable <- NULL
          foreignKey$toTable <- NULL
          foreignKey$fromFields <- NULL
@@ -2091,7 +2157,7 @@ buildServer <- function(
          tt <- foreignKey$toTable
          validate(need(ft, ""))
          validate(need(tt, ""))
-         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
+         tns <- sort(c(ft, tt))
          m <- isolate(model$x)
          cmin <- if(tns[1]==ft) isolate(foreignKey$fmin)
          else isolate(foreignKey$tmin)
@@ -2135,7 +2201,7 @@ buildServer <- function(
          tt <- foreignKey$toTable
          validate(need(ft, ""))
          validate(need(tt, ""))
-         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
+         tns <- sort(c(ft, tt))
          m <- isolate(model$x)
          cmin <- if(tns[1]!=ft) isolate(foreignKey$fmin)
          else isolate(foreignKey$tmin)
@@ -2181,7 +2247,7 @@ buildServer <- function(
          tt <- foreignKey$toTable
          validate(need(ft, ""))
          validate(need(tt, ""))
-         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
+         tns <- sort(c(ft, tt))
          lftmin <- input$leftcardmin
          lftmax <- input$leftcardmax
          rgtmin <- input$rightcardmin
@@ -2240,7 +2306,7 @@ buildServer <- function(
          validate(need(tt, ""))
          validate(need(ff, ""))
          validate(need(tf, ""))
-         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
+         tns <- sort(c(ft, tt))
          div(
             fluidRow(
                column(
