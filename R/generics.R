@@ -107,6 +107,13 @@ remove_foreign_key <- function(x, ...){
 ###############################################################################@
 #' @export
 #'
+update_foreign_key <- function(x, ...){
+   UseMethod("update_foreign_key", x)
+}
+
+###############################################################################@
+#' @export
+#'
 add_index <- function(x, ...){
    UseMethod("add_index", x)
 }

@@ -11,6 +11,7 @@
    - **F2** for renaming tables
 - The order of the fields can be updated
 - Tables can be duplicated
+- Cardinalities of existing relationships can be updated
 
 ### Implementation changes
 

@@ -939,6 +939,38 @@ remove_foreign_key.RelDataModel <- function(
 }
 
 ###############################################################################@
+#' Update a the cardinalities of a foreign key between two tables
+#'
+#' @param x a [RelDataModel]
+#' @param fromTable the name of the referencing table
+#' @param fromFields the name of the referencing fields
+#' @param toTable the name of the referenced table
+#' @param toFields the names of the referenced fields
+#' @param fmin: from minimum cardinality
+#' @param fmax: from maximum cardinality
+#' @param tmin: to minimum cardinality
+#' @param tmax: to maximum cardinality
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+update_foreign_key.RelDataModel <- function(
+   x, fromTable, fromFields, toTable, toFields,
+   fmin, fmax, tmin, tmax
+){
+   toRet <- x %>%
+      remove_foreign_key(
+         fromTable, fromFields, toTable, toFields
+      ) %>%
+      add_foreign_key(
+         fromTable, fromFields, toTable, toFields,
+         fmin, fmax, tmin, tmax
+      )
+   return(toRet)
+}
+
+###############################################################################@
 #' Remove a field from a table in a [RelDataModel]
 #'
 #' @param x a [RelDataModel]

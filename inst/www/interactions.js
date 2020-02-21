@@ -46,6 +46,10 @@ $(document).keyup(function(event) {
   ) {
     if($("#renameTable")[0]){
       $("#renameTable").click();
+    }else{
+      if($("#editFK")[0]){
+        $("#editFK").click();
+      }
     }
   }
 });

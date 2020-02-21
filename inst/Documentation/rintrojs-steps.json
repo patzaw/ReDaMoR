@@ -53,6 +53,10 @@
          "intro": "Select the color of the table."
       },
       {
+         "element": "#dupTablesInput",
+         "intro": "Duplicate selected tables."
+      },
+      {
          "element": "#rmTablesInput",
          "intro": "Remove selected tables."
       }
@@ -151,6 +155,14 @@
       {
          "element": "#rmFKInput",
          "intro": "Remove selected foreign keys."
+      }
+   ],
+
+
+   "oneFK":[
+      {
+         "element": "#editFKInput",
+         "intro": "Edit the cardinalities of the selected foreign key"
       }
    ],
 

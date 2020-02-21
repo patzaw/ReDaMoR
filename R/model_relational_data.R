@@ -159,11 +159,7 @@ buildUi <- function(fromR){
                   class="editMenuSection"
                ),
                uiOutput(
-                  "addFKInput",
-                  class="editMenuSection"
-               ),
-               uiOutput(
-                  "rmFKInput",
+                  "dupTablesInput",
                   class="editMenuSection"
                ),
                uiOutput(
@@ -171,7 +167,15 @@ buildUi <- function(fromR){
                   class="editMenuSection"
                ),
                uiOutput(
-                  "dupTablesInput",
+                  "addFKInput",
+                  class="editMenuSection"
+               ),
+               uiOutput(
+                  "editFKInput",
+                  class="editMenuSection"
+               ),
+               uiOutput(
+                  "rmFKInput",
                   class="editMenuSection"
                )
             ),
@@ -246,6 +250,9 @@ buildServer <- function(
             }
             if(length(selection$fk)>0){
                ctxt <- c(ctxt, "withFK")
+               if(length(selection$fk)==1){
+                  ctxt <- c(ctxt, "oneFK")
+               }
             }
             context$x <- ctxt
          }
@@ -1599,10 +1606,25 @@ buildServer <- function(
          validate(need(length(selTable)>0 & length(selTable)<=2, ""))
          actionButton(
             "addForeignKey", "Key",
-            icon=icon("external-link-alt", "fa-2x"),
+            icon=icon("plus", "fa-2x"),
+            # icon=icon("external-link-alt", "fa-2x"),
             class="shrunkenButton"
          ) %>% div(
             title="Add a foreign key"
+         )
+      })
+      output$editFKInput <- renderUI({
+         selFK <- selection$fk
+         validate(need(length(selFK)==1, ""))
+         actionButton(
+            "editFK",
+            label=HTML(paste(
+               '<i class="far fa-edit fa-2x"></i>',
+               'keys'
+            )),
+            class="shrunkenButton"
+         ) %>% div(
+            title="Edit cardinalities of the selected foreign key (F2)"
          )
       })
       output$rmFKInput <- renderUI({
@@ -1851,8 +1873,7 @@ buildServer <- function(
             fluidRow(uiOutput("fkFields")),
             tags$hr(class="editSeparator"),
             ##
-            fluidRow(uiOutput("possibleFkFields")),
-            tags$hr(class="editSeparator")
+            fluidRow(uiOutput("possibleFkFields"))
          )
       })
 
@@ -1869,12 +1890,12 @@ buildServer <- function(
 
       observe({
          validate(need(input$fkDirection>0, ""))
-         tns <- isolate(selection$tables)
-         validate(need(length(tns)==2, ""))
          ft <- isolate(foreignKey$toTable)
          tt <- isolate(foreignKey$fromTable)
          validate(need(ft, ""))
          validate(need(tt, ""))
+         validate(need(ft!=tt, ""))
+         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
          foreignKey$fromTable <- ft
          foreignKey$toTable <- tt
          foreignKey$fromFields <- foreignKey$toFields <- NULL
@@ -1892,11 +1913,11 @@ buildServer <- function(
       })
 
       output$possibleFkFields <- renderUI({
-         tns <- isolate(selection$tables)
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
          validate(need(ft, ""))
          validate(need(tt, ""))
+         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
          m <- isolate(model$x)
          ftfields <- m[[ft]]$fields$name
          ttfields <- m[[tt]]$fields$name
@@ -1994,11 +2015,11 @@ buildServer <- function(
       output$fkFieldTable <- DT::renderDT({
          from <- foreignKey$fromFields
          to <- foreignKey$toFields
-         tns <- isolate(selection$tables)
-         ft <- isolate(foreignKey$fromTable)
-         tt <- isolate(foreignKey$toTable)
          validate(need(from, ""))
          validate(need(to, ""))
+         ft <- isolate(foreignKey$fromTable)
+         tt <- isolate(foreignKey$toTable)
+         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
          if(tns[1]==ft){
             left <- from
             right <- to
@@ -2009,7 +2030,6 @@ buildServer <- function(
          DT::datatable(
             tibble(l=left, r=right),
             rownames=FALSE,
-            # colnames=c(tns[1], tns[length(tns)]),
             colnames=c("", ""),
             options=list(
                dom=ifelse(length(left)>10, "tip", "t"),
@@ -2055,16 +2075,30 @@ buildServer <- function(
                tmax=isolate(foreignKey$tmax)
             )
          removeModal()
+         foreignKey$fromTable <- NULL
+         foreignKey$toTable <- NULL
+         foreignKey$fromFields <- NULL
+         foreignKey$toFields <- NULL
+         foreignKey$fmin <- NULL
+         foreignKey$fmax <- NULL
+         foreignKey$tmin <- NULL
+         foreignKey$tmax <- NULL
       })
 
       ## _+ Cardinality ----
       output$ilcard <- renderUI({
-         tns <- isolate(selection$tables)
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
          validate(need(ft, ""))
          validate(need(tt, ""))
+         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
          m <- isolate(model$x)
+         cmin <- if(tns[1]==ft) isolate(foreignKey$fmin)
+         else isolate(foreignKey$tmin)
+         cmax <- if(tns[1]==ft) isolate(foreignKey$fmax)
+         else isolate(foreignKey$tmax)
+         cmin <- as.character(cmin)
+         cmax <- ifelse(cmax==-1, "n", as.character(cmax))
          toRet <- list(
             column(
                6,
@@ -2072,7 +2106,11 @@ buildServer <- function(
                   "leftcardmin",
                   "Min. card.",
                   choices=c("0", "1"),
-                  selected=ifelse(tns[1]==ft, "0", "1")
+                  selected=ifelse(
+                     length(cmin)==0,
+                     ifelse(tns[1]==ft, "0", "1"),
+                     cmin
+                  )
                )
             ),
             column(
@@ -2081,7 +2119,11 @@ buildServer <- function(
                   "leftcardmax",
                   "Max. card.",
                   choices=c("1", "n"),
-                  selected=ifelse(tns[1]==ft, "n", "1")
+                  selected=ifelse(
+                     length(cmax)==0,
+                     ifelse(tns[1]==ft, "n", "1"),
+                     cmax
+                  )
                )
             )
 
@@ -2089,12 +2131,18 @@ buildServer <- function(
          return(toRet)
       })
       output$ircard <- renderUI({
-         tns <- isolate(selection$tables)
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
          validate(need(ft, ""))
          validate(need(tt, ""))
+         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
          m <- isolate(model$x)
+         cmin <- if(tns[1]!=ft) isolate(foreignKey$fmin)
+         else isolate(foreignKey$tmin)
+         cmax <- if(tns[1]!=ft) isolate(foreignKey$fmax)
+         else isolate(foreignKey$tmax)
+         cmin <- as.character(cmin)
+         cmax <- ifelse(cmax==-1, "n", as.character(cmax))
          toRet <- list(
             column(
                6,
@@ -2102,7 +2150,11 @@ buildServer <- function(
                   "rightcardmin",
                   "Min. card.",
                   choices=c("0", "1"),
-                  selected=ifelse(tns[1]!=ft, "0", "1")
+                  selected=ifelse(
+                     length(cmin)==0,
+                     ifelse(tns[1]!=ft, "0", "1"),
+                     cmin
+                  )
                )
             ),
             column(
@@ -2111,7 +2163,11 @@ buildServer <- function(
                   "rightcardmax",
                   "Max. card.",
                   choices=c("1", "n"),
-                  selected=ifelse(tns[1]!=ft, "n", "1")
+                  selected=ifelse(
+                     length(cmax)==0,
+                     ifelse(tns[1]!=ft, "n", "1"),
+                     cmax
+                  )
                )
             )
 
@@ -2121,12 +2177,11 @@ buildServer <- function(
 
       observe({
          cval <- c("0"=0L, "1"=1L, "n"=-1L)
-         tns <- isolate(selection$tables)
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
-         validate(need(tns, ""))
          validate(need(ft, ""))
          validate(need(tt, ""))
+         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
          lftmin <- input$leftcardmin
          lftmax <- input$leftcardmax
          rgtmin <- input$rightcardmin
@@ -2147,6 +2202,100 @@ buildServer <- function(
          foreignKey$tmax <- as.integer(cval[ifelse(
             tns[1]!=ft, lftmax, rgtmax
          )])
+      })
+
+
+      #########################################################################@
+      ## Update foreign keys ----
+      #########################################################################@
+
+      observe({
+         validate(need(input$editFK > 0, ""))
+         selFK <- isolate(selection$fk)
+         validate(need(length(selFK)==1, ""))
+         m <- isolate(model$x)
+         mne <- isolate(model$vn)$edges
+         validate(need(selFK %in% mne$id, ""))
+         i <- which(mne$id==selFK)
+         foreignKey$fromTable <- mne$from[i]
+         foreignKey$toTable <- mne$to[i]
+         foreignKey$fromFields <- mne$ff[[i]]
+         foreignKey$toFields <- mne$tf[[i]]
+         foreignKey$triggered=isolate(foreignKey$triggered)+1
+         showModal(modalDialog(
+            title="Edit foreign key",
+            uiOutput("editForeignKey"),
+            size="m",
+            easyClose=TRUE
+         ))
+      })
+
+      output$editForeignKey <- renderUI({
+         validate(need(foreignKey$triggered>0, ""))
+         ft <- isolate(foreignKey$fromTable)
+         tt <- isolate(foreignKey$toTable)
+         ff <- isolate(foreignKey$fromFields)
+         tf <- isolate(foreignKey$toFields)
+         validate(need(ft, ""))
+         validate(need(tt, ""))
+         validate(need(ff, ""))
+         validate(need(tf, ""))
+         tns <- intersect(isolate(model$vn)$nodes$id, c(ft, tt))
+         div(
+            fluidRow(
+               column(
+                  5,
+                  fluidRow(h4(tns[1]), class="centerBox"),
+                  fluidRow(uiOutput("ilcard"))
+               ),
+               if(tns[1]==ft){
+                  column(
+                     2,
+                     actionButton("confirmUpdateFK", "Update"),
+                     tags$br(),
+                     icon("long-arrow-alt-right", "fa-2x"),
+                     class="centerBox"
+                  )
+               }else{
+                  column(
+                     2,
+                     actionButton("confirmUpdateFK", "Update"),
+                     tags$br(),
+                     icon("long-arrow-alt-left", "fa-2x"),
+                     class="centerBox"
+                  )
+               },
+               column(
+                  5,
+                  fluidRow(h4(tns[length(tns)]), class="centerBox"),
+                  fluidRow(uiOutput("ircard"))
+               )
+            )
+         )
+      })
+
+      observe({
+         validate(need(input$confirmUpdateFK > 0, ""))
+         model$new <- isolate(model$x) %>%
+            update_foreign_key(
+               fromTable=isolate(foreignKey$fromTable),
+               toTable=isolate(foreignKey$toTable),
+               fromFields=isolate(foreignKey$fromFields),
+               toFields=isolate(foreignKey$toFields),
+               fmin=isolate(foreignKey$fmin),
+               fmax=isolate(foreignKey$fmax),
+               tmin=isolate(foreignKey$tmin),
+               tmax=isolate(foreignKey$tmax)
+            )
+         removeModal()
+         foreignKey$fromTable <- NULL
+         foreignKey$toTable <- NULL
+         foreignKey$fromFields <- NULL
+         foreignKey$toFields <- NULL
+         foreignKey$fmin <- NULL
+         foreignKey$fmax <- NULL
+         foreignKey$tmin <- NULL
+         foreignKey$tmax <- NULL
       })
 
 
