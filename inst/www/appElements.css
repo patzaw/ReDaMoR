@@ -75,6 +75,20 @@ h3 {
    background:var(--box-bg-color);
 }
 
+#doc {
+   animation-name:blinkingText;
+   animation-duration:1s;
+   animation-iteration-count:10;
+}
+
+@keyframes blinkingText{
+    0%{     color: var(--neutral-color);    }
+    49%{    color: var(--neutral-color); }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: var(--neutral-color);    }
+}
+
 /******************************************************************************/
 /* Model view */
 
@@ -156,15 +170,9 @@ h3 {
    display:inline-block;
    color:var(--neutral-color);
    font-weight:bold;
-   animation:blinkingText 1s infinite;
-}
-
-@keyframes blinkingText{
-    0%{     color: var(--neutral-color);    }
-    49%{    color: var(--neutral-color); }
-    60%{    color: transparent; }
-    99%{    color:transparent;  }
-    100%{   color: var(--neutral-color);    }
+   animation-name:blinkingText;
+   animation-duration:1s;
+   animation-iteration-count:infinite;
 }
 
 /******************************************************************************/

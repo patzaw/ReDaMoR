@@ -169,6 +169,10 @@ buildUi <- function(fromR){
                uiOutput(
                   "rmTablesInput",
                   class="editMenuSection"
+               ),
+               uiOutput(
+                  "dupTablesInput",
+                  class="editMenuSection"
                )
             ),
 
@@ -186,7 +190,7 @@ buildUi <- function(fromR){
 buildServer <- function(
    modelInput, fromR, bcko,
    defaultColor, availableColors,
-   example
+   example, forceIntro
 ){
 
    rintrosteps <- jsonlite::fromJSON(system.file(
@@ -214,11 +218,6 @@ buildServer <- function(
       context <- reactiveValues(
          x="main"
       )
-      observeEvent(input$doc, {
-         docx <- rintrosteps[context$x] %>%
-            do.call(rbind, .)
-         rintrojs::introjs(session, options = list(steps=docx))
-      })
       observe(
          if(length(selection$tables)==0 && length(selection$fk)==0){
             context$x <- "main"
@@ -251,13 +250,20 @@ buildServer <- function(
             context$x <- ctxt
          }
       )
+      observeEvent(input$doc, {
+         docx <- rintrosteps[context$x] %>%
+            do.call(rbind, .)
+         rintrojs::introjs(session, options = list(steps=docx))
+      })
       observeEvent(input$docImp, {
          docx <- rintrosteps[c("Import")] %>%
             do.call(rbind, .)
          rintrojs::introjs(session, options = list(steps=docx))
       })
 
-      rintrojs::introjs(session, options = list(steps=rintrosteps[["main"]]))
+      if(forceIntro){
+         rintrojs::introjs(session, options = list(steps=rintrosteps[["main"]]))
+      }
 
       #########################################################################@
       ## Settings ----
@@ -1627,6 +1633,20 @@ buildServer <- function(
             title="Remove selected tables (del)"
          )
       })
+      output$dupTablesInput <- renderUI({
+         selTable <- selection$tables
+         validate(need(length(selTable)>0, ""))
+         actionButton(
+            "duplicateTables",
+            label=HTML(paste(
+               '<i class="fas fa-copy fa-2x"></i>',
+               'tables'
+            )),
+            class="shrunkenButton"
+         ) %>% div(
+            title="Duplicate selected tables"
+         )
+      })
 
       #########################################################################@
       ## Table color ----
@@ -1716,6 +1736,42 @@ buildServer <- function(
                ))
             }
          }
+      })
+
+      #########################################################################@
+      ## Duplicate tables ----
+      #########################################################################@
+
+      observe({
+         takeAction <- (
+            (!is.null(input$duplicateTables) && input$duplicateTables > 0)
+         )
+         validate(need(takeAction, ""))
+         tns <- isolate(selection$tables)
+         m <- isolate(model$x)
+         vn <- isolate(model$vn)
+         xs <- 100
+         ys <- 100
+         nm <- unclass(m)
+         if(length(tns)>0 && all(tns!="") && all(tns %in% names(m))){
+            for(tn in tns){
+               i <- 1
+               ntn <- paste(tn, "COPY", i, sep="_")
+               while(ntn %in% names(m)){
+                  i <- i+1
+                  ntn <- paste(tn, "COPY", i, sep="_")
+               }
+               toAdd <- nm[tn]
+               toAdd[[1]]$tableName <- ntn
+               toAdd[[1]]$display$x <- toAdd[[1]]$display$x +
+                  xs*(2*rbeta(1, 0.3, 0.3)-1)
+               toAdd[[1]]$display$y <- toAdd[[1]]$display$y +
+                  ys*(2*rbeta(1, 0.3, 0.3)-1)
+               names(toAdd) <- ntn
+               nm <- c(nm, toAdd)
+            }
+         }
+         model$new <- RelDataModel(nm)
       })
 
       #########################################################################@
@@ -2402,6 +2458,8 @@ buildServer <- function(
 #' @param defaultColor a single color indicating the default table color
 #' @param availableColors a character of possible colors for tables
 #' @param example a file path to an sql or json model
+#' @param forceIntro if TRUE the help tour start when the application
+#' is launched (default: FALSE)
 #'
 #' @return The [RelDataModel] designed with the GUI.
 #'
@@ -2431,7 +2489,8 @@ model_relational_data <- function(
    example=system.file(
       "examples/HPO-model.sql",
       package = packageName()
-   )
+   ),
+   forceIntro=FALSE
 ){
 
    bcko <- NA
@@ -2453,7 +2512,7 @@ model_relational_data <- function(
    server <- buildServer(
       modelInput=modelInput, fromR=fromR, bcko=bcko,
       defaultColor=defaultColor, availableColors=availableColors,
-      example=example
+      example=example, forceIntro=forceIntro
    )
 
    if(fromR){

@@ -8,6 +8,9 @@ $(document).keydown(function(event) {
   if($("#newTableName")[0]){
     $("#newTableName").focus();
   }
+  if($("#tableNewName")[0]){
+    $("#tableNewName").focus();
+  }
   if($("#newFieldName")[0]){
     $("#newFieldName").focus();
   }
@@ -29,6 +32,21 @@ $(document).keyup(function(event) {
   }
   if($("#confirmUpdateField")[0] && (event.key == "Enter")) {
     $("#confirmUpdateField").click();
+  }
+});
+
+// Rename table with F2 key
+$(document).keyup(function(event) {
+  if(
+    (
+      (document.activeElement.tagName == "BODY") ||
+      (document.activeElement.tagName == "BUTTON")
+    )&&
+    (event.keyCode == 113)
+  ) {
+    if($("#renameTable")[0]){
+      $("#renameTable").click();
+    }
   }
 });
 

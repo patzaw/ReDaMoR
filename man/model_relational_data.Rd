@@ -10,7 +10,8 @@ model_relational_data(
   defaultColor = "#D9D9D9",
   availableColors = c("#9BC8FE", "#F67FC4", "#C6BDF1", "#DFFB86", "#F8DEC3", "#8FE6E0",
     "#FEFE8F", "#FAC6DC", "#A9ECC9"),
-  example = system.file("examples/HPO-model.sql", package = packageName())
+  example = system.file("examples/HPO-model.sql", package = packageName()),
+  forceIntro = FALSE
 )
 }
 \arguments{
@@ -23,6 +24,9 @@ model_relational_data(
 \item{availableColors}{a character of possible colors for tables}
 
 \item{example}{a file path to an sql or json model}
+
+\item{forceIntro}{if TRUE the help tour start when the application
+is launched (default: FALSE)}
 }
 \value{
 The \link{RelDataModel} designed with the GUI.
