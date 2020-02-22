@@ -21,3 +21,4 @@ environment instead of .GlobalEnv.
 - CSS and JS are maintained in dedicated files
 - Help tour is not launched by default but the button is blinking for
 10 seconds when the application starts
+- Correction of several bugs in the interface and underlying functions

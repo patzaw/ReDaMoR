@@ -2725,7 +2725,7 @@ model_relational_data <- function(
    #    "#CAE095", "#6E8D65"
    # ),
    example=system.file(
-      "examples/HPO-model.sql",
+      "examples/HPO-model.json",
       package = packageName()
    ),
    forceIntro=FALSE

@@ -1,0 +1,459 @@
+{
+  "HPO_hp": {
+    "tableName": ["HPO_hp"],
+    "fields": [
+      {
+        "name": "id",
+        "type": "character",
+        "nullable": false,
+        "unique": true,
+        "comment": "HP identifier"
+      },
+      {
+        "name": "name",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "HP name"
+      },
+      {
+        "name": "description",
+        "type": "character",
+        "nullable": true,
+        "unique": false,
+        "comment": "HP description"
+      },
+      {
+        "name": "level",
+        "type": "integer",
+        "nullable": false,
+        "unique": false,
+        "comment": ""
+      }
+    ],
+    "primaryKey": ["id"],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "fields": ["id"],
+        "unique": [true]
+      }
+    ],
+    "display": {
+      "x": [-167],
+      "y": [-177],
+      "color": ["#9BC8FE"],
+      "comment": ["NA"]
+    }
+  },
+  "HPO_altId": {
+    "tableName": ["HPO_altId"],
+    "fields": [
+      {
+        "name": "id",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "HP identifier"
+      },
+      {
+        "name": "alt",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Alternative identifier"
+      }
+    ],
+    "foreignKeys": [
+      {
+        "refTable": ["HPO_hp"],
+        "key": [
+          {
+            "from": "id",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      }
+    ],
+    "indexes": [
+      {
+        "fields": ["id"],
+        "unique": [false]
+      }
+    ],
+    "display": {
+      "x": [-154],
+      "y": [-38],
+      "color": ["#9BC8FE"],
+      "comment": ["NA"]
+    },
+    "primaryKey": []
+  },
+  "HPO_sourceFiles": {
+    "tableName": ["HPO_sourceFiles"],
+    "fields": [
+      {
+        "name": "url",
+        "type": "character",
+        "nullable": false,
+        "unique": true,
+        "comment": "Source file URL"
+      },
+      {
+        "name": "current",
+        "type": "Date",
+        "nullable": false,
+        "unique": false,
+        "comment": "The date of the current source file"
+      }
+    ],
+    "primaryKey": ["url"],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "fields": ["url"],
+        "unique": [true]
+      }
+    ],
+    "display": {
+      "x": [262],
+      "y": [-336],
+      "color": ["#D9D9D9"],
+      "comment": ["NA"]
+    }
+  },
+  "HPO_diseases": {
+    "tableName": ["HPO_diseases"],
+    "fields": [
+      {
+        "name": "db",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Disease database"
+      },
+      {
+        "name": "id",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Disease ID"
+      },
+      {
+        "name": "label",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Disease lable (preferred synonym)"
+      }
+    ],
+    "primaryKey": ["db", "id"],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "fields": ["db", "id"],
+        "unique": [true]
+      }
+    ],
+    "display": {
+      "x": [320],
+      "y": [-170],
+      "color": ["#DFFB86"],
+      "comment": ["NA"]
+    }
+  },
+  "HPO_diseaseHP": {
+    "tableName": ["HPO_diseaseHP"],
+    "fields": [
+      {
+        "name": "db",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Disease database"
+      },
+      {
+        "name": "id",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Disease ID"
+      },
+      {
+        "name": "hp",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "HP identifier"
+      }
+    ],
+    "foreignKeys": [
+      {
+        "refTable": ["HPO_hp"],
+        "key": [
+          {
+            "from": "hp",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      },
+      {
+        "refTable": ["HPO_diseases"],
+        "key": [
+          {
+            "from": "db",
+            "to": "db"
+          },
+          {
+            "from": "id",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      }
+    ],
+    "indexes": [
+      {
+        "fields": ["hp"],
+        "unique": [false]
+      },
+      {
+        "fields": ["db", "id"],
+        "unique": [false]
+      }
+    ],
+    "display": {
+      "x": [75],
+      "y": [-172],
+      "color": ["#D9D9D9"],
+      "comment": ["NA"]
+    },
+    "primaryKey": []
+  },
+  "HPO_diseaseSynonyms": {
+    "tableName": ["HPO_diseaseSynonyms"],
+    "fields": [
+      {
+        "name": "db",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Disease database"
+      },
+      {
+        "name": "id",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Disease ID"
+      },
+      {
+        "name": "synonym",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Disease synonym"
+      },
+      {
+        "name": "preferred",
+        "type": "logical",
+        "nullable": false,
+        "unique": false,
+        "comment": "Is synonym preferred"
+      }
+    ],
+    "foreignKeys": [
+      {
+        "refTable": ["HPO_diseases"],
+        "key": [
+          {
+            "from": "db",
+            "to": "db"
+          },
+          {
+            "from": "id",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      }
+    ],
+    "indexes": [
+      {
+        "fields": ["db", "id"],
+        "unique": [false]
+      }
+    ],
+    "display": {
+      "x": [321],
+      "y": [-24],
+      "color": ["#DFFB86"],
+      "comment": ["NA"]
+    },
+    "primaryKey": []
+  },
+  "HPO_parents": {
+    "tableName": ["HPO_parents"],
+    "fields": [
+      {
+        "name": "id",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "HP identifier"
+      },
+      {
+        "name": "parent",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Parent identifier"
+      }
+    ],
+    "foreignKeys": [
+      {
+        "refTable": ["HPO_hp"],
+        "key": [
+          {
+            "from": "id",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      },
+      {
+        "refTable": ["HPO_hp"],
+        "key": [
+          {
+            "from": "parent",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      }
+    ],
+    "indexes": [
+      {
+        "fields": ["id"],
+        "unique": [false]
+      },
+      {
+        "fields": ["parent"],
+        "unique": [false]
+      }
+    ],
+    "display": {
+      "x": [-328],
+      "y": [-331],
+      "color": ["#F67FC4"],
+      "comment": ["NA"]
+    },
+    "primaryKey": []
+  },
+  "HPO_descendants": {
+    "tableName": ["HPO_descendants"],
+    "fields": [
+      {
+        "name": "id",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "HP identifier"
+      },
+      {
+        "name": "descendant",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Descendant (child or child of child...) HP ID"
+      }
+    ],
+    "foreignKeys": [
+      {
+        "refTable": ["HPO_hp"],
+        "key": [
+          {
+            "from": "id",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      },
+      {
+        "refTable": ["HPO_hp"],
+        "key": [
+          {
+            "from": "descendant",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      }
+    ],
+    "indexes": [
+      {
+        "fields": ["id"],
+        "unique": [false]
+      },
+      {
+        "fields": ["descendant"],
+        "unique": [false]
+      }
+    ],
+    "display": {
+      "x": [-101],
+      "y": [-360],
+      "color": ["#F67FC4"],
+      "comment": ["NA"]
+    },
+    "primaryKey": []
+  },
+  "HPO_synonyms": {
+    "tableName": ["HPO_synonyms"],
+    "fields": [
+      {
+        "name": "id",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "HP identifier"
+      },
+      {
+        "name": "synonym",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "HP synonym"
+      },
+      {
+        "name": "type",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Synonym type"
+      }
+    ],
+    "foreignKeys": [
+      {
+        "refTable": ["HPO_hp"],
+        "key": [
+          {
+            "from": "id",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      }
+    ],
+    "indexes": {},
+    "display": {
+      "x": [-360],
+      "y": [-36],
+      "color": ["#9BC8FE"],
+      "comment": ["NA"]
+    },
+    "primaryKey": []
+  }
+}
