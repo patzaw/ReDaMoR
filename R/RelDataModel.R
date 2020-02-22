@@ -83,7 +83,7 @@ RelDataModel <- function(l, checkFK=TRUE){
             }
          }
 
-         if(fk$cardinality["tmax"]==1 && fk$refTable %in% names(fk)){
+         if(fk$cardinality["tmax"]==1 && fk$refTable %in% names(toRet)){
             ei <- lapply(
                toRet[[fk$refTable]]$indexes,
                function(y){
