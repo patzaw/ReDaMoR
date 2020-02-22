@@ -1336,13 +1336,15 @@ buildServer <- function(
             if(!identical(nm, isolate(model$x))){
                model$new <- nm
                sendWarning(paste(
-                  "Some modifications may not have been taken into account",
-                  "if they did not respect existing constraints"
+                  "Uniqueness or mandatory contraints may not have been",
+                  "changed if they are required for",
+                  "existing indexes or foreign keys."
                ))
             }else{
                sendError(paste(
-                  "The field has not been modified because the modifications",
-                  "did not respect the existing constraints"
+                  "The field has not been modified because",
+                  "uniqueness or mandatory constraints are required for",
+                  "existing indexes or foreign keys."
                ))
             }
             removeModal()
@@ -1428,8 +1430,8 @@ buildServer <- function(
             model$new <- m %>%
                set_primary_key(tableName=selTable, fieldNames=npk)
             sendWarning(paste(
-               "Some constraints may have been added to support",
-               "the primary key"
+               "Some indexes, uniqueness and mandatory constraints",
+               "may have been added to support the primary key."
             ))
          }
       })
@@ -1575,7 +1577,14 @@ buildServer <- function(
                fieldNames=mt$indexes[[seli]]$fields,
                unique=ui
             )
-            model$new <- m
+            if(!identical(m, isolate(model$x))){
+               model$new <- m
+            }else{
+               sendError(paste(
+                  "The index could not be modified because it is required",
+                  "for primary or foreign keys."
+               ))
+            }
             removeModal()
          }
       })
@@ -1589,11 +1598,19 @@ buildServer <- function(
          selTable <- mt$tableName
          validate(need(length(mt$indexes)>0, ""))
          m <- isolate(model$x)
-         m <- m %>% remove_index(
+         nm <- m %>% remove_index(
             tableName=selTable,
             fieldNames=mt$indexes[[seli]]$fields
          )
-         model$new <- m
+         model$new <- nm
+         if(!identical(nm, m)){
+            model$new <- nm
+         }else{
+            sendError(paste(
+               "The index could not be removed because it is required",
+               "for primary or foreign keys."
+            ))
+         }
       })
       ## __- Add index ----
       observeEvent(input$addIndex, {
@@ -1644,6 +1661,11 @@ buildServer <- function(
             )
          if(!identical(nm, isolate(model$x))){
             model$new <- nm
+         }else{
+            sendError(paste(
+               "The index could not be added:",
+               "it may already exist or it may not fit other constraints."
+            ))
          }
          removeModal()
       })
@@ -2136,8 +2158,9 @@ buildServer <- function(
             ))
          }else{
             sendWarning(paste(
-               "Constraints may have been added to tables",
-               "to support the foreign key cardinalities."
+               "Some indexes, uniqueness and mandatory constraints may",
+               "have been added to fields to support the foreign key",
+               "cardinalities."
             ))
          }
          model$new <- nm
