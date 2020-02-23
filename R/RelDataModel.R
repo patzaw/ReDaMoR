@@ -1584,17 +1584,19 @@ confront_data.RelDataModel <- function(
                tfki_fid <- td %>% pull(tfki$key$from)
                tfki_tid <- rtd %>% pull(tfki$key$to)
             }else{
-               tfki_fid <- apply(
-                  unique(td[, tfki$key$from, drop=FALSE]),
-                  1,
+               tfki_fid <- do.call(
                   paste,
-                  collapse="_"
+                  c(
+                     unique(td[, tfki$key$from, drop=FALSE]),
+                     list(sep="_")
+                  )
                )
-               tfki_tid <- apply(
-                  unique(rtd[, tfki$key$to, drop=FALSE]),
-                  1,
+               tfki_tid <- do.call(
                   paste,
-                  collapse="_"
+                  c(
+                     unique(rtd[, tfki$key$to, drop=FALSE]),
+                     list(sep="_")
+                  )
                )
             }
             success <- TRUE
@@ -1667,4 +1669,27 @@ identical_RelDataModel <- function(x, y, ...){
       message("Not the same tables")
    }
    return(toRet)
+}
+
+
+
+###############################################################################@
+#' Get foreign keys in [RelDataModel]
+#'
+#' @param x a [RelDataModel]
+#'
+#' @return A tibble with the following fields:
+#' - from: the origin of the key
+#' - ff: the key fields in from
+#' - to: the target of the key
+#' - tf: the key fields in to
+#' - fmin: minimum cardinality of from
+#' - fmax: maximum cardinality of from
+#' - tmin: minimum cardinality of to
+#' - tmax: maximum cardinality of to
+#'
+#' @export
+#'
+get_foreign_keys.RelDataModel <- function(x){
+   do.call(rbind, lapply(x, get_foreign_keys))
 }

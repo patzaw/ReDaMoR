@@ -664,3 +664,46 @@ identical_RelTableModel <- function(x, y, includeDisplay=TRUE){
    }
    return(toRet)
 }
+
+###############################################################################@
+#' Get foreign keys from [RelTableModel]
+#'
+#' @param x a [RelTableModel]
+#'
+#' @return A tibble with the following fields:
+#' - from: the origin of the key
+#' - ff: the key fields in from
+#' - to: the target of the key
+#' - tf: the key fields in to
+#' - fmin: minimum cardinality of from
+#' - fmax: maximum cardinality of from
+#' - tmin: minimum cardinality of to
+#' - tmax: maximum cardinality of to
+#'
+#' @export
+#'
+get_foreign_keys.RelTableModel <- function(x){
+   tn <- x$tableName
+   fk <- x$foreignKeys
+   if(length(fk)==0){
+      return(NULL)
+   }
+   toRet <- do.call(rbind, lapply(
+      fk,
+      function(k){
+         to <- k$refTable
+         kt <- k$key %>% arrange(from, to)
+         tibble(
+            to=to,
+            ff=list(kt$from), tf=list(kt$to)
+         ) %>%
+            bind_cols(as_tibble(t(k$cardinality))) %>%
+            return()
+      }
+   ))
+   toRet %>% mutate(
+      from=tn
+   ) %>%
+      select(from, ff, to, tf, fmin, fmax, tmin, tmax) %>%
+      return()
+}

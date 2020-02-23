@@ -166,3 +166,10 @@ correct_constraints <- function(x, ...){
 confront_data <- function(x, ...){
    UseMethod("confront_data", x)
 }
+
+###############################################################################@
+#' @export
+#'
+get_foreign_keys <- function(x, ...){
+   UseMethod("get_foreign_keys", x)
+}
