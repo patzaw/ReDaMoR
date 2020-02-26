@@ -5,6 +5,10 @@ buildUi <- function(fromR){
       "www",
       system.file("www", package=packageName())
    )
+   addResourcePath(
+      "doc",
+      system.file("doc", package=packageName())
+   )
 
    shinyUI(fluidPage(
       title="ReDaMoR",
@@ -37,57 +41,70 @@ buildUi <- function(fromR){
       ## Main menu ----
       fluidRow(
          id="mainMenu",
-         div(
-            id="mainDone",
-            if(fromR){
+         column(
+            11,
+            id="mainLColumn",
+            div(
+               id="mainDone",
+               if(fromR){
+                  actionButton(
+                     "done",
+                     list(icon("check", "fa-2x"), "Done")
+                  ) %>%
+                     div(title="Return the model in R session")
+               }else{
+                  img(src='www/ReDaMoR.png', id="mainLogo")
+               }
+            ),
+            div(
+               class="mainButton",
                actionButton(
-                  "done",
-                  list(icon("check", "fa-2x"), "Done")
-               ) %>%
-                  div(title="Return the model in R session")
-            }else{
-               img(src='www/ReDaMoR.png', id="mainLogo")
-            }
-         ),
-         div(
-            class="mainButton",
-            actionButton(
-               "import",
-               list(icon("file-import", "fa-2x"), "Import")
+                  "import",
+                  list(icon("file-import", "fa-2x"), "Import")
+               ),
+               actionButton(
+                  "export",
+                  list("Export", icon("file-export", "fa-2x"))
+               )
             ),
-            actionButton(
-               "export",
-               list("Export", icon("file-export", "fa-2x"))
+            div(
+               class="mainButton",
+               actionButton(
+                  "undo",
+                  list("Undo", icon("undo", "fa-2x"))
+               ),
+               actionButton(
+                  "redo",
+                  list(icon("redo", "fa-2x"), "Redo")
+               ),
+               title="Undo (Ctrl+Z) / Redo (Ctrl+Shift+Z)"
+            ),
+            div(
+               class="mainButton",
+               actionButton(
+                  "addTable", "Add table",
+                  icon=icon("plus-square", "fa-2x")
+               )
+            ),
+            div(
+               class="mainButton",
+               uiOutput("modelSummary")
+            ),
+            div(
+               class="mainButton",
+               actionButton(
+                  "doc", "", icon=icon("question-circle", "fa-2x")
+               ) %>% div(title="Help tour")
             )
          ),
-         div(
-            class="mainButton",
-            actionButton(
-               "undo",
-               list("Undo", icon("undo", "fa-2x"))
-            ),
-            actionButton(
-               "redo",
-               list(icon("redo", "fa-2x"), "Redo")
-            ),
-            title="Undo (Ctrl+Z) / Redo (Ctrl+Shift+Z)"
-         ),
-         div(
-            class="mainButton",
-            actionButton(
-               "addTable", "Add table",
-               icon=icon("plus-square", "fa-2x")
+         column(
+            1,
+            id="mainRColumn",
+            tags$a(
+               "About ReDaMoR",
+               href="doc/ReDaMoR.html",
+               target="_blank"
             )
-         ),
-         div(
-            class="mainButton",
-            uiOutput("modelSummary")
-         ),
-         div(
-            class="mainButton",
-            actionButton(
-               "doc", "", icon=icon("question-circle", "fa-2x")
-            ) %>% div(title="Help tour")
          )
       ),
 
@@ -2764,7 +2781,7 @@ model_relational_data <- function(
             sprintf(
                "\n  - Use %s to get it back.",
                crayon::yellow(
-                  sprintf('bring_back_RelDataModel("%s")', bcko)
+                  sprintf('recover_RelDataModel("%s")', bcko)
                )
             ),
             sprintf(
@@ -2788,15 +2805,29 @@ model_relational_data <- function(
 }
 
 ###############################################################################@
-#' Bring back an autosaved [RelDataModel]
+#' Recover an autosaved [RelDataModel]
 #'
 #' @param name The name of the autosaved [RelDataModel] to bring back.
 #' Available autosaved [RelDataModel] can be listed using
-#' the [list_autosaved_RelDataModel()]
+#' the [list_autosaved_RelDataModel()]. If NA (default) the latest model is
+#' returned.
 #'
 #' @export
 #'
-bring_back_RelDataModel <- function(name){
+recover_RelDataModel <- function(name=NA){
+   if(length(name)>1){
+      warning("Several names provided: taking only the first one into account.")
+   }
+   if(length(name)==0){
+      stop("No name provided")
+   }
+   if(is.na(name)){
+      name <- list_autosaved_RelDataModel()
+      name <- name[length(name)]
+      if(length(name)==0){
+         stop("There is not any model to recover")
+      }
+   }
    get(name, envir=modelEnv)
 }
 

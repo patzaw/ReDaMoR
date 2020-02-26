@@ -5,7 +5,7 @@ Version: 0.4.0
 Author: Patrice Godard
 Maintainer: Patrice Godard <patrice.godard@gmail.com>
 Description: The aim of ReDaMoR is to manipulate relational data models in R.
-   It provides functions to create, import and check data models.
+   It provides functions to create, import and check relational data models.
 Depends:
    R (>= 3.5),
    dplyr,
@@ -29,6 +29,7 @@ Suggests:
    testthat (>= 2.1.0)
 License: GPL-3
 Encoding: UTF-8
+VignetteBuilder: knitr
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2

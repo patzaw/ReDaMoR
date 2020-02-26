@@ -89,6 +89,15 @@ h3 {
     100%{   color: var(--neutral-color);    }
 }
 
+#mainLColumn {
+   margin:0;
+   padding:0;
+}
+
+#mainRColumn {
+   text-align:right;
+}
+
 /******************************************************************************/
 /* Model view */
 

@@ -43,7 +43,7 @@
       "x": [-167],
       "y": [-177],
       "color": ["#9BC8FE"],
-      "comment": ["NA"]
+      "comment": ["Human phenotypes (HP)"]
     }
   },
   "HPO_altId": {
@@ -86,7 +86,7 @@
       "x": [-154],
       "y": [-38],
       "color": ["#9BC8FE"],
-      "comment": ["NA"]
+      "comment": ["Alternative HP identifiers"]
     },
     "primaryKey": []
   },
@@ -120,7 +120,7 @@
       "x": [262],
       "y": [-336],
       "color": ["#D9D9D9"],
-      "comment": ["NA"]
+      "comment": ["Files from which data were extracted"]
     }
   },
   "HPO_diseases": {
@@ -160,7 +160,7 @@
       "x": [320],
       "y": [-170],
       "color": ["#DFFB86"],
-      "comment": ["NA"]
+      "comment": ["Diseases"]
     }
   },
   "HPO_diseaseHP": {
@@ -228,7 +228,7 @@
       "x": [75],
       "y": [-172],
       "color": ["#D9D9D9"],
-      "comment": ["NA"]
+      "comment": ["HP presented by diseases"]
     },
     "primaryKey": []
   },
@@ -290,7 +290,7 @@
       "x": [321],
       "y": [-24],
       "color": ["#DFFB86"],
-      "comment": ["NA"]
+      "comment": ["Disease synonyms"]
     },
     "primaryKey": []
   },
@@ -348,7 +348,7 @@
       "x": [-328],
       "y": [-331],
       "color": ["#F67FC4"],
-      "comment": ["NA"]
+      "comment": ["Direct parents of human phenotypes"]
     },
     "primaryKey": []
   },
@@ -406,7 +406,7 @@
       "x": [-101],
       "y": [-360],
       "color": ["#F67FC4"],
-      "comment": ["NA"]
+      "comment": ["Indirect descendants of human phenotypes"]
     },
     "primaryKey": []
   },
@@ -452,7 +452,7 @@
       "x": [-360],
       "y": [-36],
       "color": ["#9BC8FE"],
-      "comment": ["NA"]
+      "comment": ["Synonyms of human phenotypes"]
     },
     "primaryKey": []
   }

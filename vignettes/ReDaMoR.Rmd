@@ -1,0 +1,235 @@
+---
+title: "Modeling Relational Data in R with ReDaMoR"
+author: "Patrice Godard <patrice.godard@ucb.com>"
+date: "`r format(Sys.time(), '%B %d %Y')`"
+package: "ReDaMoR (version `r packageVersion('ReDaMoR')`)"
+vignette: >
+    %\VignetteIndexEntry{ReDaMoR - Tutorial}
+    %\VignetteEncoding{UTF-8}
+    %\VignetteEngine{knitr::rmarkdown}
+output:
+   html_document:
+     keep_md: no
+     self_contained: yes
+     number_sections: yes
+     theme: cerulean
+     toc: yes
+     toc_float: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+library(ReDaMoR)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+<div style="width:200px;">
+![](img/ReDaMoR.png)
+</div>
+
+<!----------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+# Introduction
+
+
+In R, data are often stored in data frames which are tables in which each row represents a record and each column a variable.
+Because data frames are highly used they have been improved in different objects such as [tibble](https://tibble.tidyverse.org/), [data.table](https://rdatatable.gitlab.io/data.table/) or [AnnotatedDataFrame](https://bioconductor.org/packages/release/bioc/html/Biobase.html).
+
+However, in many projects, the data do not fit in only one table but they are organized in different data frames, each of them dealing with a specific concept.
+These tables are often related to each other by some variables.
+Depending on the diversity of the concepts, it can be difficult to remember what these tables represent and how they are connected.
+Fortunately, because they are tables, a set of data frames can be directly documented using a relational data model.
+
+The [datamodelr](https://github.com/bergant/datamodelr) R package provides tools to document relational data. The generate data models are leveraged by the [dm](https://github.com/krlmlr/dm) R package to interact more easily with relational data.
+
+Here we present the ReDaMoR package which also allows the manipulation of relational data models in R but with an approach quite different from the one implemented in datamodelr.
+It provides functions to create, import and save relational data models.
+These functions are accessible through a graphical user interface made with [Shiny](https://shiny.rstudio.com/).
+
+The main features of ReDaMoR are the following:
+
+- Create data model from scratch with a graphical user interface
+- Save data model in a json format
+- Import SQL data model generated with [MySQL Workbench](https://www.mysql.com/products/workbench/)
+- Document data types as R types (character, numeric, logical, ...)
+- Add comments to tables and fields to improve model documation
+- Check and auto-correct model constraints (keys, uniqueness, mandatory fields)
+- Confront data to the model to check their compatibility
+
+<!----------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+# Installation
+
+<!---->
+## From github
+<!----------->
+
+```{r, eval=FALSE}
+devtools::install_github("patzaw/ReDaMoR")
+```
+
+<!----------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+# Creating and modifying relational data using the graphical user interface
+
+<!---->
+## Running the app
+<!--------------->
+
+The Shiny app is launched with the following command:
+
+```{r, eval=FALSE}
+library(ReDaMoR)
+m <- model_relational_data()
+```
+
+When the ***Done*** button is clicked, the model is returned in R environment.
+Because the interface can be closed accidentaly, the model is also autosaved and can be recovered using the `recover_RelDataModel()` function.
+The recovered model can be provided as `modelInput` when calling `model_relational_data()`.
+For example:
+
+```{r, eval=FALSE}
+m <- model_relational_data(recover_RelDataModel())
+```
+
+<!---->
+## Model formalism
+<!------------------------------------------------->
+
+### Data model example: the Human Phenotype Ontology
+<!------------------------------------------------->
+
+A data model example is provided within the package.
+It represents data extracted from the [Human Phenotype Ontology (HPO)](https://hpo.jax.org/app/) and for which a subset is also provided within the ReDaMoR package (more details provided in the [Confronting data section](#confronting-data)).
+
+This example can be imported from the Shiny app when clicking on the ***Import*** button and then on the ***Try an example*** link.
+It can be also be loaded and displayed (and edited) using the following commands:
+
+```{r}
+hpoModel <- read_json_data_model(
+  system.file("examples/HPO-model.json", package="ReDaMoR")
+)
+plot(hpoModel)
+## Edit the model
+# m <- model_relational_data(hpoModel)
+```
+
+The view is rendered by the [visNetwork package](https://datastorm-open.github.io/visNetwork/). It means that it can take advantages of all the functionalities provided by the visNetwork package including the use of the view in [Shiny apps](https://datastorm-open.github.io/visNetwork/shiny.html).
+
+### Tables
+<!------->
+
+Each box represents a table.
+The header of the box corresponds to the name of the table and the following lines document each field:
+
+- The **type** of the field is given between curly brackets
+- A star indicates that the field is **unique**
+- Field surrounded by brackets are **optional**
+- Field in bold are involved in the **primary key**
+- **Indexes** are also indicated between the curly brackets when they exist:
+  - idx. correspond to regular indexes
+  - uidx. correspond to unique indexes
+  
+When the cursor is over a box, table and field **commments** are displayed.
+
+### Foreign keys
+<!------------->
+
+Each arrow represent a foreign key:
+
+- The start of the arrow correspond to the **origin** table
+- The end of the arrow correspond to the **target** table
+- When the mouse is over the arrow, the **fields** involved in the foreign key are displayed along with the minimum and maximum **cardinalities** of the key on both sides (between brackets below the table name).
+
+<!---->
+## App organization
+<!---------------->
+
+<div style="width:100%;">
+![](img/model_relational_data-Overview-Divided.png)
+</div>
+
+The app is devided in three main parts:
+
+- ![](img/ica.png){width=30px} The **main menu** at the top of the page to execute general actions on the model
+- ![](img/icb.png){width=30px} The **model view** on the left of the page to interact with the model
+- ![](img/icc.png){width=30px} The **edition view** on the right of the page to execute contextual edition of the model
+
+### The main menu
+<!-------------->
+
+General actions can be executed on the model, using the buttons in the main menu:
+
+- Import json or sql (Only sql models produced by MySQL Workbench are supported) files
+- Export json or html files (a png file can alos be saved by right clicking on the model view)
+- Add a table
+
+### The model view
+<!--------------->
+
+The model view provides a view of the data model rendered by the [visNetwork package](https://datastorm-open.github.io/visNetwork/).
+Tables can be selected by clicking on it or by searching them using the box just above the model view.
+Autodraw and autofit capabilities are also provided in this area.
+
+### The edition view
+<!----------------->
+
+In the edition view the user can:
+
+- Change the color of a table
+- Duplicate or remove tables
+- Add and remove foreign keys
+- Edit table information
+  - table name
+  - table comment
+  - fields
+  - primary key
+  - indexes
+
+### Contextual help tour
+<!--------------------->
+
+An help tour can be launched when clicking on the ![](img/bhelp.png){width=30px} button in the main menu.
+This help tour is contextual: its content depends on the state of the app.
+  
+### keyboard shortcuts
+<!------------------->
+
+Some *common* keyboard shortcuts are implemented:
+
+- **Ctrl+Z** / **Ctrl+Shift+Z ** for undo and redo
+- **Enter** for validating a new name
+- **del** for deleting tables or foreign keys
+- **F2** for renaming tables or editing foreign key cardinalities
+
+<!---->
+## Public instance of the app
+<!-------------------------->
+
+A public instance of the app is available here: http://bel040344:3838/pgodard/ReDaMoR/ **(This will change when the package is accepted for publication)**.
+
+You can easily deploy your own instance by copying these two lines in an *app.R* file:
+
+```{r, eval=FALSE}
+library(ReDaMoR)
+model_relational_data()
+```
+
+<!----------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+# Confronting data
+
+<!---->
+## Generate a data model from data frames
+<!-------------------------------------->
+
+
+<!----------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+# Acknowledgments
+
