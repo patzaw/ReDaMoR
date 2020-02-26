@@ -21,6 +21,8 @@ The main features of ReDaMoR are the following:
     mandatory fields)
 -   Confront data to the model to check their compatibility
 
+A plublic instance of the Shiny app is available [here]().
+
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 Introduction
@@ -71,7 +73,7 @@ Documentation
 =============
 
 Documentation is available in [this
-vignette](https://github.com/patzaw/ReDaMoR/raw/master/inst/doc/ReDaMoR.html).
+vignette](https://patzaw.github.io/ReDaMoR).
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->

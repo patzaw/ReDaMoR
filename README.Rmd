@@ -25,6 +25,8 @@ The main features of ReDaMoR are the following:
 - Check and auto-correct model constraints (keys, uniqueness, mandatory fields)
 - Confront data to the model to check their compatibility
 
+A plublic instance of the Shiny app is available [here]().
+
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 # Introduction
@@ -57,7 +59,7 @@ The main features of ReDaMoR are the following:
 <!----------------------------------------------------------------------------->
 # Documentation
 
-Documentation is available in [this vignette](https://github.com/patzaw/ReDaMoR/raw/master/inst/doc/ReDaMoR.html).
+Documentation is available in [this vignette](https://patzaw.github.io/ReDaMoR).
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
