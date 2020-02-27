@@ -263,6 +263,8 @@ hpo_tables <- confrontation_report$data
 In the example below the data are altered and confronted again to the data model.
 The confrontation report shows the discrepancies between the model and the data in order to facilitate the correction of one or the other.
 
+----
+
 ```{r, results='asis'}
 hpo_tables$HPO_diseases <- hpo_tables$HPO_diseases %>% slice(1:100)
 hpo_tables$HPO_synonyms[1:10, "synonym"] <- NA
@@ -274,6 +276,8 @@ confront_data(hpo_model, hpo_tables, verbose=FALSE) %>%
   ) %>%
     cat()
 ```
+
+----
 
 <!---->
 ## Drafting a data model from data frames
