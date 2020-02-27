@@ -7,6 +7,7 @@
 format_confrontation_report_md(
   cr,
   title = "Model",
+  level = 0,
   bgSuccess = "green",
   txSuccess = "black",
   bgFailure = "red",
@@ -19,6 +20,9 @@ format_confrontation_report_md(
 \item{cr}{the confrontation report from \link{confront_data.RelDataModel}}
 
 \item{title}{a character with a single value corresponding to the report}
+
+\item{level}{rmarkdown level in document hierarchy (default:0 ==> highest).
+It should be an integer between 0 and 4.}
 }
 \description{
 Format confrontation report in markdown format

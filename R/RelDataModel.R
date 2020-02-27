@@ -1439,7 +1439,9 @@ auto_layout.RelDataModel <- function(
 #' Confront a [RelDataModel] to actual data
 #'
 #' @param x a [RelDataModel]
-#' @param paths a character vector with file paths.
+#' @param data a list of data frames to be confronted with the model.
+#' @param paths a character vector with file paths taken into account if
+#' the data is empty.
 #' The file [basename] without extension
 #' will be considered as the table name.
 #' @param returnData a logical indicating if the data should be returned
@@ -1636,8 +1638,13 @@ confront_data.RelDataModel <- function(
    if(returnData){
       toRet$data <- data
    }
+
+   if(verbose){
+      cat(format_confrontation_report(toRet))
+   }
+
    ## Return the results
-   return(toRet)
+   invisible(toRet)
 }
 
 ###############################################################################@

@@ -1,0 +1,731 @@
+id	synonym	type
+0000002	Abnormality of body height	EXACT
+0000009	Poor bladder function	EXACT
+0000017	Nycturia	EXACT
+0000019	Difficulty with flow	EXACT
+0000024	Inflammation of the prostate	EXACT
+0000030	Gonadoblastoma, male	RELATED
+0000036	Abnormality of the penis	EXACT
+0000042	Absent external genitalia	EXACT
+0000050	Hypoplastic male genitalia	EXACT
+0000050	Small male external genitalia	EXACT
+0000050	Underdeveloped male genitalia	EXACT
+0000056	Abnormality of the clit	EXACT
+0000063	Fused inner lips	EXACT
+0000064	Underdeveloped inner lips	EXACT
+0000065	Enlargement of the labia	EXACT
+0000065	Enlargement of the vaginal lips	EXACT
+0000068	Absent urethral opening	EXACT
+0000068	Urethral opening absent	EXACT
+0000080	Abnormality of genital physiology	BROAD
+0000080	Abnormality of reproductive system physiology	EXACT
+0000080	Genital functional abnormality	EXACT
+0000108	Corticomedullary renal cysts	EXACT
+0000108	Renal corticomedullary cystic disease	RELATED
+0000128	Renal K wasting	EXACT
+0000131	Benign uterine leiomyomas	EXACT
+0000131	Uterine fibroid	EXACT
+0000134	Hypogonadism, female	EXACT
+0000137	Abnormality of the ovaries	EXACT
+0000137	Abnormality of the ovary	EXACT
+0000137	Ovarian disease	RELATED
+0000139	Sagging uterus	EXACT
+0000145	Transverse vaginal membrane	EXACT
+0000149	Gonadoblastoma, female	EXACT
+0000159	Abnormal lip	EXACT
+0000159	Abnormality of the lip	EXACT
+0000159	Anomaly of lip	NARROW
+0000159	Deformity of lip	NARROW
+0000159	Lip abnormality	EXACT
+0000159	Malformation of lip	NARROW
+0000163	Abnormality of the oral cavity	EXACT
+0000166	Severe gum disease	BROAD
+0000166	Severe periodontal disease	EXACT
+0000166	Severe pyorrhea	EXACT
+0000168	Abnormality of the gums	EXACT
+0000168	Gingival abnormality	EXACT
+0000172	Abnormality of palatine uvula	EXACT
+0000172	Abnormality of the uvula	EXACT
+0000177	Abnormality of upper lip	EXACT
+0000177	Anomaly of the upper lip	NARROW
+0000177	Deformity of the upper lip	NARROW
+0000177	Malformation of the upper lip	NARROW
+0000178	Abnormality of lower lip	EXACT
+0000178	Anomaly of the lower lip	NARROW
+0000178	Deformity of the lower lip	NARROW
+0000178	Malformation of the lower lip	NARROW
+0000182	Abnormality of lingual movement	EXACT
+0000182	Movement abnormality of the tongue	EXACT
+0000197	Abnormality of parotid gland	EXACT
+0000197	Anomaly of the parotid gland	EXACT
+0000198	Absence of parotid duct	EXACT
+0000198	Absent stensen duct	EXACT
+0000198	Agenesis of parotid duct	NARROW
+0000198	Agenesis of stensen duct	NARROW
+0000198	Failure of development of parotid duct	EXACT
+0000198	Failure of development of stensen duct	EXACT
+0000198	Missing parotid duct	EXACT
+0000198	Missing stensen duct	EXACT
+0000205	Pursed lips	EXACT
+0000205	Tightly closed lips	EXACT
+0000214	Angioectasias of the lip	RELATED
+0000214	Labial angioectasias	RELATED
+0000214	Labial telangiectasia	EXACT
+0000214	Lip telangiectases	EXACT
+0000214	Spider veins of the lip	RELATED
+0000214	Telangiectasia of the lips	EXACT
+0000216	Secondary alveolar ridges	EXACT
+0000222	Hyperkeratosis, gingival	EXACT
+0000223	Abnormality of taste sensation	EXACT
+0000224	Decreased taste	EXACT
+0000224	Decreased taste sensation	EXACT
+0000224	Lost taste	EXACT
+0000227	Angioectasias of the tongue	RELATED
+0000227	Lingual angioectasias	RELATED
+0000227	Lingual telangiectasia	EXACT
+0000227	Spider veins of the tongue	RELATED
+0000234	Abnormal head	EXACT
+0000234	Abnormality of the head	EXACT
+0000234	Head abnormality	EXACT
+0000242	Biparietal bossing	EXACT
+0000242	Bossing of parietal bone	EXACT
+0000245	Abnormality of the sinuses	BROAD
+0000245	Abnormality of the sinuses of the head	EXACT
+0000250	Dense skull cap	EXACT
+0000264	Abnormality of mastoid process of temporal bone	EXACT
+0000267	Abnormality of cranial vault shape	RELATED
+0000267	Abnormality of cranium shape	RELATED
+0000267	Abnormality of head shape	RELATED
+0000267	Asymmetry of cranium	EXACT
+0000267	Asymmetry of head	BROAD
+0000267	Cranial vault asymmetry	EXACT
+0000267	Malformation of cranial vault shape	RELATED
+0000267	Malformation of cranium shape	RELATED
+0000267	Malformation of head shape	RELATED
+0000267	Uneven head shape	BROAD
+0000273	Facial grimacing	EXACT
+0000277	Abnormality of the lower jaw bone	EXACT
+0000277	Abnormality of the mandible	EXACT
+0000277	Anomaly of the mandible	NARROW
+0000277	Deformity of the lower jaw bone	NARROW
+0000277	Deformity of the mandible	NARROW
+0000277	Malformation of the lower jaw bone	NARROW
+0000277	Malformation of the mandible	NARROW
+0000287	Facial fat hyperplasia	NARROW
+0000287	Facial fat hypertrophy	NARROW
+0000287	Hyperplasia of facial adipose tissue	NARROW
+0000287	Hypertrophy of facial adipose tissue	NARROW
+0000287	Increased amount of facial adipose tissue	EXACT
+0000287	Increased amount of facial fat	EXACT
+0000287	Increased volume of facial adipose tissue	EXACT
+0000290	Abnormality of the forehead	EXACT
+0000290	Abnormality of the frontal region of the face	EXACT
+0000290	Anomaly of the forehead	NARROW
+0000290	Deformity of the forehead	NARROW
+0000290	Malformation of the forehead	NARROW
+0000292	Decreased amount of facial adipose tissue	EXACT
+0000292	Decreased amount of facial fat	EXACT
+0000292	Decreased volume of facial adipose tissue	EXACT
+0000292	Loss of facial fat	EXACT
+0000292	Loss of facial subcutaneous adipose tissue	EXACT
+0000292	Loss of subcutaneous adipose tissue from face	EXACT
+0000295	Doll-like facial appearance	EXACT
+0000301	Abnormality of facial muscles	EXACT
+0000301	Facial muscle issue	EXACT
+0000306	Abnormality of the chin	EXACT
+0000306	Abnormality of the menton	NARROW
+0000306	Anomaly of the chin	NARROW
+0000306	Deformity of the chin	NARROW
+0000306	Malformation of the chin	NARROW
+0000309	Abnormality of the midface	EXACT
+0000309	Anomaly of the midface	EXACT
+0000309	Deformity of the midface	NARROW
+0000309	Malformation of the midface	NARROW
+0000315	Abnormality of the eye region	EXACT
+0000315	Abnormality of the region around the eyes	EXACT
+0000315	Anomaly of the orbital region of the face	NARROW
+0000315	Deformity of the orbital region of the face	NARROW
+0000315	Malformation of the orbital region of the face	NARROW
+0000317	Involuntary facial contraction	EXACT
+0000317	Involuntary facial quivering	EXACT
+0000320	Bird-like facial appearance	EXACT
+0000321	Square face	EXACT
+0000321	Square facial shape	EXACT
+0000321	Square facies	EXACT
+0000326	Abnormality of the upper jaw bone	EXACT
+0000326	Abnormality of the upper jaw bones	EXACT
+0000326	Anomaly of the maxilla	NARROW
+0000326	Deformity of the maxilla	NARROW
+0000326	Deformity of the upper jaw bones	NARROW
+0000326	Malformation of the maxilla	NARROW
+0000326	Malformation of the upper jaw bones	NARROW
+0000339	Boxer-like facial appearance	EXACT
+0000339	Pugilistic facial appearance	EXACT
+0000346	Whistling appearance	EXACT
+0000346	Whistling facial appearance	EXACT
+0000350	Decreased size of forehead	EXACT
+0000350	Decreased size of frontal region of face	EXACT
+0000350	Hypoplasia of forehead	NARROW
+0000350	Hypotrophic forehead	NARROW
+0000350	Small forehead	EXACT
+0000357	Abnormal location of ears	EXACT
+0000357	External ear position defect	EXACT
+0000359	Abnormality of the inner ear	EXACT
+0000359	Inner ear abnormality	EXACT
+0000370	Middle ear abnormalities	EXACT
+0000370	Middle ear abnormality	EXACT
+0000371	Acute middle ear infection	EXACT
+0000372	Auditory canal abnormality	EXACT
+0000375	Abnormality of cochlea	EXACT
+0000376	Mondini malformation	RELATED
+0000383	Abnormality of the region around the ear	NARROW
+0000383	Anomaly of the periauricular region	NARROW
+0000383	Deformity of the periauricular region	NARROW
+0000383	Malformation of the periauricular region	NARROW
+0000417	Slender nose	EXACT
+0000419	Abnormality of septum of nose	EXACT
+0000419	Abnormality of the nasal septum	EXACT
+0000419	Anomaly of nasal septum	EXACT
+0000419	Anomaly of septum of nose	EXACT
+0000420	Decreased length of nasal septum	EXACT
+0000420	Decreased length of septum of nose	EXACT
+0000420	Short nasal septum	EXACT
+0000420	Short septum of nose	EXACT
+0000422	Abnormality of the bridge of the nose	EXACT
+0000422	Abnormality of the nasal bridge	EXACT
+0000422	Abnormality of the nasal root	EXACT
+0000422	Deformity of the bridge of the nose	NARROW
+0000422	Deformity of the nasal bridge	NARROW
+0000422	Malformation of the bridge of the nose	NARROW
+0000422	Malformation of the nasal bridge	NARROW
+0000429	Abnormality of the nasal ala	EXACT
+0000429	Abnormality of the nasal alar cartilage	NARROW
+0000429	Deformity of the nasal ala	NARROW
+0000429	Deformity of the nasal alar cartilage	NARROW
+0000429	Malformation of the nasal ala	NARROW
+0000429	Malformation of the nasal alar cartilage	NARROW
+0000433	Abnormality of mucosa of nose	EXACT
+0000433	Abnormality of mucous membrane of nose	EXACT
+0000433	Abnormality of nasal mucous membrane	EXACT
+0000433	Abnormality of the nasal mucosa	EXACT
+0000434	Angioectasia of mucosa of nose	EXACT
+0000434	Angioectasia of mucous membrane of nose	EXACT
+0000434	Angioectasia of nasal mucous membrane	EXACT
+0000434	Nasal mucous membrane telangiectasia	EXACT
+0000434	Spider veins of mucosa of nose	EXACT
+0000434	Spider veins of mucous membrane of nose	EXACT
+0000434	Spider veins of nasal mucous membrane	EXACT
+0000434	Telangiectasia of mucosa of nose	EXACT
+0000434	Telangiectasia of mucous membrane of nose	EXACT
+0000434	Telangiectasia of nasal mucous membrane	EXACT
+0000447	Pear-shaped nose	EXACT
+0000451	Triangular nasal tip	EXACT
+0000451	Triangular shaped tip of nose	EXACT
+0000454	Flared nasal alae	EXACT
+0000454	Flared nostrils	EXACT
+0000466	Limited cervical range of motion	EXACT
+0000466	Limited neck range of motion	EXACT
+0000468	Increased fat around the neck	EXACT
+0000471	GI angiodysplasia	EXACT
+0000472	Cervical elongation	EXACT
+0000472	Elongated neck	EXACT
+0000472	Increased cervical length	EXACT
+0000472	Increased length of neck	EXACT
+0000472	Long neck	EXACT
+0000479	Abnormal retina	EXACT
+0000479	Abnormality of the retina	EXACT
+0000479	Anomaly of the retina	EXACT
+0000479	Retina issue	EXACT
+0000479	Retinal disease	RELATED
+0000481	Abnormality of the cornea	EXACT
+0000481	Corneal abnormalities	EXACT
+0000481	Corneal abnormality	EXACT
+0000481	Cornela disease	RELATED
+0000493	Abnormality of the fovea	EXACT
+0000517	Abnormality of the lens	EXACT
+0000517	Lens disease	RELATED
+0000517	Lens issue	EXACT
+0000525	Abnormality of the iris	EXACT
+0000531	Corneal deposits	EXACT
+0000549	Disconjugate eye movements	EXACT
+0000552	Blue yellow color blindness	EXACT
+0000552	Blue-yellow dyschromatopsia	EXACT
+0000552	Blue/yellow color vision defect	RELATED
+0000552	Dyschromatopsia, blue-yellow	EXACT
+0000555	Leukokoria	EXACT
+0000555	White pupillary reflex	EXACT
+0000564	Imperforate nasolacrimal ducts	EXACT
+0000564	Nasolacrimal duct atresia	EXACT
+0000564	Unopened tear duct	EXACT
+0000591	Abnormality of the outer white part of eyeball	BROAD
+0000591	Abnormality of the sclera	EXACT
+0000599	Abnormality of hairline at front of head	EXACT
+0000599	Abnormality of the frontal hairline	EXACT
+0000606	Abnormality of the region around the eye	NARROW
+0000606	Abnormality of the region around the eye socket	NARROW
+0000606	Anomaly of the periorbital region	NARROW
+0000606	Deformity of the periorbital region	NARROW
+0000606	Malformation of the periorbital region	NARROW
+0000607	Excess periorbital skin wrinkling	EXACT
+0000607	Periorbital rhytids	EXACT
+0000607	Periorbital wrinkling	EXACT
+0000607	Wrinkles around the eyes	EXACT
+0000610	Abnormality of the choroid	EXACT
+0000610	Choroid disease	RELATED
+0000617	Abnormal smooth pursuits	EXACT
+0000617	Disrupted ocular pursuit movements	EXACT
+0000617	Impaired smooth pursuit ocular movements	EXACT
+0000617	Irregular visual pursuit movements	EXACT
+0000619	Convergence insufficiency	EXACT
+0000620	Dacrocystitis	EXACT
+0000620	Infection of the lacrimal sac	EXACT
+0000630	Abnormality of retinal arteries	EXACT
+0000630	Retinal arterial abnormality	EXACT
+0000633	Decreased tear secretion	EXACT
+0000642	Dyschromatopsia with red-green confusion	EXACT
+0000642	Red green color blindness	EXACT
+0000642	Red/green color vision defect	RELATED
+0000652	Cleft lower eyelid	EXACT
+0000652	Coloboma of lower eyelid	EXACT
+0000652	Full thickness defect of the lower eyelid	EXACT
+0000652	Lower lid coloboma	EXACT
+0000652	Notched lower eyelid	EXACT
+0000658	Difficulty opening the eyelids	EXACT
+0000675	Hyperplasia of permanent maxillary central incisor	BROAD
+0000675	Hypertrophy of permanent maxillary central incisor	BROAD
+0000675	Increased size of permanent maxillary central incisor	BROAD
+0000675	Increased size of permanent upper central incisor	BROAD
+0000675	Increased width of permanent maxillary central incisor	EXACT
+0000675	Increased width of permanent upper central incisor	EXACT
+0000675	Large permanent maxillary central incisor	BROAD
+0000675	Large permanent upper central incisor	BROAD
+0000675	Long maxillary central incisors	EXACT
+0000675	Prominent upper incisors	EXACT
+0000675	Prominent, protruding upper incisors	EXACT
+0000683	Gray colored tooth enamel	EXACT
+0000683	Gray tooth shade	EXACT
+0000683	Grayish enamel	EXACT
+0000683	Greyish enamel	EXACT
+0000690	Absence of maxillary lateral incisor	RELATED
+0000690	Absence of upper lateral incisor	RELATED
+0000690	Absent upper lateral incisors	EXACT
+0000690	Failure of development of maxillary lateral incisor	EXACT
+0000690	Missing maxillary lateral incisor	RELATED
+0000690	Missing upper lateral incisor	RELATED
+0000694	Teeth with dentinal dysplasia	EXACT
+0000694	Teeth with thin dentin and large pulp chambers	EXACT
+0000694	Teeth with type iii dentinogenesis imperfecta	EXACT
+0000700	Bone loss around tooth root	RELATED
+0000700	Dark spot around tooth root on x-ray	EXACT
+0000700	Periapical cyst	RELATED
+0000700	Periapical granuloma	RELATED
+0000700	Periapical lesion	EXACT
+0000700	Periapical radiolucencies	RELATED
+0000700	Periapical radiolucency	RELATED
+0000706	Failure of eruption of tooth	EXACT
+0000706	Pseudo-anodontia	EXACT
+0000706	Pseudoanodontia	EXACT
+0000706	Unerupted dentition	BROAD
+0000706	Unerupted tooth	EXACT
+0000710	Hyperoralia	EXACT
+0000720	Mood swings	EXACT
+0000725	Psychotic episodes	EXACT
+0000743	Frontal release reflexes	EXACT
+0000745	Diminished motivation	EXACT
+0000745	Lack of motivation	EXACT
+0000748	Inappropriate laughter	EXACT
+0000749	Paroxysmal laughter	EXACT
+0000756	Fear of open spaces	EXACT
+0000757	Lack of insight	EXACT
+0000759	Abnormal peripheral nervous system morphology	EXACT
+0000759	Peripheral nervous system disease	RELATED
+0000769	Abnormality of the breast	EXACT
+0000775	Abnormality of the diaphragm	EXACT
+0000775	Diaphragm issues	EXACT
+0000775	Diaphragmatic defect	EXACT
+0000777	Abnormality of the thymus	EXACT
+0000777	Thymic hypoplasia	EXACT
+0000782	Abnormality of the shoulder blade	EXACT
+0000791	Uric acid stones	EXACT
+0000791	Uric acid urolithiasis	EXACT
+0000793	Mesangiocapillary glomerulonephritis	EXACT
+0000793	MPGN	EXACT
+0000794	IgA nephropathy	RELATED
+0000795	Urethra issue	EXACT
+0000799	Fatty kidney	EXACT
+0000803	Cortical cysts	EXACT
+0000804	Urinary xanthine stones	EXACT
+0000804	Xanthine stones	EXACT
+0000811	Abnormal external genitalia	EXACT
+0000812	Abnormal internal genitalia	EXACT
+0000816	Abnormality of citric acid cycle	EXACT
+0000816	Abnormality of the tricarboxylic cycle	EXACT
+0000828	Parathyroid disease	RELATED
+0000834	Adrenal abnormalities	EXACT
+0000834	Adrenal gland disease	RELATED
+0000841	Increased plasma renin activity	RELATED
+0000860	Small parathyroid glands	EXACT
+0000860	Underdeveloped parathyroid glands	EXACT
+0000875	Intermittent high blood pressure	EXACT
+0000877	Insulin-resistant diabetes mellitus at puberty	EXACT
+0000886	Deformed rib cage	EXACT
+0000887	Cupped ribs	EXACT
+0000887	Rib cupping	EXACT
+0000887	Rib flaring	RELATED
+0000892	Cleft ribs	EXACT
+0000892	Split ribs	EXACT
+0000904	Anterior flaring of ribs	EXACT
+0000904	Flaring of rib cage	EXACT
+0000905	Progressive acroosteolysis of the clavicle	EXACT
+0000915	Pectus excavatum inferiorly	EXACT
+0000916	Broad collarbone	EXACT
+0000917	Pectus carinatum superiorly	EXACT
+0000918	Scapulae exostoses	EXACT
+0000918	Shoulder bone exostoes	EXACT
+0000920	Costochondral thickening	EXACT
+0000920	Enlarged costochondral junctions	EXACT
+0000920	Prominent costochondral junction	EXACT
+0000920	Wide costochondral junctions	EXACT
+0000920	Widened costochondral junction	EXACT
+0000922	Anterior and posterior rib cupping	EXACT
+0000929	Abnormality of the skull	EXACT
+0000929	Abnormality of the skull bones	NARROW
+0000930	Elevated imprint of occipital bone over the transverse sinuses	EXACT
+0000930	Elevated imprint of posterior skull bones over the transverse sinuses	EXACT
+0000930	Thinning and bulging of occipital bone over the transverse sinuses	EXACT
+0000930	Thinning and bulging of posterior skull bones over the transverse sinuses	EXACT
+0000931	Thinning and bulging of occipital bone of skull	NARROW
+0000931	Thinning and bulging of posterior fossa bones	EXACT
+0000931	Thinning and bulging of posterior skull bones	EXACT
+0000932	Abnormality of the posterior fossa	EXACT
+0000932	Posterior fossa anomaly	EXACT
+0000935	Broad cortex of long bones	EXACT
+0000935	Cortical thickening of the long bones	EXACT
+0000935	Thickened cortices of long bones	EXACT
+0000941	Short shaft of long bone	EXACT
+0000947	Dumbbell widening of long bone metaphyses	EXACT
+0000947	Dumbbell-shaped long bone	EXACT
+0000971	Abnormalities of sweating	RELATED
+0000971	Abnormality of the sweat gland	EXACT
+0000971	Sweat gland disease	RELATED
+0000993	Molluscoid pseudotumor	EXACT
+0000999	Pus-filled lesion	EXACT
+0001001	Abnormality of fatty tissue below the skin	EXACT
+0001014	Angiokeratomas	EXACT
+0001026	Penetrating foot ulcers	EXACT
+0001027	Soft, doughy skin	EXACT
+0001032	Absence of skin creases over distal interphalangeal joints	EXACT
+0001032	Aplasia of the distal interphalangeal creases	EXACT
+0001032	Distal finger flexion creases absent	EXACT
+0001033	Facial flushing after alcohol intake	EXACT
+0001041	Blushed cheeks	EXACT
+0001041	Blushing	EXACT
+0001041	Red face	EXACT
+0001041	Red in the face	EXACT
+0001041	Rosacea	NARROW
+0001041	Ruddy face	RELATED
+0001043	Prominent scalp veins	EXACT
+0001054	Multiple pigmented nevi	EXACT
+0001054	Numerous moles	EXACT
+0001055	St. Anthony's Fire	RELATED
+0001060	Axillary pterygia	EXACT
+0001062	Atypical mole	EXACT
+0001062	Dysplastic Nevus	RELATED
+0001067	multiple neurofibromas	RELATED
+0001067	Neurofibromata	EXACT
+0001067	Neurofibromatosis	EXACT
+0001069	Hyperhidrosis, episodic	EXACT
+0001069	Sporadic excessive sweating	EXACT
+0001070	Mottled skin coloring	EXACT
+0001070	Stippled pigmentation	RELATED
+0001071	Fabry syndrome	EXACT
+0001073	'cigarette paper scarring'	EXACT
+0001073	Cigarette paper scarring	EXACT
+0001073	Cigarette-paper scars	EXACT
+0001076	Glabellar capillary hemangioma	EXACT
+0001084	Anterior embryotoxon	EXACT
+0001084	Arcus juvenilis	RELATED
+0001084	Arcus lipoidis	EXACT
+0001084	Arcus senilis	EXACT
+0001084	Corneal annulus	EXACT
+0001084	Gerontoxon	EXACT
+0001088	Iris brushfield spots	EXACT
+0001088	Speckled iris	RELATED
+0001089	Iris degeneration	EXACT
+0001092	Absent lacrimal gland puncta	EXACT
+0001092	Absent lacrimal openings	EXACT
+0001092	Absent lacrimal puncta	EXACT
+0001092	Agenesis of the lacrimal punctum	RELATED
+0001092	Aplasia of lacrimal puncta	EXACT
+0001092	Lacrimal puncta aplasia	EXACT
+0001092	Lacrimal punctum, absence	EXACT
+0001098	Abnormality of the fundus	EXACT
+0001101	Inflammation of iris	EXACT
+0001106	Dark circles around the eyes	EXACT
+0001106	Dark circles under the eyes	EXACT
+0001106	Darkening around the eyes	EXACT
+0001106	Idiopathic cutaneous hyperchromia at the orbital region	EXACT
+0001106	Infraorbital pigmentation	EXACT
+0001106	Periorbital melanosis	EXACT
+0001106	Pigmentation around the eyes	EXACT
+0001112	Leber optic atrophy features	EXACT
+0001112	Leber optic degeneration	EXACT
+0001115	Polar cataract, posterior	EXACT
+0001116	Coloboma of the macula	EXACT
+0001117	Sudden central visual loss	RELATED
+0001117	Sudden decrease in vision	BROAD
+0001125	Hemianopic blurring	RELATED
+0001125	Hemianoptic blurring of vision	EXACT
+0001125	Transient unilateral blurred vision	EXACT
+0001128	Ingrown eyelashes	EXACT
+0001128	Introversion of eyelashes	EXACT
+0001128	Trichiasis of eyelid eyelashes	EXACT
+0001129	Large central loss of field of vision	EXACT
+0001134	Polar cataract, anterior	EXACT
+0001136	Tortuous retinal arterioles	EXACT
+0001137	Alternating cross eyes	EXACT
+0001144	Cyst of eye socket	EXACT
+0001144	Orbital cysts	EXACT
+0001147	Retinal exudates	EXACT
+0001149	Biber haab dimmer dystrophy	EXACT
+0001151	Abnormal horizontal ocular pursuit	EXACT
+0001151	Impaired horizontal visual pursuit	EXACT
+0001153	Double vagina	EXACT
+0001194	Abnormalities of placenta or umbilical cord	EXACT
+0001196	Short umbilical cord	EXACT
+0001197	Abnormality of prenatal development or birth	EXACT
+0001204	Fused outermost bones of hand	EXACT
+0001204	Symphalangism affecting the distal phalanges of the hand	EXACT
+0001204	Symphalangism, distal	EXACT
+0001204	Synostosis of distal phalanges	EXACT
+0001204	Terminal symphalangism	EXACT
+0001211	Abnormality of the fingertips	EXACT
+0001220	Interphalangeal joint flexion contractures	EXACT
+0001222	Spoon shaped thumbs	EXACT
+0001225	Wrist swelling	EXACT
+0001227	Thenar abnormality	EXACT
+0001230	Wide long bones of hand	EXACT
+0001230	Wide metacarpals	EXACT
+0001232	Nail bed telangiectases	EXACT
+0001234	Abducted thumb	EXACT
+0001234	Hitchhiker thumb	EXACT
+0001241	Capitate-hamate fusions	EXACT
+0001241	Fused capitate and hamate	EXACT
+0001241	Fusion of capitate and hamate	EXACT
+0001241	Fusion of hamate and capitate	EXACT
+0001248	Shortened short tubular bones of the hand	EXACT
+0001311	Neurophysiologic abnormalities	EXACT
+0001311	Neurophysiologic abnormality	EXACT
+0001312	Giant SEPS	EXACT
+0001341	Olfactory lobe absence	EXACT
+0001384	Abnormality of the hip joint	EXACT
+0001384	Abnormality of the hip joints	RELATED
+0001403	Macrovesicular steatosis	EXACT
+0001404	Death of liver cells	EXACT
+0001404	Hepatocellular loss	EXACT
+0001430	Abnormal calf muscles	EXACT
+0001430	Abnormality of calf musculature	EXACT
+0001435	Abnormality of shoulder musculature	EXACT
+0001436	Abnormal foot muscles	EXACT
+0001440	Fusion of metatarsals	EXACT
+0001440	Fusion of the long bones of the feet	EXACT
+0001440	Synostosis involving metatarsal bones	EXACT
+0001449	Duplication of long bones of foot	EXACT
+0001459	Webbed 1st-3rd toes	EXACT
+0001460	Absent/small skeletal muscles	EXACT
+0001460	Absent/underdeveloped skeletal muscles	EXACT
+0001464	Absent/small shoulder muscles	EXACT
+0001464	Absent/underdeveloped shoulder muscles	EXACT
+0001473	Osteolysis involving metatarsal bones	EXACT
+0001477	Compensatory head tilt/chin elevation	EXACT
+0001489	Vitreous detachment	EXACT
+0001491	CFEOM	EXACT
+0001491	Congenital fibrosis of the extraocular muscles	EXACT
+0001491	Congenital ophthalmoplegia	EXACT
+0001493	Congenital retinal fold	EXACT
+0001495	Carpal bone osteolysis	EXACT
+0001500	Broad finger	EXACT
+0001500	Broad fingers	EXACT
+0001500	Wide fingers	EXACT
+0001501	6 long bones of hand	EXACT
+0001504	Metacarpals osteolysis	EXACT
+0001530	Mild growth deficiency	RELATED
+0001530	Postnatal onset of mild growth retardation	EXACT
+0001544	Prominent belly button	EXACT
+0001544	Prominent navel	EXACT
+0001551	Abnormal belly button	EXACT
+0001551	Abnormal navel	EXACT
+0001551	Abnormal umbilicus	EXACT
+0001557	Abnormal intrauterine movements	EXACT
+0001560	Abnormal amniotic fluid	EXACT
+0001571	Impacted teeth	EXACT
+0001571	Multiple buried teeth	BROAD
+0001571	Multiple impacted teeth	EXACT
+0001571	Multiple retained teeth	BROAD
+0001579	ACTH-independent hypercortisolemia	RELATED
+0001583	Rotatory Nystagmus	EXACT
+0001593	Decreased size of maxillary lateral incisor	BROAD
+0001593	Decreased size of upper lateral incisor	BROAD
+0001593	Decreased width of upper lateral incisor	EXACT
+0001593	Hypotrophic maxillary lateral incisor	BROAD
+0001593	Hypotrophic upper lateral incisor	BROAD
+0001593	Small maxillary lateral incisor	BROAD
+0001593	Small upper lateral incisor	BROAD
+0001637	Abnormality of the myocardium	EXACT
+0001686	Aphonia	EXACT
+0001691	Muscular subaortic stenosis	EXACT
+0001692	Primary atrial arrhythmia	RELATED
+0001697	Abnormality of the pericardium	EXACT
+0001705	Right ventricular outlet obstruction	EXACT
+0001709	Complete heart block	EXACT
+0001709	Third-degree heart block	RELATED
+0001710	Conotruncal heart defects	EXACT
+0001711	Abnormal heart left ventricle morphology	EXACT
+0001711	Abnormality of the left ventricle	EXACT
+0001711	Left ventricular abnormality	EXACT
+0001713	Abnormality of cardiac ventricle	EXACT
+0001735	Acute pancreatic inflammation	EXACT
+0001735	Pancreatitis, acute	EXACT
+0001742	Blockage of nose	EXACT
+0001742	Congestion of nose	NARROW
+0001742	Nasal blockage	EXACT
+0001742	Nasal congestion	NARROW
+0001742	Nasal obstruction	EXACT
+0001742	Obstruction of nose	EXACT
+0001742	Stuffy nose	EXACT
+0001750	Common ventricle	EXACT
+0001757	High frequency sensorineural hearing impairment	EXACT
+0001757	High-tone sensorineural deafness	EXACT
+0001757	High-tone sensorineural hearing impairment	EXACT
+0001780	Abnormalities of the toes	EXACT
+0001780	Abnormality of toe	EXACT
+0001783	Broad metatarsals	RELATED
+0001783	Wide long bone of foot	EXACT
+0001783	Widened metatarsal shaft	RELATED
+0001785	Ankle swelling	EXACT
+0001786	Narrow foot	EXACT
+0001786	Slender feet	EXACT
+0001787	Abnormal delivery	EXACT
+0001787	Delivery complication	EXACT
+0001809	Longitudinal splitting of nail	EXACT
+0001814	Deep-set nails	EXACT
+0001821	Broad fingernails	EXACT
+0001821	Broad nail	EXACT
+0001821	Wide fingernails	EXACT
+0001832	Abnormality of the long bone of foot	EXACT
+0001842	Acroosteolysis of feet	EXACT
+0001844	Abnormalities of the hallux	EXACT
+0001844	Abnormality of the big toe	EXACT
+0001850	Abnormal ankle bones	EXACT
+0001850	Abnormal tarsals	EXACT
+0001853	Bifid distal phalanges of toes	EXACT
+0001853	Bifid terminal phalanx of toe	EXACT
+0001853	Notched outermost bones of toes	EXACT
+0001854	Gout of big toe	EXACT
+0001857	Hypoplastic distal phalanges of feet	EXACT
+0001857	Short outermost bone of toe	EXACT
+0001870	Acroosteolysis of distal phalanges of feet	EXACT
+0001872	Blood platelet disease	RELATED
+0001872	Platelet abnormalities	EXACT
+0001872	Thrombasthenia	RELATED
+0001877	Abnormality of erythrocytes	EXACT
+0001877	Abnormality of erythroid lineage cell	RELATED
+0001877	Abnormality of red blood cells	EXACT
+0001879	Abnormality of eosinophils	EXACT
+0001881	Abnormal leukocyte function	EXACT
+0001881	Abnormality of leukocytes	EXACT
+0001885	Short second toe	EXACT
+0001886	Foot bone infection	EXACT
+0001898	Increased RBC mass	EXACT
+0001899	Increased Hct	EXACT
+0001900	Increased Hb	EXACT
+0001905	thrombocytopenia, congenital	EXACT
+0001911	Abnormality of granulocytes	EXACT
+0001911	Abnormality of neutrophil	EXACT
+0001912	Abnormality of basophils	EXACT
+0001920	Narrowing of kidney artery	EXACT
+0001929	Factor XI deficiency	RELATED
+0001929	Low factor XI activity	EXACT
+0001953	Diabetic ketosis	EXACT
+0001955	Unexplained fevers	EXACT
+0001961	Small heart	EXACT
+0001961	Underdeveloped heart	EXACT
+0001963	Abnormal speech discrimination	EXACT
+0001963	Poor speech discrimination	EXACT
+0001964	Absent or hypoplastic metatarsal	EXACT
+0001964	Absent/hypoplastic metacarpals	EXACT
+0001964	Absent/hypoplastic metatarsals	EXACT
+0001964	Absent/small long bone of foot	EXACT
+0001964	Absent/underdeveloped long bone of foot	EXACT
+0001964	Aplastic/hypoplastic metatarsals	EXACT
+0001965	Abnormality of the scalp	EXACT
+0001965	Anomaly of scalp	EXACT
+0001969	Tubulointerstitial nephropathy	RELATED
+0001975	Glanzmann thrombasthenia	RELATED
+0001975	Reduced level of platelet glycoprotein IIb/IIIa complex	EXACT
+0001977	Abnormal blood clot	EXACT
+0001978	Extramedullary erythropoiesis	RELATED
+0001981	Schistocytes	EXACT
+0001982	'Sea blue' histiocytes	EXACT
+0001982	Sea-blue histiocyte	EXACT
+0001983	Cd43 defectively expressed on surface of blood cells	EXACT
+0001983	Reduced lymphocyte surface expression of sialophorin	EXACT
+0001986	Hyperosmolar dehydration	EXACT
+0001991	Absent/hypoplastic toes	RELATED
+0001991	Absent/small toe	EXACT
+0001991	Absent/underdeveloped toe	EXACT
+0001991	Aplastic/hypoplastic toe phalanges	EXACT
+0002010	Decreased breadth of upper jaw bones	EXACT
+0002010	Decreased transverse dimension of maxilla	EXACT
+0002010	Decreased width of maxilla	EXACT
+0002010	Decreased width of upper jaw bones	EXACT
+0002010	Narrow upper jaw bones	EXACT
+0002010	Transverse hypoplasia of maxilla	EXACT
+0002010	Transverse maxillary deficiency	EXACT
+0002010	Transverse maxillary insufficiency	EXACT
+0002011	Abnormality of the central nervous system	EXACT
+0002011	Central nervous system disease	RELATED
+0002011	Morphological abnormality of the CNS	EXACT
+0002012	Abnormality of the abdominal organs	EXACT
+0002012	Gastrointestinal tract defects	EXACT
+0002031	Abnormality of esophagus morphology	EXACT
+0002031	Anomaly of the esophagus	EXACT
+0002034	Abnormality of the rectum	EXACT
+0002034	Anomaly of the rectum	EXACT
+0002049	Proximal tubular acidosis	EXACT
+0002049	Renal tubular acidosis, proximal	EXACT
+0002049	Renal tubular acidosis, type II	EXACT
+0002054	Heavy brow of the face	EXACT
+0002054	Heavy supraorbital ridge	EXACT
+0002056	Abnormality of the area between the eyebrows	EXACT
+0002056	Deformity of the area between the eyebrows	NARROW
+0002056	Glabellar abnormality	EXACT
+0002056	Malformation of the area between the eyebrows	NARROW
+0002060	Abnormality of the telencephalon	EXACT
+0002074	Neuronal lipopigments	RELATED
+0002087	Abnormality of the upper respiratory tract	EXACT
+0002087	Upper respiratory tract issues	EXACT
+0002088	Abnormality of lung morphology	EXACT
+0002088	Abnormality of the lungs	EXACT
+0002088	Abnormally shaped lung	EXACT
+0002088	Lung disease	RELATED
+0002088	Unusal lung shape	EXACT
+0002108	Spontaneous collapsed lung	EXACT
+0002143	Abnormality of the spinal cord	EXACT
+0002143	Spinal cord disease	RELATED
+0002143	Spinal cord pathology	RELATED
+0002154	Elevated blood glycine levels	EXACT
+0002154	Hyperglycinaemia	EXACT
+0002156	High urine homocystine levels	EXACT
+0002157	Azotaemia	EXACT
+0002160	Elevated blood homocystine	EXACT
+0002160	Homocystinemia	EXACT
+0002161	Elevated blood lysine	EXACT
+0002165	Nail pterygium	EXACT
+0002189	Excessive daytime sleepiness	EXACT
+0002200	Pseudobulbar symptoms	EXACT
+0002218	Silver-gray hair	EXACT
+0002218	Silver-gray hair color	EXACT
+0002218	Silvery-gray hair	EXACT
+0002219	Increased facial hair growth	EXACT
+0002229	Patchy baldness	EXACT

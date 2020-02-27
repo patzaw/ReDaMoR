@@ -57,7 +57,7 @@ The main features of ReDaMoR are the following:
 - Save data model in a json format
 - Import SQL data model generated with [MySQL Workbench](https://www.mysql.com/products/workbench/)
 - Document data types as R types (character, numeric, logical, ...)
-- Add comments to tables and fields to improve model documation
+- Add comments to tables and fields to improve model documentation
 - Check and auto-correct model constraints (keys, uniqueness, mandatory fields)
 - Confront data to the model to check their compatibility
 
@@ -89,7 +89,7 @@ m <- model_relational_data()
 ```
 
 When the ***Done*** button is clicked, the model is returned in R environment.
-Because the interface can be closed accidentaly, the model is also autosaved and can be recovered using the `recover_RelDataModel()` function.
+Because the interface can be closed accidentally, the model is also autosaved and can be recovered using the `recover_RelDataModel()` function.
 The recovered model can be provided as `modelInput` when calling `model_relational_data()`.
 For example:
 
@@ -111,15 +111,15 @@ This example can be imported from the Shiny app when clicking on the ***Import**
 It can be also be loaded and displayed (and edited) using the following commands:
 
 ```{r}
-hpoModel <- read_json_data_model(
+hpo_model <- read_json_data_model(
   system.file("examples/HPO-model.json", package="ReDaMoR")
 )
-plot(hpoModel)
+plot(hpo_model)
 ## Edit the model
-# m <- model_relational_data(hpoModel)
+# m <- model_relational_data(hpo_model)
 ```
 
-The view is rendered by the [visNetwork package](https://datastorm-open.github.io/visNetwork/). It means that it can take advantages of all the functionalities provided by the visNetwork package including the use of the view in [Shiny apps](https://datastorm-open.github.io/visNetwork/shiny.html).
+The view is rendered by the [visNetwork package](https://datastorm-open.github.io/visNetwork/). It means that it can take advantages of all the functions provided by the visNetwork package including the use of the model in [Shiny apps](https://datastorm-open.github.io/visNetwork/shiny.html).
 
 ### Tables
 <!------->
@@ -135,7 +135,7 @@ The header of the box corresponds to the name of the table and the following lin
   - idx. correspond to regular indexes
   - uidx. correspond to unique indexes
   
-When the cursor is over a box, table and field **commments** are displayed.
+When the cursor is over a box, table and field **comments** are displayed.
 
 ### Foreign keys
 <!------------->
@@ -154,7 +154,7 @@ Each arrow represent a foreign key:
 ![](img/model_relational_data-Overview-Divided.png)
 </div>
 
-The app is devided in three main parts:
+The app is divided in three main parts:
 
 - ![](img/ica.png){width=30px} The **main menu** at the top of the page to execute general actions on the model
 - ![](img/icb.png){width=30px} The **model view** on the left of the page to interact with the model
@@ -166,7 +166,7 @@ The app is devided in three main parts:
 General actions can be executed on the model, using the buttons in the main menu:
 
 - Import json or sql (Only sql models produced by MySQL Workbench are supported) files
-- Export json or html files (a png file can alos be saved by right clicking on the model view)
+- Export json or html files (a png file can also be saved by right clicking on the model view)
 - Add a table
 
 ### The model view
@@ -194,7 +194,7 @@ In the edition view the user can:
 ### Contextual help tour
 <!--------------------->
 
-An help tour can be launched when clicking on the ![](img/bhelp.png){width=30px} button in the main menu.
+An help tour can be launched when clicking on the ![](img/bhelp.png){width=40px} button in the main menu.
 This help tour is contextual: its content depends on the state of the app.
   
 ### keyboard shortcuts
@@ -224,14 +224,82 @@ model_relational_data()
 <!----------------------------------------------------------------------------->
 # Confronting data
 
+Data can be confronted to the model using the `confront_data()` function.
+A subset of the [HPO](https://hpo.jax.org/app/) is provided within the package and can be directly confronted to the data model.
+The function prints a report with messages about the global success of the data model confrontation and additional failure or warning messages for relevant tables.
 
+```{r}
+confrontation_report <- confront_data(
+  hpo_model,
+  path=list.files(
+    system.file("examples/HPO-subset", package="ReDaMoR"),
+    full.names=TRUE
+  ),
+  returnData=TRUE
+)
+```
+
+This report can also be formatted using markdown and included in an document such as this one.
+
+----
+
+```{r, results='asis'}
+format_confrontation_report_md(
+  confrontation_report,
+  title="Example: Confrontation with original data",
+  level=1
+) %>%
+  cat()
+```
+
+----
+
+The `returnData` argument is used to keep the data in the confrontation report.
+
+```{r}
+hpo_tables <- confrontation_report$data
+```
+
+In the example below the data are altered and confronted again to the data model.
+The confrontation report shows the discrepancies between the model and the data in order to facilitate the correction of one or the other.
+
+```{r, results='asis'}
+hpo_tables$HPO_diseases <- hpo_tables$HPO_diseases %>% slice(1:100)
+hpo_tables$HPO_synonyms[1:10, "synonym"] <- NA
+hpo_tables$HPO_hp <- hpo_tables$HPO_hp %>% mutate(level=as.character(level))
+confront_data(hpo_model, hpo_tables, verbose=FALSE) %>%
+  format_confrontation_report_md(
+    title="Example: Confrontation with altered data",
+    level=1
+  ) %>%
+    cat()
+```
 
 <!---->
-## Generate a data model from data frames
+## Drafting a data model from data frames
 <!-------------------------------------->
+
+Beside confronting a model to data, a model can also be drafted from a set of tables.
+Only column names and types are documented during this process.
+Uniqueness, mandatory and key constraints still need to be documented by the user to complete the model.
+It can easily be done with `model_relational_data()`.
+
+
+```{r}
+new_model <- df_to_model(
+  list=names(hpo_tables), envir=as.environment(hpo_tables)
+)
+new_model %>%
+  auto_layout(lengthMultiplier=250) %>%
+  plot()
+# model_relational_data(new_model)
+```
 
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 # Acknowledgments
+
+This work was entirely supported by [UCB Pharma](https://www.ucb.com/).
+
 

@@ -20,7 +20,10 @@
 \arguments{
 \item{x}{a \link{RelDataModel}}
 
-\item{paths}{a character vector with file paths.
+\item{data}{a list of data frames to be confronted with the model.}
+
+\item{paths}{a character vector with file paths taken into account if
+the data is empty.
 The file \link{basename} without extension
 will be considered as the table name.}
 

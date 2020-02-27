@@ -215,12 +215,15 @@ format_confrontation_report <- function(
 #'
 #' @param cr the confrontation report from [confront_data.RelDataModel]
 #' @param title a character with a single value corresponding to the report
+#' @param level rmarkdown level in document hierarchy (default:0 ==> highest).
+#' It should be an integer between 0 and 4.
 #'
 #' @export
 #'
 format_confrontation_report_md <- function(
    cr,
    title="Model",
+   level=0,
    bgSuccess="green",
    txSuccess="black",
    bgFailure="red",
@@ -228,6 +231,9 @@ format_confrontation_report_md <- function(
    bgMessage="#FFBB33",
    txMessage="white"
 ){
+
+   level <- round(level, digits=0)
+   stopifnot(level >=0, level <=4)
 
    ## Helpers ----
    successTag <- function(s){
@@ -455,8 +461,16 @@ format_confrontation_report_md <- function(
       )
    }
 
+   ## Set document level ----
+   toRet <- sub(
+      "^[#]",
+      paste0("#", paste(rep("#", level), collapse="")),
+      toRet
+   )
+
    ## Concatenate the result ----
-   return(paste(toRet, collapse="\n"))
+   toRet <- paste(toRet, collapse="\n")
+   return(toRet)
 }
 
 ###############################################################################@

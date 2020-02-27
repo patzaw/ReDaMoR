@@ -1,0 +1,501 @@
+id	name	description	level
+0000002	Abnormality of body height	Deviation from the norm of height with respect to that which is expected according to age and gender norms.	3
+0000009	Functional abnormality of the bladder	Dysfunction of the urinary bladder.	6
+0000014	Abnormality of the bladder	An abnormality of the urinary bladder.	5
+0000017	Nocturia	Abnormally increased production of urine during the night leading to an unusually frequent need to urinate.	7
+0000019	Urinary hesitancy	Difficulty in beginning the process of urination.	7
+0000021	Megacystis	Dilatation of the bladder postnatally.	8
+0000022	Abnormality of male internal genitalia	An abnormality of the male internal genitalia.	6
+0000024	Prostatitis	The presence of inflammation of the prostate.	8
+0000025	Functional abnormality of male internal genitalia	NA	6
+0000030	Testicular gonadoblastoma	The presence of a gonadoblastoma of the testis.	9
+0000031	Epididymitis	The presence of inflammation of the epididymis.	8
+0000032	Abnormality of male external genitalia	An abnormality of male external genitalia.	6
+0000036	Abnormality of the penis	NA	7
+0000042	Absent external genitalia	Lack of external genitalia in a male or female individual.	6
+0000045	Abnormality of the scrotum	NA	7
+0000050	Hypoplastic male external genitalia	Underdevelopment of part or all of the male external reproductive organs (which include the penis, the scrotum and the urethra).	7
+0000052	Urethral atresia, male	Congenital anomaly characterized by closure or failure to develop an opening in the urethra in males.	9
+0000056	Abnormality of the clitoris	An abnormality of the clitoris.	7
+0000058	Abnormality of the labia	An anomaly of the labia, the externally visible portions of the vulva.	7
+0000063	Fused labia minora	Fusion of the labia minora as a result of labial adhesions resulting in vaginal obstruction.	9
+0000064	Hypoplastic labia minora	NA	9
+0000065	Labial hypertrophy	NA	8
+0000068	Urethral atresia	Congenital anomaly characterized by closure or failure to develop an opening in the urethra.	8
+0000070	Ureterocele	A ureterocele is a congenital saccular dilatation of the distal segment of the ureter.	7
+0000080	Abnormality of reproductive system physiology	An abnormal functionality of the genital system.	4
+0000108	Renal corticomedullary cysts	The presence of multiple cysts at the border between the renal cortex and medulla.	8
+0000111	Renal juxtaglomerular cell hypertrophy/hyperplasia	Increased number and size of the juxtaglomerular cells.	10
+0000128	Renal potassium wasting	High urine potassium in the presence of hypokalemia.	8
+0000131	Uterine leiomyoma	The presence of a leiomyoma of the uterus.	10
+0000134	Female hypogonadism	Decreased functionality of the female gonads, i.e., of the ovary.	9
+0000136	Bifid uterus	The presence of a bifid uterus.	9
+0000137	Abnormality of the ovary	An abnormality of the ovary.	7
+0000139	Uterine prolapse	The presence of prolapse of the uterus.	9
+0000145	Transverse vaginal septum	NA	9
+0000149	Ovarian gonadoblastoma	The presence of a gonadoblastoma of the ovary.	9
+0000159	Abnormal lip morphology	An abnormality of the lip.	8
+0000163	Abnormal oral cavity morphology	Abnormality of the oral cavity, i.e., the opening or hollow part of the mouth.	7
+0000166	Severe periodontitis	A severe form of periodontitis.	11
+0000168	Abnormality of the gingiva	Any abnormality of the gingiva (also known as gums).	9
+0000172	Abnormality of the uvula	Abnormality of the uvula, the conic projection from the posterior edge of the middle of the soft palate.	10
+0000177	Abnormality of upper lip	An abnormality of the upper lip.	9
+0000178	Abnormality of lower lip	An abnormality of the lower lip.	9
+0000182	Movement abnormality of the tongue	NA	10
+0000196	Lower lip pit	Depression located on the vermilion of the lower lip, usually paramedian.	11
+0000197	Abnormal parotid gland morphology	Any abnormality of the parotid glands, which are the salivary glands that are located in the subcutaneous tissues of the face overlying the mandibular ramus and anterior and inferior to the external ear.	9
+0000198	Absence of Stensen duct	NA	10
+0000205	Pursed lips	An abnormality of the appearance of the face caused by constant contraction of the lips leading to a puckered or pursed appearance.	9
+0000214	Lip telangiectasia	Telangiectasia (that is, the presence of small dilated superficial blood vessels) of the lips.	10
+0000216	Broad secondary alveolar ridge	NA	10
+0000222	Gingival hyperkeratosis	Hyperkeratosis of the gingiva.	10
+0000223	Abnormality of taste sensation	NA	10
+0000224	Decreased taste sensation	NA	11
+0000227	Tongue telangiectasia	Telangiectasia (that is, the presence of small dilated superficial blood vessels) of the tongue.	10
+0000234	Abnormality of the head	An abnormality of the head.	3
+0000242	Parietal bossing	Parietal bossing is a marked prominence in the parietal region.	9
+0000245	Abnormality of the paranasal sinuses	Abnormality of the paranasal (cranial) sinuses, which are air-filled spaces that are located within the bones of the skull and face and communicate with the nasal cavity. They comprise the maxillary sinuses, the frontal sinuses, the ethmoid sinuses, and the sphenoid sinuses.	7
+0000250	Dense calvaria	An abnormal increase of density of the bones making up the calvaria.	9
+0000264	Abnormality of the mastoid	An abnormality of the mastoid process, which is the conical prominence projecting from the undersurface of the mastoid portion of the temporal bone.	6
+0000265	Mastoiditis	NA	7
+0000267	Cranial asymmetry	Asymmetry of the bones of the skull.	8
+0000273	Facial grimacing	NA	7
+0000277	Abnormality of the mandible	Any abnormality of the mandible, the bone of the lower jaw.	8
+0000287	Increased facial adipose tissue	An increased amount of subcutaneous fat tissue in the face.	7
+0000290	Abnormality of the forehead	An anomaly of the forehead.	5
+0000292	Loss of facial adipose tissue	Loss of normal subcutaneous fat tissue in the face.	7
+0000295	Doll-like facies	A characteristic facial appearance with a round facial form, full cheeks, a short nose, and a relatively small chin.	6
+0000301	Abnormality of facial musculature	An anomaly of a muscle that is innervated by the facial nerve (the seventh cranial nerve).	6
+0000306	Abnormality of the chin	An abnormality of the chin, i.e., of the inferior portion of the face lying inferior to the lower lip and including the central prominence of the lower jaw.	5
+0000309	Abnormality of the midface	An anomaly of the midface, which is a region and not an anatomical term. It extends, superiorly, from the inferior orbital margin to, inferiorly, the level of nasal base. It is formed by the maxilla (upper jaw) and zygoma and cheeks and malar region. Traditionally, the nose and premaxilla are not included in the midface.	5
+0000315	Abnormality of the orbital region	NA	5
+0000317	Facial myokymia	Facial myokymia is a fine fibrillary activity of one or more muscles innervated by the facial nerve (the seventh cranial nerve).	7
+0000320	Bird-like facies	NA	6
+0000321	Square face	Facial contours, as viewed from the front, show a broad upper face/cranium and lower face/mandible, creating a square appearance.	6
+0000326	Abnormality of the maxilla	An abnormality of the Maxilla (upper jaw bone).	8
+0000339	Pugilistic facies	Coarse facial features reminiscent of those of a boxer.	7
+0000346	Whistling appearance	An abnormality of facial morphology characterized by a small mouth opening and constant contraction of the lips as if the patient were whistling.	10
+0000350	Small forehead	The presence of a forehead that is abnormally small.	6
+0000357	Abnormal location of ears	Abnormal location of the ear.	5
+0000359	Abnormality of the inner ear	An abnormality of the inner ear.	4
+0000370	Abnormality of the middle ear	An abnormality of the middle ear.	4
+0000371	Acute otitis media	Acute otitis media is a short and generally painful infection of the middle ear.	7
+0000372	Abnormality of the auditory canal	An abnormality of the External acoustic tube (also known as the auditory canal).	5
+0000375	Abnormal cochlea morphology	An abnormality of the cochlea.	6
+0000376	Incomplete partition of the cochlea type II	IWith incomplete partition II, the cochlea consists of 1.5 turns; the apical and middle cochlea turns are undifferentiated and form a cystic apex. The vestibule is normal while the vestibular aqueduct is always enlarged. Developmental arrest occurs at the seventh week of gestation.	9
+0000381	Stapes ankylosis	Stapes ankylosis refers to congenital or acquired fixation of the stapes (the stirrup-shaped small bone or ossicle in the middle ear), which is associated with conductive hearing resulting from impairment of the sound-conduction mechanism (the external auditory canal, tympanic membrane, and/or middle-ear ossicles).	8
+0000383	Abnormality of periauricular region	NA	7
+0000394	Lop ear	Anterior and inferior folding of the upper portion of the ear that obliterates triangular fossa and scapha.	6
+0000395	Prominent antihelix	The presence of an abnormally prominent antihelix.	7
+0000417	Slender nose	NA	7
+0000419	Abnormality of the nasal septum	An abnormality of the nasal septum.	6
+0000420	Short nasal septum	Reduced superior to inferior length of the nasal septum.	7
+0000422	Abnormality of the nasal bridge	Abnormality of the nasal bridge, which is the saddle-shaped area that includes the nasal root and the lateral aspects of the nose. It lies between the glabella and the inferior boundary of the nasal bone, and extends laterally to the inner canthi.	6
+0000429	Abnormality of the nasal alae	An abnormality of the Ala of nose.	7
+0000433	Abnormality of the nasal mucosa	NA	6
+0000434	Nasal mucosa telangiectasia	Telangiectasia of the nasal mucosa.	9
+0000447	Pear-shaped nose	NA	7
+0000451	Triangular nasal tip	NA	8
+0000454	Flared nostrils	NA	8
+0000466	Limited neck range of motion	NA	5
+0000468	Increased adipose tissue around the neck	An increased amount of subcutaneous fat tissue around the neck.	5
+0000471	Gastrointestinal angiodysplasia	Dysplasia affecting the vasculature of the gastrointestinal tract.	6
+0000472	Long neck	Increased inferior-superior length of the neck.	4
+0000479	Abnormal retinal morphology	A structural abnormality of the retina.	6
+0000481	Abnormal cornea morphology	Any abnormality of the cornea, which is the transparent tissue at the front of the eye that covers the iris, pupil, and anterior chamber.	5
+0000484	Hyperopic astigmatism	A form of astigmatism in which one meridian is hyperopic while the one at a right angle to it has no refractive error.	8
+0000493	Abnormal foveal morphology	An abnormality of the fovea centralis, the central area of the macula that mediates central, high resolution vision and contains the largest concentration of cone cells in the retina.	8
+0000502	Abnormal conjunctiva morphology	An abnormality of the conjunctiva.	8
+0000503	Tortuosity of conjunctival vessels	The presence of an increased number of twists and turns of the conjunctival blood vessels.	10
+0000517	Abnormality of the lens	An abnormality of the lens.	5
+0000525	Abnormality iris morphology	An abnormality of the iris, which is the pigmented muscular tissue between the cornea and the lens, that is perforated by an opening called the pupil.	5
+0000531	Corneal crystals	NA	8
+0000538	Pseudopapilledema	Apparent optic disc swelling in the absence of increased intracranial pressure.	8
+0000539	Abnormality of refraction	An abnormality in the process of focusing of light by the eye in order to produce a sharp image on the retina.	4
+0000542	Impaired ocular adduction	Reduced ability to move the eye in the direction of the nose.	5
+0000549	Abnormal conjugate eye movement	Any deviation from the normal motor coordination of the eyes that allows for bilateral fixation on a single object.	5
+0000552	Tritanomaly	Difficulty distinguishing between yellow and blue, possible related to dysfunction of the S photopigment.	8
+0000555	Leukocoria	An abnormal white reflection from the pupil rather than the usual black reflection.	7
+0000558	Rieger anomaly	A congenital malformation of the anterior segment characterized by iridicorneal malformation, glaucoma, iris stroma hypoplasia, posterior embryotoxon, and corneal opacities.	9
+0000564	Lacrimal duct atresia	A developmental disorder of the lacrimal drainage system that most often affects the lacrimal ostium and resulting in non-opening of the nasolacrimal duct. It usually results from a non-canalization of the nasolacrimal duct.	10
+0000576	Centrocecal scotoma	A scotoma (area of diminished vision within the visual field) located between the central point of fixation and the blind spot with a roughly horizontal oval shape.	8
+0000584	Punctate corneal epithelial erosions	NA	8
+0000591	Abnormal sclera morphology	An abnormality of the sclera.	4
+0000594	Shallow anterior chamber	Reduced depth of the anterior chamber, i.e., the anteroposterior distance between the cornea and the iris is decreased.	6
+0000599	Abnormality of the frontal hairline	An anomaly in the placement or shape of the hairline (trichion) on the forehead, that is, the border between skin on the forehead that has head hair and that does not.	8
+0000606	Abnormality of the periorbital region	An abnormality of the region situated around the orbit of the eye.	5
+0000607	Periorbital wrinkles	NA	8
+0000610	Abnormal choroid morphology	Any structural abnormality of the choroid.	6
+0000617	Abnormality of ocular smooth pursuit	An abnormality of eye movement characterized by impaired smooth-pursuit eye movements.	5
+0000619	Impaired convergence	Reduced ability to turn the eyes inward in order to focus on a nearby object.	6
+0000620	Dacryocystitis	Inflammation of the nasolacrimal sac.	9
+0000623	Supranuclear ophthalmoplegia	A vertical gaze palsy with inability to direct the gaze of the eyes downwards.	7
+0000630	Abnormal retinal artery morphology	NA	8
+0000633	Decreased lacrimation	Abnormally decreased lacrimation, that is, reduced ability to produce tears.	5
+0000634	Impaired ocular abduction	An impaired ability of the eye to move in the outward direction (towards the side of the head).	6
+0000642	Red-green dyschromatopsia	Difficulty with discriminating red and green hues.	7
+0000650	Abnormal amplitude of pattern reversal visual evoked potentials	NA	8
+0000652	Lower eyelid coloboma	A short discontinuity of the margin of the lower eyelid.	11
+0000658	Eyelid apraxia	NA	9
+0000660	Lipemia retinalis	A creamy appearance of the retinal blood vessels that occurs when the concentration of lipids in the blood are extremely increased, with pale pink to milky white retinal vessels and altered pale reflexes from choroidal vasculature.	8
+0000661	Palpebral fissure narrowing on adduction	NA	12
+0000667	Phthisis bulbi	Atrophy of the eyeball with blindness and decreased intraocular pressure due to end-stage intraocular disease.	4
+0000675	Macrodontia of permanent maxillary central incisor	Increased size of the maxillary central secondary incisor tooth.	12
+0000676	Abnormality of the incisor	An abnormality of the Incisor tooth.	9
+0000683	Grayish enamel	A grey discoloration of the dental enamel.	11
+0000690	Agenesis of maxillary lateral incisor	Agenesis of one or more maxillary lateral incisor, comprising the maxillary lateral primary incisor and maxillary lateral secondary incisor.	14
+0000694	Shell teeth	A type of dental dysplasia occurring in dentinogenesis imperfecta in which the pulp chambers are enlarged and there is a reduced amount of coronal dentin.	12
+0000700	Periapical bone loss	Radiolucency (reflecting a reduction in the bony substance) around the apex (the tip of the dental root).	9
+0000706	Unerupted tooth	The presence of one or more embedded tooth germs which have failed to erupt.	10
+0000710	Hyperorality	A tendency or compulsion to examine objects by mouth.	5
+0000720	Mood swings	An exaggeration of emotional affects such as laughing crying, or yawning beyond what the person feels.	6
+0000725	Psychotic episodes	NA	6
+0000727	Frontal lobe dementia	NA	8
+0000728	Impaired ability to form peer relationships	NA	7
+0000740	Episodic paroxysmal anxiety	Recurrent attacks of severe anxiety, whose occurence is not restricted to any particular situation or set of circumstances and is therefore unpredictable.	8
+0000743	Frontal release signs	Primitive reflexes traditionally held to be a sign of disorders that affect the frontal lobes.	5
+0000745	Diminished motivation	A reduction in goal-directed behavior, that is, motivation, the determinant of behavior and adaptation that allows individuals to get started, be energized to perform a sustained and directed action.	6
+0000748	Inappropriate laughter	NA	7
+0000749	Paroxysmal bursts of laughter	NA	8
+0000753	Autism with high cognitive abilities	NA	6
+0000756	Agoraphobia	A type of anxiety disorder characterized by avoidance of public places, especially where crowds gather.	7
+0000757	Lack of insight	NA	5
+0000759	Abnormal peripheral nervous system morphology	A structural abnormality of the peripheral nervous system, which is composed of the nerves that lead to or branch off from the central nervous system. This includes the cranial nerves (olfactory and optic nerves are technically part of the central nervous system).	4
+0000764	Peripheral axonal degeneration	Progressive deterioration of peripheral axons.	5
+0000769	Abnormality of the breast	An abnormality of the breast.	2
+0000775	Abnormality of the diaphragm	Any abnormality of the diaphragm, the sheet of skeletal muscle that separates the thoracic cavity from the abdominal cavity.	4
+0000777	Abnormality of the thymus	Abnormality of the thymus, an organ located in the upper anterior portion of the chest cavity just behind the sternum and whose main function is to provide an environment for T lymphocyte maturation.	5
+0000782	Abnormality of the scapula	Any abnormality of the scapula, also known as the shoulder blade.	6
+0000791	Uric acid nephrolithiasis	The presence of uric acid-containing calculi (stones) in the kidneys.	8
+0000793	Membranoproliferative glomerulonephritis	A type of glomerulonephritis characterized by diffuse mesangial cell proliferation and the thickening of capillary walls due to subendothelial extension of the mesangium. The term membranoproliferative glomerulonephritis is often employed to denote a general pattern of glomerular injury seen in a variety of disease processes that share a common pathogenetic mechanism, rather than to describe a single disease entity	11
+0000794	IgA deposition in the glomerulus	The presence of immunoglobulin A deposits in the glomerulus.	11
+0000795	Abnormality of the urethra	An abnormality of the urethra, i.e., of the tube which connects the urinary bladder to the outside of the body.	7
+0000796	Urethral obstruction	Obstruction of the flow of urine through the urethra.	8
+0000799	Renal steatosis	Abnormal fat accumulation in the kidneys.	7
+0000803	Renal cortical cysts	Cysts of the cortex of the kidney.	8
+0000804	Xanthine nephrolithiasis	The presence of xanthine-containing calculi (stones) in the kidneys.	8
+0000807	Glandular hypospadias	NA	11
+0000808	Penoscrotal hypospadias	A severe form of hypospadias in which the urethral opening is located at the junction of the penis and scrotum.	11
+0000811	Abnormal external genitalia	NA	5
+0000812	Abnormal internal genitalia	An anomaly of the adnexa, uterus, and vagina (in female) or seminal tract and prostate (in male).	5
+0000816	Abnormality of Krebs cycle metabolism	An abnormality of the tricarboxylic acid cycle.	4
+0000828	Abnormality of the parathyroid gland	An abnormality of the parathyroid gland.	3
+0000832	Primary hypothyroidism	A type of hypothyroidism that results from a defect in the thyroid gland.	6
+0000834	Abnormality of the adrenal glands	Abnormality of the adrenal glands, i.e., of the endocrine glands located at the top of the kindneys.	3
+0000839	Pituitary dwarfism	A type of reduced stature with normal proportions related to dysfunction of the pituitary gland related to either an isolated defect in the secretion of growth hormone or to panhypopituitarism, i.e., a deficit of all the anterior pituitary hormones.	11
+0000840	Adrenogenital syndrome	Adrenogenital syndrome is also known as congenital adrenal hyperplasia, which results from disorders of steroid hormone production in the adrenal glands leading to a deficiency of cortisol. The pituitary gland reacts by increased secretion of corticotropin, which in turn causes the adrenal glands to overproduce certain intermediary hormones which have testosterone-like effects.	4
+0000841	Hyperactive renin-angiotensin system	An abnormally increased activity of the renin-angiotensin system, causing hypertension by a combination of volume excess and vasoconstrictor mechanisms.	4
+0000849	Adrenocortical abnormality	NA	5
+0000857	Neonatal insulin-dependent diabetes mellitus	NA	8
+0000860	Parathyroid hypoplasia	Developmental hypoplasia of the parathyroid gland.	6
+0000866	Euthyroid multinodular goiter	NA	7
+0000867	Secondary hyperparathyroidism	Secondary hyperparathyroidism refers to the production of higher than normal levels of parathyroid hormone in the presence of hypocalcemia.	6
+0000875	Episodic hypertension	NA	7
+0000877	Insulin-resistant diabetes mellitus at puberty	NA	8
+0000886	Deformed rib cage	Malformation of the rib cage.	7
+0000887	Cupped ribs	Wide, concave rib end.	8
+0000892	Bifid ribs	A bifid rib refers to cleavage of the sternal end of a rib, usually unilateral. Bifid ribs are usually asymptomatic, and are often discovered incidentally by chest x-ray.	8
+0000893	Bulging of the costochondral junction	Abnormal outward curving (protuberance) of the junction of ribs and costal cartilage.	9
+0000896	Rib exostoses	Multiple circumscribed bony excrescences located in the ribs.	8
+0000897	Rachitic rosary	A row of beadlike prominences at the junction of a rib and its cartilage (i.e., enlarged costochondral joints), resembling a rosary.	9
+0000900	Thickened ribs	Increased thickness (diameter) of ribs.	8
+0000904	Flaring of rib cage	The presence of wide, concave anterior rib ends.	8
+0000905	Progressive clavicular acroosteolysis	Progressive bone resorption in the distal part of the clavicle.	7
+0000910	Wide-cupped costochondral junctions	NA	9
+0000911	Flat glenoid fossa	Abnormally flat configuration of the glenoid fossa, also known as the glenoid cavity, which is the articular surface of the scapula that articulates with the head of the humerus.	8
+0000913	Posterior rib fusion	Complete or partial merging of the posterior part of adjacent ribs.	9
+0000915	Pectus excavatum of inferior sternum	Pectus excavatum (defect of the chest wall characterized by depression of the sternum) affecting primarily the inferior region of the sternum.	8
+0000916	Broad clavicles	Increased width (cross-sectional diameter) of the clavicles.	7
+0000917	Superior pectus carinatum	Pectus carinatum affecting primarily the superior part of the sternum.	8
+0000918	Scapular exostoses	The presence of multiple exostoses on the scapula. An exostosis is a benign growth the projects outward from the bone surface. It is capped by cartilage.	7
+0000920	Enlargement of the costochondral junction	Abnormally increased size of the costochondral junctions, which are located between the distal part of the ribs and the costal cartilages, which are bars of hyaline cartilage that connect the ribs to the sternum.	9
+0000922	Posterior rib cupping	Wide, concave posterior rib end.	9
+0000923	Beaded ribs	The presence of a row of multiple rounded expansions (beadlike prominences) at the junction of a rib and its cartilage.	8
+0000929	Abnormal skull morphology	An abnormality of the skull, the bony framework of the head which is comprised of eight cranial and fourteen facial bones.	5
+0000930	Elevated imprint of the transverse sinuses	NA	7
+0000931	Thinning and bulging of the posterior fossa bones	NA	8
+0000932	Abnormality of the posterior cranial fossa	An abnormality of the fossa cranii posterior (the posterior fossa), which is made up primarily of the occipital bone and which surrounds to the foramen magnum.	7
+0000933	Posterior fossa cyst at the fourth ventricle	NA	12
+0000935	Thickened cortex of long bones	Abnormal thickening of the cortex of long bones.	7
+0000941	Short diaphyses	NA	7
+0000947	Dumbbell-shaped long bone	An abnormal appearance of the long bones with resemblance to a dumbbell, a short bar with a weight at each end. That is, the long bone is shortened and displays flaring (widening) of the metaphyses.	8
+0000971	Abnormal sweat gland morphology	Any structural abnormality of the sweat gland.	4
+0000993	Molluscoid pseudotumors	Bluish-grey, spongy nodules associated with scars over pressure points and easily traumatized areas like the elbows and knees.	6
+0000996	Facial capillary hemangioma	Hemangioma, a benign tumor of the vascular endothelial cells with small endothelial spaces, occurring in the face.	7
+0000997	Axillary freckling	The presence in the axillary region (armpit) of an increased number of freckles, small circular spots on the skin that are darker than the surrounding skin because of deposits of melanin.	7
+0000999	Pyoderma	Any manifestation of a skin disease associated with the production of pus.	9
+0001001	Abnormality of subcutaneous fat tissue	NA	6
+0001005	Dermatological manifestations of systemic disorders	NA	6
+0001008	Accumulation of melanosomes in melanocytes	NA	7
+0001013	Eruptive xanthomas	Eruptive xanthomas are yellow-orange-to-red-brown papules that are often surrounded by an erythematous halo. They appear in crops on the buttocks, extensor surfaces of the extremities, and flexural creases. Acutely, variable amounts of pruritus and pain occur.	7
+0001014	Angiokeratoma	A vascular lesion defined histologically as one or more dilated blood vessels lying directly subepidermal and showing an epidermal proliferative reaction. Clinically, angiokeratoma presents as a small, raised, dark-red spot.	7
+0001017	Anemic pallor	A type of pallor that is secondary to the presence of anemia.	6
+0001018	Abnormal palmar dermatoglyphics	An abnormality of the dermatoglyphs, i.e., an abnormality of the patterns of ridges of the skin of palm of hand.	7
+0001024	Skin dimple over apex of long bone angulation	NA	7
+0001026	Penetrating foot ulcers	NA	7
+0001027	Soft, doughy skin	A skin texture that is unusually soft (and may feel silky), and has a malleable consistency resembling that of dough.	7
+0001032	Absent distal interphalangeal creases	Absence of the distal interphalangeal flexion creases of the fingers.	10
+0001033	Facial flushing after alcohol intake	NA	7
+0001038	Warfarin-induced skin necrosis	NA	7
+0001039	Atheroeruptive xanthoma	NA	7
+0001040	Multiple pterygia	NA	7
+0001041	Facial erythema	Redness of the skin of the face, caused by hyperemia of the capillaries in the lower layers of the skin.	8
+0001042	High axial triradius	NA	8
+0001043	Prominent scalp veins	NA	9
+0001049	Absent dorsal skin creases over affected joints	NA	9
+0001050	Plethora	NA	7
+0001054	Numerous nevi	NA	7
+0001055	Erysipelas	Increased susceptibility to erysipelas, as manifested by a medical history of repeated episodes of erysipelas, which is a superficial infection of the skin, typically involving the lymphatic system.	7
+0001060	Axillary pterygium	Presence of a cutaneous membrane (flap) in the armpit.	7
+0001062	Atypical nevus	A large pigmented lesion measuring 5-15 mm in diameter with irregular, notched, and ill defined border and with color that may range from tan to dark brown to pink.	7
+0001067	Neurofibromas	The presence of multiple cutaneous neurofibromas.	7
+0001069	Episodic hyperhidrosis	Intermittent episodes of abnormally increased perspiration.	6
+0001070	Mottled pigmentation	Patchy and irregular skin pigmentation.	6
+0001071	Angiokeratoma corporis diffusum	NA	8
+0001073	Cigarette-paper scars	Thin (atrophic) and wide scars.	9
+0001074	Atypical nevi in non-sun exposed areas	NA	7
+0001076	Glabellar hemangioma	NA	6
+0001084	Corneal arcus	A hazy, grayish-white ring about 2 mm in width located close to but separated from the limbus (the corneoscleral junction). Corneal arcus generally occurs bilaterally, and is related to lipid deposition in the cornea. Corneal arcus can occur in elderly persons as a part of the aging process but may be associated with hypercholesterolemia in people under the age of 50 years.	9
+0001088	Brushfield spots	The presence of whitish spots in a ring-like arrangement at the periphery of the iris.	7
+0001089	Iris atrophy	Loss of iris tissue (atrophy)	6
+0001092	Absent lacrimal punctum	No identifiable superior and/or inferior lacrimal punctum.	10
+0001093	Optic nerve dysplasia	The presence of developmental dysplasia of the optic nerve.	7
+0001094	Iridocyclitis	A type of anterior uveitis, in which there is Inflammation of the iris and the ciliary body.	9
+0001095	Hypertensive retinopathy	NA	8
+0001096	Keratoconjunctivitis	Inflammation of the cornea and conjunctiva.	10
+0001098	Abnormal fundus morphology	Any structural abnormality of the fundus of the eye.	5
+0001099	Fundus atrophy	NA	6
+0001101	Iritis	Inflammation of the iris.	6
+0001106	Periorbital hyperpigmentation	Increased pigmentation of the skin in the region surrounding the orbit of the eye.	6
+0001112	Leber optic atrophy	Degeneration of retinal ganglion cells and their axons.	7
+0001115	Posterior polar cataract	A polar cataract that affects the posterior pole of the lens.	8
+0001116	Macular coloboma	A congenital defect of the macula distinct from coloboma associated with optic fissure closure defects. Macular coloboma is characterized by a sharply defined, rather large defect in the central area of the fundus that is oval or round, and coarsely pigmented.	8
+0001117	Sudden loss of visual acuity	Severe loss of visual acuity within hours or days. This is characteristic of Leber hereditary optic neuropathy.	7
+0001118	Juvenile cataract	A type of cataract that is not apparent at birth but that arises in childhood or adolescence.	7
+0001119	Keratoglobus	Limbus-to-limbus corneal thinning, often greatest in the periphery, with globular protrusion of the cornea.	8
+0001120	Abnormality of corneal size	Any abnormality of the size or morphology of the cornea.	6
+0001125	Transient unilateral blurring of vision	Transient blurring of vision associated with the aura phase of migraine.	6
+0001126	Cryptophthalmos	Cryptophthalmos is a condition of total absence of eyelids and the skin of forehead is continuous with that of cheek, in which the eyeball is completely concealed by the skin, which is stretched over the orbital cavity.	10
+0001128	Trichiasis	Inversion and rubbing of the eyelashes against the globe of the eye.	10
+0001129	Large central visual field defect	NA	7
+0001134	Anterior polar cataract	A polar cataract that affects the anterior pole of the lens.	8
+0001135	Chorioretinal dystrophy	NA	8
+0001136	Retinal arteriolar tortuosity	The presence of an increased number of twists and turns of the retinal arterioles.	9
+0001137	Alternating esotropia	Esotropia in which either eye may be used for fixation.	9
+0001142	Lenticonus	A conical projection of the anterior or posterior surface of the lens, occurring as a developmental anomaly.	7
+0001144	Orbital cyst	Presence of a cyst in the region of the periorbital tissues. Orbital cysts can be derived from epithelial or glandular tissue within or surrounding the orbit (lacrimal glands, salivary glands, conjunctival, oral, nasal, or sinus epithelium).	6
+0001147	Retinal exudate	Fluid which has escaped from retinal blood vessels with a high concentration of lipid, protein, and cellular debris with a typically bright, reflective, white or cream colored appearance on the surface of the retina.	8
+0001149	Lattice corneal dystrophy	The presence of fine, branching linear opacities in Bowman's layer in the central area that may spread to the periphery in the clinical course. The deep corneal stroma may be involved but the process does not reach Descemet's membrane. Recurrent corneal erosion may occur. Histologic examination reveals amyloid deposits in the collagen fibers of the cornea.	7
+0001151	Impaired horizontal smooth pursuit	An abnormality of ocular smooth pursuit characterized by an impairment of the ability to track horizontally moving objects.	7
+0001153	Septate vagina	The presence of a vaginal septum, thereby creating a vaginal duplication. The septum is longitudinal in the majority of cases.	8
+0001178	Ulnar claw	An abnormal hand position characterized by hyperextension of the fourth and fifth fingers at the metacarpophalangeal joints and flexion of the interphalangeal joints of the same fingers such that they are curled towards the palm.	5
+0001194	Abnormalities of placenta or umbilical cord	An abnormality of the placenta (the organ that connects the developing fetus to the uterine wall) or of the umbilical cord (the cord that connects the fetus to the placenta).	3
+0001196	Short umbilical cord	Decreased length of the umbilical cord.	5
+0001197	Abnormality of prenatal development or birth	An abnormality of the fetus or the birth of the fetus, excluding structural abnormalities.	2
+0001204	Distal symphalangism of hands	The term distal symphalangism refers to a bony fusion of the distal and middle phalanges of the digits of the hand, in other words the distal interphalangeal joint (DIJ) is missing which can be seen either on x-rays or as an absence of the distal interphalangeal finger creases.	10
+0001211	Abnormal fingertip morphology	An abnormal structure of the tip (end) of a finger.	8
+0001215	Camptodactyly of 2nd-5th fingers	The distal interphalangeal joint and/or the proximal interphalangeal joint of the second to fifth fingers cannot be extended to 180 degrees by either active or passive extension.	12
+0001218	Autoamputation	Spontaneous detachment (amputation) of an appendage from the body.	3
+0001220	Interphalangeal joint contracture of finger	Chronic loss of joint motion in an interphalangeal joint of a finger due to structural changes in non-bony tissue.	10
+0001222	Spatulate thumbs	Spoon-shaped, broad thumbs.	12
+0001223	Pointed proximal second through fifth metacarpals	All of the metacarpal bones of the hand have a pointed proximal appearance.	10
+0001225	Wrist swelling	NA	7
+0001227	Abnormality of the thenar eminence	An abnormality of the thenar eminence, i.e., of the muscle on the palm of the human hand just beneath the thumb.	7
+0001230	Broad metacarpals	Abnormally broad metacarpal bones.	9
+0001232	Nail bed telangiectasia	Telangiectases in the area of the nails.	8
+0001234	Hitchhiker thumb	With the hand relaxed and the thumb in the plane of the palm, the axis of the thumb forms an angle of at least 90 degrees with the long axis of the hand.	12
+0001241	Capitate-hamate fusion	NA	9
+0001248	Short tubular bones of the hand	Decreased length of the tubular bones of the hand, that is, the phalanges and metacarpals.	7
+0001293	Cranial nerve compression	NA	6
+0001301	Chronic sensorineural polyneuropathy	NA	6
+0001311	Abnormal nervous system electrophysiology	An abnormality of the function of the electrical signals with which nerve cells communicate with each other or with muscles as measured by electrophysiological investigations.	4
+0001312	Giant somatosensory evoked potentials	An abnormal enlargement (i.e. increase in measured voltage) of somatosensory evoked potentials.	7
+0001326	EEG with irregular generalized spike and wave complexes	EEG shows spikes (<80 ms) and waves, which are recorded over the entire scalp and do not have a specific frequency.	11
+0001327	Photomyoclonic seizures	NA	7
+0001340	Enhancement of the C-reflex	Increase in amplitude of a long-loop response upon somatosensory evoked potential testing, representing an electrically evoked myoclonic response.	7
+0001341	Olfactory lobe agenesis	NA	8
+0001343	Kernicterus	Damage to cerebral nuclei caused in infants by highly increased levels of unconjugated bilirubin. The basal ganglia and brainstem nuclei could be shown to have a yellow staining historically in infants who died of kernicterus, that is, kernicterus is strictly speaking a pathological diagnosis. The presence of kernicterus may be inferred in infants with characteristic acute or chronic bilirubin-induced neurological dysfunction.	6
+0001345	Psychotic mentation	NA	6
+0001351	Jerk-locked premyoclonus spikes	Jerk-locked averaging (JLA) is used to record the timing and distribution of brain activity preceding brisk involuntary movements such as those observed in patients with myoclonus. JLA is capable of revealing a premyoclonus spike in the absence of paroxysmal activity in the routine EEG.	6
+0001361	Nystagmus-induced head nodding	Head movements associated with nystagmus, that may represent an attempt to compensate for the involuntary eye movements and to improve vision.	7
+0001384	Abnormality of the hip joint	An abnormality of the hip joint.	7
+0001401	Intrahepatic biliary dysgenesis	NA	9
+0001403	Macrovesicular hepatic steatosis	A form of hepatic steatosis characterized by the presence of large, lipid-laden vesicles in the affected hepatocytes.	9
+0001404	Hepatocellular necrosis	NA	7
+0001405	Periportal fibrosis	The presence of fibrosis affecting the interlobular stroma of liver.	7
+0001412	Enteroviral hepatitis	Inflammation of the liver due to infection with enterovirus.	8
+0001430	Abnormality of the calf musculature	NA	6
+0001435	Abnormality of the shoulder girdle musculature	NA	6
+0001436	Abnormality of the foot musculature	An anomaly of the musculature of foot.	6
+0001437	Abnormality of the musculature of the lower limbs	NA	5
+0001440	Metatarsal synostosis	NA	9
+0001442	Somatic mosaicism	The presence of genetically distinct populations of somatic cells in a given organism caused by DNA mutations, epigenetic alterations of DNA, chromosomal abnormalities or the spontaneous reversion of inherited mutations.	3
+0001444	Autosomal dominant somatic cell mutation	Being related to a de novo variant that occurs in a single cell in developing somatic tissue. The cell is the progenitor of a population of identical mutant cells, all of which have descended from the cell that mutated. Clinical manifestations depend on the identity and proportion of affected cells in the body.	3
+0001449	Duplication of metatarsal bones	NA	8
+0001450	Y-linked inheritance	A mode of inheritance that is observed for traits related to a gene encoded on the Y chromosome.	3
+0001452	Autosomal dominant contiguous gene syndrome	NA	3
+0001459	1-3 toe syndactyly	Syndactyly with fusion of toes one to three.	9
+0001460	Aplasia/Hypoplasia involving the skeletal musculature	Absence or underdevelopment of the musculature.	5
+0001464	Aplasia/Hypoplasia involving the shoulder musculature	Absence or underdevelopment of the muscles of the shoulder.	8
+0001470	Sex-limited autosomal dominant	NA	3
+0001473	Metatarsal osteolysis	Osteolysis involving metatarsal bones.	9
+0001474	Sclerotic scapulae	Increased density of the bony tissue of the scapula.	8
+0001475	Male-limited autosomal dominant	NA	4
+0001477	Compensatory chin elevation	A tendency to hold the chin elevated by about 20 to 30 degrees to compensate for a limitation of eye movement.	6
+0001483	Eye poking	Repetitive pressing, poking, and/or rubbing in the eyes.	7
+0001489	Posterior vitreous detachment	Separation of the vitreous humor from the retina.	6
+0001491	Congenital fibrosis of extraocular muscles	Congenital non-progressive ophthalmoplegia with multiple extraocular muscle restrictions. Typically, there is ptosis and variable degrees of restriction of horizontal and vertical eye movements.	9
+0001492	Axenfeld anomaly	Axenfeld's anomaly is a bilateral disorder characterized by a prominent, anteriorly displaced Schwalbe's line (posterior embryotoxon) and peripheral iris strands which span the anterior chamber angle to attach to Schwalbe's line.	6
+0001493	Falciform retinal fold	An area of the retina that is buckled so that a sector-shaped sheet of retina lies in front of the normal retina. This feature is of congenital onset.	8
+0001495	Carpal osteolysis	Osteolysis affecting carpal bones.	8
+0001500	Broad finger	Increased width of a non-thumb digit of the hand.	8
+0001501	6 metacarpals	NA	9
+0001504	Metacarpal osteolysis	NA	8
+0001530	Mild postnatal growth retardation	A mild degree of slow or limited growth after birth, being between two and three standard deviations below age- and sex-related norms.	5
+0001544	Prominent umbilicus	Abnormally prominent umbilicus (belly button).	5
+0001551	Abnormal umbilicus morphology	An abnormality of the structure or appearance of the umbilicus.	4
+0001557	Prenatal movement abnormality	An abnormality of fetal movement.	3
+0001560	Abnormality of the amniotic fluid	Abnormality of the amniotic fluid, which is the fluid contained in the amniotic sac surrounding the developing fetus.	3
+0001563	Fetal polyuria	Abnormally increased production of urine by the fetus resulting in polyhydramnios.	4
+0001571	Multiple impacted teeth	The presence of multiple impacted teeth.	12
+0001574	Abnormality of the integument	An abnormality of the integument, which consists of the skin and the superficial fascia.	2
+0001579	Primary hypercortisolism	Hypercortisolemia associated with a primary defect of the adrenal gland leading to overproduction of cortisol.	7
+0001580	Pigmented micronodular adrenocortical disease	NA	6
+0001583	Rotary nystagmus	A form of nystagmus in which the eyeball makes rotary motions around the axis.	7
+0001586	Vesicovaginal fistula	The presence of a fistula connecting the urinary bladder to the vagina.	9
+0001593	Maxillary lateral incisor microdontia	Decreased size of the maxillary permanent incisor.	11
+0001637	Abnormal myocardium morphology	A structural anomaly of the muscle layer of the heart wall.	5
+0001670	Asymmetric septal hypertrophy	Hypertrophic cardiomyopathy with an asymmetrical pattern of hypertrophy, with a predilection for the interventricular septum and myocyte disarray.	8
+0001683	Ectopia cordis	Congenital malformation of the ventral wall with partial or total evisceration of the heart outside the thoracic cavity and through the defect in the ventral wall.	6
+0001685	Myocardial fibrosis	Myocardial fibrosis is characterized by dysregulated collagen turnover (increased synthesis predominates over unchanged or decreased degradation) and excessive diffuse collagen accumulation in the interstitial and perivascular spaces as well as by phenotypically transformed fibroblasts, termed myofibroblasts.	6
+0001686	Loss of voice	NA	3
+0001691	Muscular subvalvular aortic stenosis	A type of subvalvular aortic stenosis resulting from thickening of the musculature of the interventricular septum, which results in obstruction to blood flow through the left-ventricular outflow tract.	9
+0001692	Atrial arrhythmia	A type of supraventricular tachycardia in which the atria are the principal site of electrophysiologic disturbance.	7
+0001693	Cardiac shunt	Pattern of blood flow in the heart that deviates from the normal circuit of the circulatory system.	5
+0001694	Right-to-left shunt	Pattern of blood flow in the heart that deviates from the normal circuit of the circulatory system from the right side of the heart to the left.	6
+0001697	Abnormal pericardium morphology	An abnormality of the pericardium, i.e., of the fluid filled sac that surrounds the heart and the proximal ends of the aorta, vena cava, and the pulmonary artery.	5
+0001700	Myocardial necrosis	Irreversible damage to heart tissue (myocardium) due to lack of oxygen after a heart attack (myocardial infarction).	6
+0001705	Right ventricular outlet tract obstruction	An obstruction to the forward flow of blood in the outflow tract of the right ventricle.	5
+0001709	Third degree atrioventricular block	Third-degree atrioventricular (AV) block (also referred to as complete heart block) is the complete dissociation of the atria and the ventricles. Third-degree AV block exists when more P waves than QRS complexes exist and no relationship (no conduction) exists between them.	8
+0001710	Conotruncal defect	A congenital malformation of the outflow tract of the heart. Conotruncal defects are thought to result from a disturbance of the outflow tract of the embryonic heart, and comprise truncus arteriosus, tetralogy of Fallot, interrupted aortic arch, transposition of the great arteries, and double outlet right ventricle.	7
+0001711	Abnormal left ventricle morphology	Any structural abnormality of the left ventricle of the heart.	6
+0001713	Abnormal cardiac ventricle morphology	An abnormality of a cardiac ventricle.	5
+0001717	Coronary artery calcification	An accumulation of calcium and phosphate in arteries with mineral deposits in the intimal or medial layer of the vessel wall in a coronary artery.	7
+0001722	High-output congestive heart failure	A form of heart failure characterized by elevated cardiac output. This may be seen in patients with heart failure and hyperthyroidism, anemia, pregnancy, arteriovenous fistulae, and others.	5
+0001727	Thromboembolic stroke	A cerebrovascular accident (stroke) that occurs because of thromboembolism.	5
+0001735	Acute pancreatitis	A acute form of pancreatitis.	7
+0001741	Phimosis	The male foreskin cannot be fully retracted from the head of the penis.	9
+0001742	Nasal obstruction	Reduced ability to pass air through the nasal cavity often leading to mouth breathing.	6
+0001747	Accessory spleen	An accessory spleen is a round, iso-echogenic, homogenic and smooth structure and is seen as a normal variant mostly on the medial contour of the spleen, near the hilus or around the lower pole. This has no pathogenic relevance.	8
+0001750	Single ventricle	The presence of only one working lower chamber in the heart, usually with a virtual absence of the ventricular septum and usually present in conjunction with double inlet left or right ventricle.	6
+0001756	Vestibular hypofunction	Reduced functioning of the vestibular apparatus.	7
+0001757	High-frequency sensorineural hearing impairment	A form of sensorineural hearing impairment that affects primarily the higher frequencies.	7
+0001775	Tarsal osteovalgus	NA	9
+0001780	Abnormality of toe	An anomaly of a toe.	7
+0001782	Bulbous tips of toes	An abnormality of the morphology of the toes, such that the tips of the toes are prominent and bulbous.	8
+0001783	Broad metatarsal	Increased side-to-side width of a metatarsal bone.	8
+0001785	Ankle swelling	NA	7
+0001786	Narrow foot	A foot for which the measured width is below the 5th centile for age; or, a foot that appears disproportionately narrow for its length.	5
+0001787	Abnormal delivery	An abnormality of the birth process.	3
+0001788	Premature rupture of membranes	Premature rupture of membranes (PROM) is a condition which occurs in pregnancy when the amniotic sac ruptures more than an hour before the onset of labor.	4
+0001791	Fetal ascites	Accumulation of fluid in the peritoneal cavity during the fetal period.	5
+0001809	Split nail	A nail plate that has a longitudinal separation and the two sections of the nail share the same lateral radius of curvature.	6
+0001814	Deep-set nails	Deeply placed nails.	6
+0001818	Paronychia	The nail disease paronychia is an often-tender bacterial or fungal hand infection or foot infection where the nail and skin meet at the side or the base of a finger or toenail. The infection can start suddenly (acute paronychia) or gradually (chronic paronychia).	7
+0001821	Broad nail	Increased width of nail.	6
+0001832	Abnormal metatarsal morphology	Abnormalities of the metatarsal bones (i.e. of five tubular bones located between the tarsal bones of the hind- and mid-foot and the phalanges of the toes).	7
+0001842	Foot acroosteolysis	NA	10
+0001844	Abnormality of the hallux	This term applies for all abnormalities of the big toe, also called hallux.	8
+0001850	Abnormality of the tarsal bones	An abnormality of the tarsus are the cluster of seven bones in the foot between the tibia and fibula and the metatarsus, including the calcaneus (heel) bone and the talus (ankle) bone.	7
+0001853	Bifid distal phalanx of toe	NA	8
+0001854	Podagra	Gout affecting the Metatarsophalangeal joint of big toe.	7
+0001857	Short distal phalanx of toe	Short distance from the end of the toe to the most distal interphalangeal crease or distal interphalangeal joint flexion point, i.e., abnormally short distal phalanx of toe.	12
+0001859	Distal foot symphalangism	NA	10
+0001868	Autoamputation of foot	Spontaneous detachment of a foot from the body.	5
+0001870	Acroosteolysis of distal phalanges (feet)	NA	11
+0001872	Abnormal thrombocyte morphology	An abnormality of platelets.	3
+0001877	Abnormal erythrocyte morphology	Any structural abnormality of erythrocytes (red-blood cells).	3
+0001879	Abnormal eosinophil morphology	An abnormal count or structure of eosinophils.	8
+0001881	Abnormal leukocyte morphology	An abnormality of leukocytes.	5
+0001885	Short 2nd toe	Underdevelopment (hypoplasia) of the second toe.	11
+0001886	Foot osteomyelitis	An infection of bone of the foot.	7
+0001898	Increased red blood cell mass	The presence of an increased mass of red blood cells in the circulation.	5
+0001899	Increased hematocrit	An elevation above the normal ratio of the volume of red blood cells to the total volume of blood.	5
+0001900	Increased hemoglobin	NA	5
+0001905	Congenital thrombocytopenia	Thrombocytopenia with congenital onset.	6
+0001908	Hypoplastic anemia	Anemia with varying degrees of erythrocytic hypoplasia without leukopenia or thrombocytopenia.	6
+0001911	Abnormal granulocyte morphology	Any structural abnormality or abnormal count of granulocytes.	7
+0001912	Abnormal basophil morphology	Any structural abnormality or abnormal count of basophils.	8
+0001913	Granulocytopenia	An abnormally reduced number of granulocytes in the blood.	9
+0001917	Renal amyloidosis	A form of amyloidosis that affects the kidney.	7
+0001920	Renal artery stenosis	The presence of stenosis of the renal artery.	8
+0001929	Reduced factor XI activity	Decreased activity of coagulation factor XI. Factor XI, also known as plasma thromboplastin antecedent, is a serine proteinase that activates factor IX.	6
+0001930	Nonspherocytic hemolytic anemia	NA	7
+0001948	Alkalosis	Depletion of acid or accumulation base in the body fluids.	5
+0001949	Hypokalemic alkalosis	NA	6
+0001950	Respiratory alkalosis	Alkalosis due to excess loss of carbon dioxide from the body.	6
+0001951	Episodic ammonia intoxication	NA	5
+0001953	Diabetic ketoacidosis	A type of diabetic metabolic abnormality with an accumulation of ketone bodies.	7
+0001955	Unexplained fevers	Episodes of fever for which no infectious cause can be identified.	6
+0001958	Nonketotic hypoglycemia	NA	7
+0001960	Hypokalemic metabolic alkalosis	NA	7
+0001961	Hypoplastic heart	NA	5
+0001963	Abnormal speech discrimination	A type of hearing impairment prominently characterized by a difficulty in understanding speech, rather than an inability to hear speech. Poor speech discrimination is a very common symptom of high frequency hearing loss.	5
+0001964	Aplasia/Hypoplasia of metatarsal bones	Absence or underdevelopment of the metatarsal bones.	9
+0001965	Abnormality of the scalp	Any anomaly of the scalp, the skin an subcutaneous tissue of the head on which head hair grows.	4
+0001966	Mesangial abnormality	An abnormality of the mesangium, i.e., of the central part of the renal glomerulus between capillaries.	10
+0001969	Tubulointerstitial abnormality	An abnormality that involves the tubules and interstitial tissue of the kidney.	9
+0001975	Decreased platelet glycoprotein IIb-IIIa	Decreased cell membrane concentration of glycoprotein IIb-IIIa.	6
+0001977	Abnormal thrombosis	Venous or arterial thrombosis (formation of blood clots) of spontaneous nature and which cannot be fully explained by acquired risk (e.g. atherosclerosis).	3
+0001978	Extramedullary hematopoiesis	The process of hematopoiesis occurring outside of the bone marrow (in the liver, thymus, and spleen) in the postnatal organisms.	3
+0001980	Megaloblastic bone marrow	Abnormal increased number of megaloblasts in the bone marrow.	5
+0001981	Schistocytosis	The presence of an abnormal number of fragmented red blood cells (schistocytes) in the blood.	5
+0001982	Sea-blue histiocytosis	An abnormality of histiocytes, in which the cells take on a sea blue appearance due to abnormally increased lipid content. Histiocytes are a type of macrophage. Sea-blue histiocytes are typically large macrophages from 20 to 60 micrometers in diameter with a single eccentric nucleus whose cytoplasm if packed with sea-blue or blue-green granules when stained with Wright-Giemsa.	8
+0001983	Reduced lymphocyte surface expression of CD43	A reduction in the expression of CD43 on the cell surface of lymphocytes.	5
+0001986	Hypertonic dehydration	NA	6
+0001991	Aplasia/Hypoplasia of toe	Absence or hypoplasia of toes.	9
+0001995	Hyperchloremic acidosis	NA	6
+0001996	Chronic metabolic acidosis	Longstanding metabolic acidosis.	7
+0002009	Potter facies	A facial appearance characteristic of a fetus or neonate due to oligohydramnios experienced in the womb, comprising ocular hypertelorism, low-set ears, receding chin, and flattening of the nose.	7
+0002010	Narrow maxilla	NA	9
+0002011	Morphological abnormality of the central nervous system	A structural abnormality of the central nervous system.	4
+0002012	Abnormality of the abdominal organs	An abnormality of the viscera of the abdomen.	3
+0002031	Abnormal esophagus morphology	A structural abnormality of the esophagus.	5
+0002034	Abnormality of the rectum	An abnormaltiy of the rectum, the final segment of the large intestine that stores solid waste until it passes through the anus.	7
+0002038	Protein avoidance	NA	5
+0002041	Intractable diarrhea	NA	6
+0002048	Renal cortical atrophy	Atrophy of the cortex of the kidney.	8
+0002049	Proximal renal tubular acidosis	A type of renal tubular acidosis characterized by a failure of the proximal tubular cells to reabsorb bicarbonate, leading to urinary bicarbonate wasting and subsequent acidemia.	9
+0002050	Macroorchidism, postpubertal	NA	10
+0002054	Heavy supraorbital ridges	NA	8
+0002055	Curved linear dimple below the lower lip	NA	10
+0002056	Abnormality of the glabella	An abnormality of the glabella.	6
+0002060	Abnormality of the cerebrum	An abnormality of the telencephalon, which is also known as the cerebrum.	7
+0002068	Neuromuscular dysphagia	NA	7
+0002074	Increased neuronal autofluorescent lipopigment	Lipofuscin, a generic term applied to autofluorescent lipopigment, is a mixture of protein and lipid that accumulates in most aging cells, particularly those involved in high lipid turnover (e.g., the adrenal medulla) or phagocytosis of other cell types (e g., the retinal pigment epithelium or RPE; macrophage). This term pertains if there is an increase in the neuronal accumulation of lipofuscin (also known as autofluorescent lipoprotein) more than expected for the age of the patient.	7
+0002083	Migraine without aura	Repeated headache attacks lasting 4-72 h fulfilling at least two of the following criteria: 1) unilateral location, 2) pulsating quality, 3) moderate or severe pain intensity, and 4) aggravation by or causing avoidance of routine physical activity such as climbing stairs. Headache attacks are commonly accompanied by nausea, vomiting, photophobia, or phonophobia.	6
+0002087	Abnormality of the upper respiratory tract	An abnormality of the upper respiratory tract.	4
+0002088	Abnormal lung morphology	Any structural anomaly of the lung.	4
+0002108	Spontaneous pneumothorax	Pneumothorax occurring without traumatic injury to the chest or lung.	6
+0002143	Abnormality of the spinal cord	An abnormality of the spinal cord (myelon).	5
+0002152	Hyperproteinemia	An increased concentration of proteins in the blood.	5
+0002154	Hyperglycinemia	An elevated concentration of glycine in the blood.	8
+0002156	Homocystinuria	An increased concentration of homocystine in the urine.	8
+0002157	Azotemia	An increased concentration of nitrogen compounds in the blood.	5
+0002159	Heparan sulfate excretion in urine	An increased concentration of heparan sulfates in the urine.	8
+0002160	Hyperhomocystinemia	An increased concentration of homocystine in the blood.	8
+0002161	Hyperlysinemia	An increased concentration of lysine in the blood.	8
+0002165	Pterygium of nails	Inward advance of skin over the nail plate.	5
+0002189	Excessive daytime sleepiness	NA	6
+0002190	Choroid plexus cyst	A cyst occurring within the choroid plexus within a cerebral ventricle.	8
+0002193	Pseudobulbar behavioral symptoms	Individuals with Pseudobulbar signs often also demonstrate abnormal behavioral symptoms such as inappropriate emotional outbursts of uncontrolled laughter or weeping etc.	5
+0002195	Dysgenesis of the cerebellar vermis	Defective development of the vermis of cerebellum.	11
+0002196	Myelopathy	NA	6
+0002200	Pseudobulbar signs	Pseudobulbar signs result from injury to an upper motor neuron lesion to the corticobulbar pathways in the pyramidal tract. Patients have difficulty chewing, swallowing and demonstrate slurred speech (often initial presentation) as well as abnormal behavioral symptoms such as inappropriate emotional outbursts of uncontrolled laughter or weeping etc.	4
+0002203	Respiratory paralysis	Inability to move the muscles of respiration.	6
+0002207	Diffuse reticular or finely nodular infiltrations	NA	6
+0002218	Silver-gray hair	Hypopigmented hair that appears silver-gray.	8
+0002219	Facial hypertrichosis	Excessive, increased hair growth located in the facial region.	7
+0002220	Melanin pigment aggregation in hair shafts	NA	6
+0002229	Alopecia areata	Loss of round patches of scalp hair.	7
+0002232	Patchy alopecia	NA	7
