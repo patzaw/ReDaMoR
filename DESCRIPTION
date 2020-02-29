@@ -11,20 +11,22 @@ BugReports: https://github.com/patzaw/ReDaMoR/issues
 Depends:
    R (>= 3.5),
    dplyr,
-   tibble,
    magrittr,
-   visNetwork,
-   shiny,
-   shinyjs
+   visNetwork
 Imports:
    readr,
+   shiny,
+   shinyjs,
    jsonlite,
    DT,
    colourpicker,
    rintrojs,
    markdown,
    rstudioapi,
-   crayon
+   crayon,
+   utils,
+   graphics,
+   stats
 Suggests:
    knitr,
    rmarkdown

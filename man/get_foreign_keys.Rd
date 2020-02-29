@@ -4,7 +4,7 @@
 \alias{get_foreign_keys}
 \title{Get a foreign key table from an object}
 \usage{
-get_foreign_keys(x, ...)
+get_foreign_keys(x)
 }
 \arguments{
 \item{x}{a \link{RelTableModel} or a \link{RelDataModel}}

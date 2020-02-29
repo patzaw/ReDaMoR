@@ -10,7 +10,7 @@ model_relational_data(
   defaultColor = "#D9D9D9",
   availableColors = c("#9BC8FE", "#F67FC4", "#C6BDF1", "#DFFB86", "#F8DEC3", "#8FE6E0",
     "#FEFE8F", "#FAC6DC", "#A9ECC9"),
-  example = system.file("examples/HPO-model.json", package = packageName()),
+  example = system.file("examples/HPO-model.json", package = utils::packageName()),
   forceIntro = FALSE
 )
 }

@@ -3,11 +3,11 @@ buildUi <- function(fromR){
 
    addResourcePath(
       "www",
-      system.file("www", package=packageName())
+      system.file("www", package=utils::packageName())
    )
    addResourcePath(
       "doc",
-      system.file("doc", package=packageName())
+      system.file("doc", package=utils::packageName())
    )
 
    shinyUI(fluidPage(
@@ -16,7 +16,7 @@ buildUi <- function(fromR){
       id="MainApp",
 
       ## Settings ----
-      useShinyjs(),
+      shinyjs::useShinyjs(),
       rintrojs::introjsUI(),
 
       ## HEAD ----
@@ -216,7 +216,7 @@ buildServer <- function(
 
    rintrosteps <- jsonlite::fromJSON(system.file(
       "Documentation/rintrojs-steps.json",
-      package = packageName()
+      package = utils::packageName()
    )) %>% lapply(
       function(x){
          toRet <- as_tibble(x) %>%
@@ -663,10 +663,10 @@ buildServer <- function(
                color=isolate(settings$defaultColor)
             )
             if(any(is.na(tin$nodes$x)) || any(is.na(tin$nodes$y))){
-               tin$nodes$x <- runif(
+               tin$nodes$x <- stats::runif(
                   nrow(tin$nodes), min=cmxrange[1], max=cmxrange[2]
                )
-               tin$nodes$y <- runif(
+               tin$nodes$y <- stats::runif(
                   nrow(tin$nodes), min=cmyrange[1], max=cmyrange[2]
                )
             }
@@ -734,9 +734,9 @@ buildServer <- function(
          ntn <- input$newTableName
          m <- isolate(model$x)
          if(is.null(ntn) || ntn=="" || ntn %in% names(m)){
-            disable("confirmAddTable")
+            shinyjs::disable("confirmAddTable")
          }else{
-            enable("confirmAddTable")
+            shinyjs::enable("confirmAddTable")
          }
       })
 
@@ -828,9 +828,9 @@ buildServer <- function(
          ntn <- input$tableNewName
          m <- isolate(model$x)
          if(is.null(ntn) || ntn=="" || ntn %in% names(m)){
-            disable("confirmRenameTable")
+            shinyjs::disable("confirmRenameTable")
          }else{
-            enable("confirmRenameTable")
+            shinyjs::enable("confirmRenameTable")
          }
       })
       observe({
@@ -889,9 +889,9 @@ buildServer <- function(
          ntn <- ifelse(is.na(ntn), "", ntn)
          cc <- ifelse(is.na(cc), "", cc)
          if(ntn==cc){
-            disable("refreshComment")
+            shinyjs::disable("refreshComment")
          }else{
-            enable("refreshComment")
+            shinyjs::enable("refreshComment")
          }
       })
       output$refreshCommentH <- renderUI({
@@ -1195,9 +1195,9 @@ buildServer <- function(
             nfn=="" ||
             nfn %in% fields$name
          ){
-            disable("confirmAddField")
+            shinyjs::disable("confirmAddField")
          }else{
-            enable("confirmAddField")
+            shinyjs::enable("confirmAddField")
          }
       })
       output$existingNewField <- renderUI({
@@ -1300,9 +1300,9 @@ buildServer <- function(
             nfn=="" ||
             nfn %in% fields$name[-seli]
          ){
-            disable("confirmUpdateField")
+            shinyjs::disable("confirmUpdateField")
          }else{
-            enable("confirmUpdateField")
+            shinyjs::enable("confirmUpdateField")
          }
       })
       output$existingField <- renderUI({
@@ -1416,9 +1416,9 @@ buildServer <- function(
          selTable <- mt$tableName
          cpk <- mt$primaryKey
          if(length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk))){
-            enable("refreshPrimaryKey")
+            shinyjs::enable("refreshPrimaryKey")
          }else{
-            disable("refreshPrimaryKey")
+            shinyjs::disable("refreshPrimaryKey")
          }
       })
       output$refreshPKH <- renderUI({
@@ -1660,9 +1660,9 @@ buildServer <- function(
       })
       observe({
          if(length(input$newIndexFields)==0){
-            disable("confirmAddIndex")
+            shinyjs::disable("confirmAddIndex")
          }else{
-            enable("confirmAddIndex")
+            shinyjs::enable("confirmAddIndex")
          }
       })
       observeEvent(input$confirmAddIndex, {
@@ -1876,9 +1876,9 @@ buildServer <- function(
                toAdd <- nm[tn]
                toAdd[[1]]$tableName <- ntn
                toAdd[[1]]$display$x <- toAdd[[1]]$display$x +
-                  xs*(2*rbeta(1, 0.3, 0.3)-1)
+                  xs*(2*stats::rbeta(1, 0.3, 0.3)-1)
                toAdd[[1]]$display$y <- toAdd[[1]]$display$y +
-                  ys*(2*rbeta(1, 0.3, 0.3)-1)
+                  ys*(2*stats::rbeta(1, 0.3, 0.3)-1)
                names(toAdd) <- ntn
                nm <- c(nm, toAdd)
             }
@@ -1972,9 +1972,9 @@ buildServer <- function(
             length(foreignKey$fromTable)==0 || length(foreignKey$toTable)==0 ||
             length(foreignKey$fromFields)==0 || length(foreignKey$toFields)==0
          ){
-            disable("confirmAddFK")
+            shinyjs::disable("confirmAddFK")
          }else{
-            enable("confirmAddFK")
+            shinyjs::enable("confirmAddFK")
          }
       })
 
@@ -2621,16 +2621,16 @@ buildServer <- function(
 
       observe({
          if(model$current==1){
-            disable("undo")
+            shinyjs::disable("undo")
          }
          if(model$current > 1){
-            enable("undo")
+            shinyjs::enable("undo")
          }
          if(model$current >= length(model$history)){
-            disable("redo")
+            shinyjs::disable("redo")
          }
          if(model$current < length(model$history)){
-            enable("redo")
+            shinyjs::enable("redo")
          }
       })
 
@@ -2718,6 +2718,8 @@ buildServer <- function(
 #'
 #' @return The [RelDataModel] designed with the GUI.
 #'
+#' @import shiny
+#'
 #' @export
 #'
 model_relational_data <- function(
@@ -2743,7 +2745,7 @@ model_relational_data <- function(
    # ),
    example=system.file(
       "examples/HPO-model.json",
-      package = packageName()
+      package = utils::packageName()
    ),
    forceIntro=FALSE
 ){

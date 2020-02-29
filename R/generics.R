@@ -15,6 +15,6 @@
 #'
 #' @export
 #'
-get_foreign_keys <- function(x, ...){
+get_foreign_keys <- function(x){
    UseMethod("get_foreign_keys", x)
 }

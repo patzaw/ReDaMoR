@@ -4,10 +4,12 @@
 \alias{format.RelTableModel}
 \title{Format a \link{RelTableModel} object for printing}
 \usage{
-\method{format}{RelTableModel}(x)
+\method{format}{RelTableModel}(x, ...)
 }
 \arguments{
 \item{x}{a \link{RelTableModel} object}
+
+\item{...}{for generics compatibility (not used)}
 }
 \value{
 A single character

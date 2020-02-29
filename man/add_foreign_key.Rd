@@ -27,13 +27,13 @@ add_foreign_key(
 
 \item{toFields}{the names of the referenced fields}
 
-\item{fmin:}{from minimum cardinality (default: 0L)}
+\item{fmin}{from minimum cardinality (default: 0L)}
 
-\item{fmax:}{from maximum cardinality (default: -1L ==> Infinite)}
+\item{fmax}{from maximum cardinality (default: -1L ==> Infinite)}
 
-\item{tmin:}{to minimum cardinality (default: 1L)}
+\item{tmin}{to minimum cardinality (default: 1L)}
 
-\item{tmax:}{to maximum cardinality (default: 1L)}
+\item{tmax}{to maximum cardinality (default: 1L)}
 }
 \value{
 A \link{RelDataModel}

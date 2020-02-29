@@ -30,6 +30,9 @@
 #'    + *color*: single character value corresponding to the color of the table
 #'    + *comment*: single character value with some description of the table
 #'
+#' @import dplyr
+#' @importFrom magrittr %>%
+#'
 #' @return A RelTableModel object.
 #'
 #' @export
@@ -230,12 +233,13 @@ is.RelTableModel <- function(x){
 #' Format a [RelTableModel] object for printing
 #'
 #' @param x a [RelTableModel] object
+#' @param ... for generics compatibility (not used)
 #'
 #' @return A single character
 #'
 #' @export
 #'
-format.RelTableModel <- function(x){
+format.RelTableModel <- function(x, ...){
    f <- x$fields
    pk <- x$primaryKey
    it <- index_table(x)

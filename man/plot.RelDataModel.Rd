@@ -9,11 +9,12 @@
 \arguments{
 \item{x}{a \link{RelDataModel}}
 
-\item{color}{default table background color}
-
-\item{border}{border color (single character)}
-
-\item{highlightBorder}{color of highlighted borders}
+\item{...}{additional parameters:
+\itemize{
+\item \strong{color} default table background color
+\item \strong{border} border color (single character)
+\item \strong{highlightBorder} color of highlighted borders
+}}
 }
 \description{
 This function draw a visNetwork of the \link{RelDataModel}.

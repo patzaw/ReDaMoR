@@ -4,9 +4,13 @@
 #' This function draw a visNetwork of the [RelDataModel].
 #'
 #' @param x a [RelDataModel]
-#' @param color default table background color
-#' @param border border color (single character)
-#' @param highlightBorder color of highlighted borders
+#' @param ... additional parameters:
+#' - **color** default table background color
+#' - **border** border color (single character)
+#' - **highlightBorder** color of highlighted borders
+#'
+#' @importFrom graphics plot
+#' @import visNetwork
 #'
 #' @export
 #'
@@ -251,7 +255,7 @@ modelToVn <- function(
       edges <- bind_cols(edges, edges %>% select(from, to) %>%
          apply(1, function(x) c(sort(x), paste(sort(x), collapse="<->"))) %>%
          t() %>%
-         set_colnames(c("uef", "uet", "ue")) %>%
+         magrittr::set_colnames(c("uef", "uet", "ue")) %>%
          as_tibble()
       )
       edges <- edges %>%

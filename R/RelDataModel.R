@@ -199,8 +199,6 @@ check_foreign_keys <- function(x){
 }
 
 ###############################################################################@
-#' Get the number of tables in a [RelDataModel] object
-#'
 #' @export
 #'
 length.RelDataModel <- function(x){
@@ -278,7 +276,7 @@ names.RelDataModel <- function(x){
 ###############################################################################@
 #' @export
 #'
-'names<-.RelDataModel' <- function(x, value, ...){
+'names<-.RelDataModel' <- function(x, value){
    stopifnot(
       is.character(value),
       length(value)==length(x),
@@ -297,10 +295,7 @@ names.RelDataModel <- function(x){
       }
       l[[i]]$foreignKeys <- fk
    }
-   return(RelDataModel(
-      l=l,
-      ...
-   ))
+   return(RelDataModel(l=l))
 }
 
 
@@ -853,10 +848,10 @@ fk_match <- function(
 #' @param fromFields the name of the referencing fields
 #' @param toTable the name of the referenced table
 #' @param toFields the names of the referenced fields
-#' @param fmin: from minimum cardinality (default: 0L)
-#' @param fmax: from maximum cardinality (default: -1L ==> Infinite)
-#' @param tmin: to minimum cardinality (default: 1L)
-#' @param tmax: to maximum cardinality (default: 1L)
+#' @param fmin from minimum cardinality (default: 0L)
+#' @param fmax from maximum cardinality (default: -1L ==> Infinite)
+#' @param tmin to minimum cardinality (default: 1L)
+#' @param tmax to maximum cardinality (default: 1L)
 #'
 #' @return A [RelDataModel]
 #'
