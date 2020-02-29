@@ -1,7 +1,7 @@
 ###############################################################################@
 #' Format confrontation report for printing in console
 #'
-#' @param cr the confrontation report from [confront_data.RelDataModel]
+#' @param cr the confrontation report from [confront_data]
 #' @param title a character with a single value corresponding to the report
 #' title (e.g. database/model name)
 #'
@@ -213,7 +213,7 @@ format_confrontation_report <- function(
 ###############################################################################@
 #' Format confrontation report in markdown format
 #'
-#' @param cr the confrontation report from [confront_data.RelDataModel]
+#' @param cr the confrontation report from [confront_data]
 #' @param title a character with a single value corresponding to the report
 #' @param level rmarkdown level in document hierarchy (default:0 ==> highest).
 #' It should be an integer between 0 and 4.
@@ -476,7 +476,7 @@ format_confrontation_report_md <- function(
 ###############################################################################@
 #' View confrontation report in rstudio viewer
 #'
-#' @param cr the confrontation report from [confront_data.RelDataModel]
+#' @param cr the confrontation report from [confront_data]
 #' @param title report title
 #' @param ... additional params for the [format_confrontation_report] function
 #'

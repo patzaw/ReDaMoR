@@ -38,7 +38,7 @@ knitr::opts_chunk$set(
 
 
 In R, data are often stored in data frames which are tables in which each row represents a record and each column a variable.
-Because data frames are highly used they have been improved in different objects such as [tibble](https://tibble.tidyverse.org/), [data.table](https://rdatatable.gitlab.io/data.table/) or [AnnotatedDataFrame](https://bioconductor.org/packages/release/bioc/html/Biobase.html).
+Because data frames are highly used, they have been improved in different objects such as [tibble](https://tibble.tidyverse.org/), [data.table](https://rdatatable.gitlab.io/data.table/) or [AnnotatedDataFrame](https://bioconductor.org/packages/release/bioc/html/Biobase.html).
 
 However, in many projects, the data do not fit in only one table but they are organized in different data frames, each of them dealing with a specific concept.
 These tables are often related to each other by some variables.
@@ -58,12 +58,39 @@ The main features of ReDaMoR are the following:
 - Import SQL data model generated with [MySQL Workbench](https://www.mysql.com/products/workbench/)
 - Document data types as R types (character, numeric, logical, ...)
 - Add comments to tables and fields to improve model documentation
-- Check and auto-correct model constraints (keys, uniqueness, mandatory fields)
+- Check and auto-correct model constraints (types, keys, uniqueness, mandatory fields)
 - Confront data to the model to check their compatibility
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 # Installation
+
+<!---->
+## From CRAN
+<!----------->
+
+This package is not yet available on CRAN.
+
+<!---->
+## Dependencies
+<!----------->
+
+The following R packages available on CRAN are required:
+
+- dplyr
+- tibble
+- magrittr
+- visNetwork
+- shiny
+- shinyjs
+- readr
+- jsonlite
+- DT
+- colourpicker
+- rintrojs
+- markdown
+- rstudioapi
+- crayon
 
 <!---->
 ## From github

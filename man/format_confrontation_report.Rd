@@ -7,7 +7,7 @@
 format_confrontation_report(cr, title = "Model")
 }
 \arguments{
-\item{cr}{the confrontation report from \link{confront_data.RelDataModel}}
+\item{cr}{the confrontation report from \link{confront_data}}
 
 \item{title}{a character with a single value corresponding to the report
 title (e.g. database/model name)}

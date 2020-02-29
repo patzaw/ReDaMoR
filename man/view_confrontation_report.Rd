@@ -7,7 +7,7 @@
 view_confrontation_report(cr, ...)
 }
 \arguments{
-\item{cr}{the confrontation report from \link{confront_data.RelDataModel}}
+\item{cr}{the confrontation report from \link{confront_data}}
 
 \item{...}{additional params for the \link{format_confrontation_report} function}
 

@@ -17,7 +17,7 @@ format_confrontation_report_md(
 )
 }
 \arguments{
-\item{cr}{the confrontation report from \link{confront_data.RelDataModel}}
+\item{cr}{the confrontation report from \link{confront_data}}
 
 \item{title}{a character with a single value corresponding to the report}
 

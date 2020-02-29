@@ -320,7 +320,8 @@ print.RelTableModel <- function(x, ...){
 #'
 #' @export
 #'
-index_table.RelTableModel <- function(x){
+index_table <- function(x){
+   stopifnot(is.RelTableModel(x))
    pk <- x$primaryKey
    ind <- x$indexes
    toRet <- NULL
@@ -351,28 +352,27 @@ index_table.RelTableModel <- function(x){
 #' Get the types of the columns of a [RelTableModel] object
 #'
 #' @param x a [RelTableModel] object
-#' @return A col_spec object with the type of each column
 #'
-#' @importFrom readr cols col_character col_double col_integer col_logical
-#' @importFrom readr col_date col_datetime
+#' @return A col_spec object with the type of each column
 #'
 #' @export
 #'
-col_types.RelTableModel <- function(x){
+col_types <- function(x){
+   stopifnot(is.RelTableModel(x))
    do.call(
-      cols,
+      readr::cols,
       structure(
          lapply(
             x$fields$type,
             function(y){
                switch(
                   y,
-                  "integer"=col_integer(),
-                  "numeric"=col_double(),
-                  "logical"=col_logical(),
-                  "character"=col_character(),
-                  "Date"=col_date(),
-                  "POSIXct"=col_datetime()
+                  "integer"=readr::col_integer(),
+                  "numeric"=readr::col_double(),
+                  "logical"=readr::col_logical(),
+                  "character"=readr::col_character(),
+                  "Date"=readr::col_date(),
+                  "POSIXct"=readr::col_datetime()
                )
             }
          ),
@@ -388,7 +388,8 @@ col_types.RelTableModel <- function(x){
 #'
 #' @export
 #'
-correct_constraints.RelTableModel <- function(x){
+correct_constraints <- function(x){
+   stopifnot(is.RelTableModel(x))
    ## Primary key uniqueness
    if(length(x$primaryKey)==1){
       x$fields[which(x$fields$name==x$primaryKey), "unique"] <- TRUE
@@ -454,11 +455,12 @@ correct_constraints.RelTableModel <- function(x){
 #'
 #' @export
 #'
-confront_data.RelTableModel <- function(
+confront_table_data <- function(
    x,
    d,
    checks=c("unique", "not nullable")
 ){
+   stopifnot(is.RelTableModel(x))
    stopifnot(
       is.data.frame(d)
    )

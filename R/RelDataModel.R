@@ -136,12 +136,15 @@ is.RelDataModel <- function(x){
 ###############################################################################@
 #' Check the availability of foreign keys
 #'
+#' @param x a [RelDataModel] object
+#'
 #' @return Nothing. The function throws an error if there is an issue with
 #' foreign keys.
 #'
 #' @export
 #'
-check_foreign_keys.RelDataModel <- function(x){
+check_foreign_keys <- function(x){
+   stopifnot(is.RelDataModel(x))
    lapply(
       x,
       function(tm){
@@ -629,7 +632,8 @@ fromDBM <- function(dbm){
 #'
 #' @export
 #'
-rename_table.RelDataModel <- function(x, old, new){
+rename_table <- function(x, old, new){
+   stopifnot(is.RelDataModel(x))
    stopifnot(
       is.RelDataModel(x),
       length(old)==1,
@@ -653,7 +657,8 @@ rename_table.RelDataModel <- function(x, old, new){
 #' @export
 #'
 #'
-add_table.RelDataModel <- function(x, newTable){
+add_table <- function(x, newTable){
+   stopifnot(is.RelDataModel(x))
    stopifnot(is.RelTableModel(newTable) || is.character(newTable))
    if(is.character(newTable)){
       stopifnot(
@@ -697,7 +702,8 @@ add_table.RelDataModel <- function(x, newTable){
 #'
 #' @export
 #'
-remove_table.RelDataModel <- function(x, tableName, rmForeignKeys=FALSE){
+remove_table <- function(x, tableName, rmForeignKeys=FALSE){
+   stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(tableName),
       length(tableName)==1,
@@ -721,10 +727,11 @@ remove_table.RelDataModel <- function(x, tableName, rmForeignKeys=FALSE){
 #'
 #' @export
 #'
-add_field.RelDataModel <- function(
+add_field <- function(
    x, tableName,
    name, type, nullable, unique, comment
 ){
+   stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(tableName), length(tableName)==1,
       !is.na(tableName),
@@ -766,7 +773,8 @@ add_field.RelDataModel <- function(
 #'
 #' @export
 #'
-rename_field.RelDataModel <- function(x, tableName, current, new){
+rename_field <- function(x, tableName, current, new){
+   stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(tableName), length(tableName)==1,
       tableName %in% names(x),
@@ -854,10 +862,11 @@ fk_match <- function(
 #'
 #' @export
 #'
-add_foreign_key.RelDataModel <- function(
+add_foreign_key <- function(
    x, fromTable, fromFields, toTable, toFields,
    fmin=0L, fmax=-1L, tmin=1L, tmax=1L
 ){
+   stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(fromTable), length(fromTable)==1,
       fromTable %in% names(x),
@@ -915,9 +924,10 @@ add_foreign_key.RelDataModel <- function(
 #'
 #' @export
 #'
-remove_foreign_key.RelDataModel <- function(
+remove_foreign_key <- function(
    x, fromTable, fromFields, toTable, toFields
 ){
+   stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(fromTable), length(fromTable)==1,
       fromTable %in% names(x),
@@ -955,10 +965,11 @@ remove_foreign_key.RelDataModel <- function(
 #'
 #' @export
 #'
-update_foreign_key.RelDataModel <- function(
+update_foreign_key <- function(
    x, fromTable, fromFields, toTable, toFields,
    fmin, fmax, tmin, tmax
 ){
+   stopifnot(is.RelDataModel(x))
    toRet <- x %>%
       remove_foreign_key(
          fromTable, fromFields, toTable, toFields
@@ -984,12 +995,13 @@ update_foreign_key.RelDataModel <- function(
 #'
 #' @export
 #'
-remove_field.RelDataModel <- function(
+remove_field <- function(
    x,
    tableName,
    fieldName,
    rmForeignKeys=FALSE
 ){
+   stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(tableName), length(tableName)==1,
       tableName %in% names(x),
@@ -1073,11 +1085,12 @@ remove_field.RelDataModel <- function(
 #'
 #' @export
 #'
-order_fields.RelDataModel <- function(
+order_fields <- function(
    x,
    tableName,
    order
 ){
+   stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(tableName), length(tableName)==1,
       tableName %in% names(x),
@@ -1101,7 +1114,8 @@ order_fields.RelDataModel <- function(
 #'
 #' @export
 #'
-set_primary_key.RelDataModel <- function(x, tableName, fieldNames){
+set_primary_key <- function(x, tableName, fieldNames){
+   stopifnot(is.RelDataModel(x))
    fieldNames <- as.character(fieldNames)
    stopifnot(
       is.character(tableName), length(tableName)==1,
@@ -1126,7 +1140,8 @@ set_primary_key.RelDataModel <- function(x, tableName, fieldNames){
 #'
 #' @export
 #'
-add_index.RelDataModel <- function(x, tableName, fieldNames, unique){
+add_index <- function(x, tableName, fieldNames, unique){
+   stopifnot(is.RelDataModel(x))
    fieldNames <- as.character(fieldNames) %>% unique()
    stopifnot(
       is.character(tableName), length(tableName)==1,
@@ -1166,7 +1181,8 @@ add_index.RelDataModel <- function(x, tableName, fieldNames, unique){
 #'
 #' @export
 #'
-remove_index.RelDataModel <- function(x, tableName, fieldNames){
+remove_index <- function(x, tableName, fieldNames){
+   stopifnot(is.RelDataModel(x))
    fieldNames <- as.character(fieldNames)
    stopifnot(
       is.character(tableName), length(tableName)==1,
@@ -1203,7 +1219,8 @@ remove_index.RelDataModel <- function(x, tableName, fieldNames){
 #'
 #' @export
 #'
-set_unique_index.RelDataModel <- function(x, tableName, fieldNames, unique){
+set_unique_index <- function(x, tableName, fieldNames, unique){
+   stopifnot(is.RelDataModel(x))
    fieldNames <- as.character(fieldNames)
    stopifnot(
       is.character(tableName), length(tableName)==1,
@@ -1244,9 +1261,10 @@ set_unique_index.RelDataModel <- function(x, tableName, fieldNames, unique){
 #'
 #' @export
 #'
-update_field.RelDataModel <- function(
+update_field <- function(
    x, tableName, fieldName, type=NULL, nullable=NULL, unique=NULL, comment=NULL
 ){
+   stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(tableName), length(tableName)==1,
       tableName %in% names(x),
@@ -1345,9 +1363,10 @@ update_field.RelDataModel <- function(
 #'
 #' @export
 #'
-update_table_display.RelDataModel <- function(
+update_table_display <- function(
    x, tableName, px=NULL, py=NULL, color=NULL, comment=NULL
 ){
+   stopifnot(is.RelDataModel(x))
    px <- ifelse(
       is.null(px),
       x[[tableName]]$display$x,
@@ -1404,12 +1423,13 @@ update_table_display.RelDataModel <- function(
 #'
 #' @export
 #'
-auto_layout.RelDataModel <- function(
+auto_layout <- function(
    x,
    layout="layout_nicely",
    lengthMultiplier=40*length(x),
    force=FALSE
 ){
+   stopifnot(is.RelDataModel(x))
    if(length(x)==0){
       return(x)
    }
@@ -1461,7 +1481,7 @@ auto_layout.RelDataModel <- function(
 #'
 #' @export
 #'
-confront_data.RelDataModel <- function(
+confront_data <- function(
    x,
    data=list(),
    paths=NULL,
@@ -1476,6 +1496,7 @@ confront_data.RelDataModel <- function(
    delim="\t",
    ...
 ){
+   stopifnot(is.RelDataModel(x))
    ## Optional checks ----
    if(length(checks)>0){
       checks <- match.arg(
@@ -1541,7 +1562,7 @@ confront_data.RelDataModel <- function(
          }
       }
       ## _+ Simple table ----
-      tr <- confront_data.RelTableModel(x=tm, d=td, checks=checks)
+      tr <- confront_table_data(x=tm, d=td, checks=checks)
       toRet$success <- toRet$success && tr$success
       ## _+ Foreign keys ----
       tfk <- tm$foreignKeys
