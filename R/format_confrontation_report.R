@@ -5,6 +5,8 @@
 #' @param title a character with a single value corresponding to the report
 #' title (e.g. database/model name)
 #'
+#' @example inst/examples/ex_confront.R
+#'
 #' @export
 #'
 format_confrontation_report <- function(
@@ -223,6 +225,8 @@ format_confrontation_report <- function(
 #' @param txFailure text color for FAILURE
 #' @param bgMessage background color for a warning message
 #' @param txMessage text color for a warning message
+#'
+#' @example inst/examples/ex_confront.R
 #'
 #' @export
 #'

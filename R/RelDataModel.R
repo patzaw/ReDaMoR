@@ -1476,6 +1476,8 @@ auto_layout <- function(
 #'
 #' @return A report as a list
 #'
+#' @example inst/examples/ex_read_json.R
+#'
 #' @export
 #'
 confront_data <- function(

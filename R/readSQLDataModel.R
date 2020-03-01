@@ -10,6 +10,8 @@
 #'
 #' @return A [RelDataModel] object
 #'
+#' @example inst/examples/ex_read_sql.R
+#'
 #' @export
 #'
 read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){

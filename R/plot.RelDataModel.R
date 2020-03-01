@@ -9,6 +9,8 @@
 #' - **border** border color (single character)
 #' - **highlightBorder** color of highlighted borders
 #'
+#' @example inst/examples/ex_plot_model.R
+#'
 #' @importFrom graphics plot
 #' @import visNetwork
 #'

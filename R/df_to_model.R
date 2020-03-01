@@ -19,6 +19,8 @@
 #'
 #' @return A RelTableModel object.
 #'
+#' @example inst/examples/ex_from_df.R
+#'
 #' @export
 #'
 df_to_model <- function(

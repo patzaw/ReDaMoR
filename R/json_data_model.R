@@ -3,6 +3,8 @@
 #'
 #' @param txt a JSON string, URL or file
 #'
+#' @example inst/examples/ex_read_json.R
+#'
 #' @export
 #'
 read_json_data_model <- function(txt){
