@@ -13,14 +13,13 @@ read_json_data_model <- function(txt){
          ## table name ----
          x$tableName <- unlist(x$tableName)
          ## fields ----
-         x$fields <- lapply(x$fields, as_tibble) %>%
-            do.call(rbind, .) %>%
+         x$fields <- do.call(rbind, lapply(x$fields, as_tibble)) %>%
             mutate(
-               name=as.character(name),
-               type=as.character(type),
-               nullable=as.logical(nullable),
-               unique=as.logical(unique),
-               comment=as.character(comment)
+               name=as.character(.data$name),
+               type=as.character(.data$type),
+               nullable=as.logical(.data$nullable),
+               unique=as.logical(.data$unique),
+               comment=as.character(.data$comment)
             )
          ## primary key ----
          x$primaryKey <- as.character(x$primaryKey)
@@ -29,7 +28,7 @@ read_json_data_model <- function(txt){
             x$foreignKeys,
             function(y){
                y$refTable <- unlist(y$refTable)
-               y$key <- lapply(y$key, as_tibble) %>% do.call(rbind, .)
+               y$key <- do.call(rbind, lapply(y$key, as_tibble))
                y$cardinality <- as.integer(unlist(y$cardinality))
                names(y$cardinality) <- c("fmin", "fmax", "tmin", "tmax")
                return(y)

@@ -435,8 +435,8 @@ toDBM <- function(rdm){
                   toRet %>%
                      rename("field"="from", "refField"="to") %>%
                      select(
-                        table, fki, field, refTable, refField,
-                        fmin, fmax, tmin, tmax
+                        "table", "fki", "field", "refTable", "refField",
+                        "fmin", "fmax", "tmin", "tmax"
                      )
                }
             ))
@@ -461,14 +461,8 @@ toDBM <- function(rdm){
                      idx=idx,
                      unique=tm$indexes[[idx]]$unique,
                      field=tm$indexes[[idx]]$fields
-                  ) %>% select(table, idx, field, unique)
+                  ) %>% select("table", "idx", "field", "unique")
                   return(toRet)
-                  # tm$indexes[[idx]] %>%
-                  #    mutate(
-                  #       table=tm$tableName,
-                  #       idx=idx
-                  #    ) %>%
-                  #    select(table, idx, field, unique)
                }
             ))
          }
@@ -542,34 +536,34 @@ fromDBM <- function(dbm){
       tm <- list()
       tm$tableName <- tn
       tm$fields <- dbm$fields %>%
-         filter(table==tn) %>%
-         select(-table)
+         filter(.data$table==tn) %>%
+         select(-"table")
       if("fieldOrder" %in% colnames(tm$fields)){
          tm$fields <- tm$fields %>%
-            arrange(fieldOrder) %>%
-            select(-fieldOrder)
+            arrange(.data$fieldOrder) %>%
+            select(-"fieldOrder")
       }
       tm$primaryKey <- dbm$primaryKeys %>%
-         filter(table==tn) %>%
-         pull(field)
+         filter(.data$table==tn) %>%
+         pull("field")
       if(length(tm$primaryKey)==0){
          tm$primaryKey <- NULL
          tm <- c(tm, list(primaryKey=NULL))
       }
       tm$foreignKeys <- dbm$foreignKeys %>%
-         filter(table==tn) %>%
-         select(-table)
+         filter(.data$table==tn) %>%
+         select(-"table")
       if(nrow(tm$foreignKeys)>0){
          tm$foreignKeys <- split(tm$foreignKeys, tm$foreignKeys$fki) %>%
             lapply(function(x){
                x %>%
-                  select(-fki) %>%
+                  select(-"fki") %>%
                   split(x$refTable) %>%
                   lapply(function(y){
                      toRet <- list(
                         refTable=unique(y$refTable),
                         key=y %>%
-                           select(field, refField) %>%
+                           select("field", "refField") %>%
                            rename("from"="field", "to"="refField")
                      )
                      cnames <- c("fmin", "fmax", "tmin", "tmax")
@@ -577,7 +571,7 @@ fromDBM <- function(dbm){
                         all(cnames %in% colnames(y))
                      ){
                         toRet$cardinality=y %>%
-                           select(fmin, fmax, tmin, tmax) %>%
+                           select("fmin", "fmax", "tmin", "tmax") %>%
                            unique() %>% unlist() %>% as.integer()
                      }else{
                         toRet$cardinality=c(0, -1, 1, 1) %>% as.integer()
@@ -587,18 +581,17 @@ fromDBM <- function(dbm){
                   }) %>%
                   structure(.Names=NULL)
             }) %>%
-            structure(.Names=NULL) %>%
-            do.call(c, .)
+            structure(.Names=NULL)
+         tm$foreignKeys <- do.call(c, tm$foreignKeys)
       }else{
          tm$foreignKeys <- NULL
          tm <- c(tm, list(foreignKeys=NULL))
       }
       tm$indexes <- dbm$indexes %>%
-         filter(table==tn) %>%
-         select(-table)
+         filter(.data$table==tn) %>%
+         select(-"table")
       if(nrow(tm$indexes)>0){
          tm$indexes <- split(tm$indexes, tm$indexes$idx) %>%
-            # lapply(select, -idx) %>%
             lapply(function(x){
                list(fields=x$field, unique=unique(x$unique))
             }) %>%
@@ -608,8 +601,8 @@ fromDBM <- function(dbm){
          tm <- c(tm, list(indexes=NULL))
       }
       tm$display <- dbm$tables %>%
-         filter(name==tn) %>%
-         select(-name) %>%
+         filter(dbm$tables$name==tn) %>%
+         select(-"name") %>%
          as.list()
       toRet <- c(toRet, list(RelTableModel(tm)))
    }
@@ -1063,7 +1056,8 @@ remove_field <- function(
       }
    }
    ## Removing the field ----
-   x[[tableName]]$fields <- x[[tableName]]$fields %>% filter(name!=fieldName)
+   x[[tableName]]$fields <- x[[tableName]]$fields %>%
+      filter(.data$name!=fieldName)
    ## Returning the results ----
    return(RelDataModel(x))
 
@@ -1266,7 +1260,9 @@ update_field <- function(
       is.character(fieldName), length(fieldName)==1,
       fieldName %in% x[[tableName]]$fields$name
    )
-   curType <- x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(type)
+   curType <- x[[tableName]]$fields %>%
+      filter(.data$name==fieldName) %>%
+      pull("type")
    type <- ifelse(
       is.null(type),
       curType,
@@ -1274,17 +1270,23 @@ update_field <- function(
    )
    nullable <- ifelse(
       is.null(nullable),
-      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(nullable),
+      x[[tableName]]$fields %>%
+         filter(.data$name==fieldName) %>%
+         pull("nullable"),
       nullable
    )
    unique <- ifelse(
       is.null(unique),
-      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(unique),
+      x[[tableName]]$fields %>%
+         filter(.data$name==fieldName) %>%
+         pull("unique"),
       unique
    )
    comment <- ifelse(
       is.null(comment),
-      x[[tableName]]$fields %>% filter(name==fieldName) %>% pull(comment),
+      x[[tableName]]$fields %>%
+         filter(.data$name==fieldName) %>%
+         pull("comment"),
       comment
    )
    type <- as.character(type)
@@ -1335,10 +1337,10 @@ update_field <- function(
    x <- unclass(x)
    x[[tableName]]$fields <- x[[tableName]]$fields %>%
       mutate(
-         type=ifelse(name==fieldName, !!type, type),
-         nullable=ifelse(name==fieldName, !!nullable, nullable),
-         unique=ifelse(name==fieldName, !!unique, unique),
-         comment=ifelse(name==fieldName, !!comment, comment)
+         type=ifelse(.data$name==fieldName, !!type, .data$type),
+         nullable=ifelse(.data$name==fieldName, !!nullable, .data$nullable),
+         unique=ifelse(.data$name==fieldName, !!unique, .data$unique),
+         comment=ifelse(.data$name==fieldName, !!comment, .data$comment)
       )
    return(RelDataModel(x))
 }
@@ -1434,7 +1436,7 @@ auto_layout <- function(
       mn$nodes$y <- NA
    }
    if(any(is.na(mn$nodes$x)) || any(is.na(mn$nodes$y))){
-      vp <- visNetwork(mn$nodes %>% select(-x, -y), mn$edges) %>%
+      vp <- visNetwork(mn$nodes %>% select(-"x", -"y"), mn$edges) %>%
          visIgraphLayout(layout=layout, randomSeed=2)
       x <- lapply(
          x,
@@ -1510,8 +1512,10 @@ confront_data <- function(
             paste(nf, collapse="\n   - ")
          )
       }
-      names(paths) <- basename(paths) %>%
-         sub("(\\.[[:alnum:]]+)(\\.gz)?$", "", .)
+      names(paths) <- sub(
+         pattern="(\\.[[:alnum:]]+)(\\.gz)?$", replacement="",
+         x=basename(paths)
+      )
       dtn <- names(paths)
    }else{
       dtn <- names(data)

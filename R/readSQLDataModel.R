@@ -31,9 +31,9 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
          pos=c(oBrackPos, cBrackPos),
          brack=c(rep("(", length(oBrackPos)), rep(")", length(cBrackPos)))
       ) %>%
-         arrange(pos) %>%
-         mutate(oc=ifelse(brack=="(", 1, -1)) %>%
-         mutate(ib=cumsum(oc))
+         arrange(.data$pos) %>%
+         mutate(oc=ifelse(.data$brack=="(", 1, -1)) %>%
+         mutate(ib=cumsum(.data$oc))
       e <- which(posBrack$ib==0)
       s <- c(1, e[-length(e)]+1)
       return(tibble(
@@ -111,11 +111,10 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
       ## Table ----
       header <- sub("[[:space:]]*[(].*", "", cs)
       p <- gregexpr('(`[^`]*`[.])?`[^`]*`', header)[[1]]
-      tableFullName <-
-         substr(header, p, p+attr(p, "match.length")-1) %>%
+      tableFullName <- substr(header, p, p+attr(p, "match.length")-1) %>%
          strsplit(split="[.]") %>%
-         unlist() %>%
-         gsub("`", "", .)
+         unlist()
+      tableFullName <- gsub("`", "", tableFullName)
       if(length(tableFullName)==1){
          tableFullName <- c("", tableFullName)
       }
@@ -124,8 +123,8 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
       tableFullName <- paste0("`", dbName, "`.`", tableName, "`")
 
       ##
-      body <- sub("[^(]*[(]", "", cs) %>%
-         sub("[)][^)]*$", "", .)
+      body <- sub("[^(]*[(]", "", cs)
+      body <- sub("[)][^)]*$", "", body)
       subStatements <- getSubStatements(body, sep=",")
 
       ## Fields ----
@@ -139,11 +138,11 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
       for(i in 1:length(comPos)){
          p <- comPos[[i]]
          if(p!=-1){
-            toAdd <- substr(fields[i], p, p+attr(p, 'match.length')-1) %>%
-               sub(" *COMMENT *'", "", .) %>%
-               sub("'$", "", .) %>%
-               gsub('\\\\"' , '"', .) %>%
-               gsub("\\\\'" , "'", .)
+            toAdd <- substr(fields[i], p, p+attr(p, 'match.length')-1)
+            toAdd <- sub(" *COMMENT *'", "", toAdd)
+            toAdd <- sub("'$", "", toAdd)
+            toAdd <- gsub('\\\\"' , '"', toAdd)
+            toAdd <- gsub("\\\\'" , "'", toAdd)
             comments[i] <- toAdd
          }
       }
@@ -155,8 +154,9 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
       )
 
       ## Primary key ----
-      primaryKey <- grep("^PRIMARY KEY ", subStatements, value=TRUE) %>%
-         sub("^PRIMARY KEY [(]", "", .) %>% sub("[)]$", "", .)
+      primaryKey <- grep("^PRIMARY KEY ", subStatements, value=TRUE)
+      primaryKey <- sub("^PRIMARY KEY [(]", "", primaryKey)
+      primaryKey <- sub("[)]$", "", primaryKey)
       if(length(primaryKey) > 0){
          primaryKey <- getSubStatements(gsub('`', '', primaryKey), sep=",")
       }else{
@@ -181,11 +181,10 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
                "^CONSTRAINT `[^`]*` FOREIGN KEY [(].*[)] REFERENCES ", "", x
             )
             p <- gregexpr('(`[^`]*`[.])?`[^`]*`', ref)[[1]]
-            refTableFullName <-
-               substr(ref, p, p+attr(p, "match.length")-1) %>%
+            refTableFullName <- substr(ref, p, p+attr(p, "match.length")-1) %>%
                strsplit(split="[.]") %>%
-               unlist() %>%
-               gsub("`", "", .)
+               unlist()
+            refTableFullName <- gsub("`", "", refTableFullName)
             if(length(refTableFullName)==1){
                refTableFullName <- c("", refTableFullName)
             }
@@ -230,9 +229,6 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
             ))
             colnames(toRet) <- c("field", "order")
             toRet <- list(fields=toRet[,"field"], unique=FALSE)
-            # toRet <- as_tibble(toRet) %>%
-            #    select(field) %>%
-            #    mutate(unique=FALSE)
             return(toRet)
          }
       )
@@ -265,19 +261,11 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
             ))
             colnames(toRet) <- c("field", "order")
             toRet <- toRet[,"field"]
-            # toRet <- as_tibble(toRet) %>%
-            #    select(field) %>%
-            #    mutate(unique=TRUE)
             return(toRet)
          }
       ))
-      # if(length(uindexes)>0){
-      #    uindexes <- uindexes[which(!unlist(lapply(uindexes, is.null)))]
-      # }else{
-      #    uindexes <- NULL
-      # }
       fields <- fields %>%
-         mutate(unique=ifelse(name %in% uindexes, TRUE, FALSE))
+         mutate(unique=ifelse(.data$name %in% uindexes, TRUE, FALSE))
 
       toRet <- list(list(
          dbName=dbName,
@@ -303,28 +291,24 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
 
    typeRef <- match.arg(typeRef, list_type_ref())
    txt <- readLines(f) %>%
-      paste(collapse="\n") %>%
-      gsub("/\\*((?!\\*/)(.|\n))*\\**/", "", ., perl=T) %>%
+      paste(collapse="\n")
+   txt <- gsub("/\\*((?!\\*/)(.|\n))*\\**/", "", txt, perl=T) %>%
       strsplit(split="\n") %>%
-      unlist() %>%
-      sub("--.*$", "", .)
+      unlist()
+   txt <- sub("--.*$", "", txt)
    if(mysqlcomments){
-      txt <- txt %>%
-         sub("#.*$", "", .)
+      txt <- sub("#.*$", "", txt)
    }
-   txt <- txt %>%
-      sub("^[[:space:]]*", "", .) %>%
-      `[`(which(.!="")) %>%
+   txt <- sub("^[[:space:]]*", "", txt)
+   txt <- txt[which(txt!="")] %>%
       paste(collapse=" ") %>%
       strsplit(split=";") %>%
-      unlist() %>%
-      sub("^[[:space:]]*", "", .) %>%
-      sub("[[:space:]]*$", "", .) %>%
-      gsub("[[:space:]]+", " ", .)
-   tdTxt <- txt %>%
-      grep("^CREATE TABLE", ., ignore.case=TRUE, value=TRUE)
-   unsupported <- tdTxt %>%
-      grep("`", ., value=TRUE, invert=TRUE)
+      unlist()
+   txt <- sub("^[[:space:]]*", "", txt)
+   txt <- sub("[[:space:]]*$", "", txt)
+   txt <- gsub("[[:space:]]+", " ", txt)
+   tdTxt <- grep("^CREATE TABLE", txt, ignore.case=TRUE, value=TRUE)
+   unsupported <- grep("`", tdTxt, value=TRUE, invert=TRUE)
    if(length(unsupported)>0){
       stop(
          sprintf(
@@ -348,8 +332,8 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
          "There should be only one."
       )
    }
-   toRet <- lapply(toRet, function(x)x[which(names(x)!="dbName")]) %>%
-      lapply(., RelTableModel)
+   toRet <- lapply(toRet, function(x)x[which(names(x)!="dbName")])
+   toRet <- lapply(toRet, RelTableModel)
    toRet <- RelDataModel(toRet, checkFK=TRUE)
    return(toRet)
 

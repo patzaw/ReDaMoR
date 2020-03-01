@@ -220,10 +220,10 @@ buildServer <- function(
    )) %>% lapply(
       function(x){
          toRet <- as_tibble(x) %>%
-            select(element, intro)
+            select("element", "intro")
          if(!fromR){
             toRet <- toRet %>%
-               filter(is.na(element) | element!="#done")
+               filter(is.na(.data$element) | .data$element!="#done")
          }
          return(toRet)
       }
@@ -275,13 +275,11 @@ buildServer <- function(
          }
       )
       observeEvent(input$doc, {
-         docx <- rintrosteps[context$x] %>%
-            do.call(rbind, .)
+         docx <- do.call(rbind, rintrosteps[context$x])
          rintrojs::introjs(session, options = list(steps=docx))
       })
       observeEvent(input$docImp, {
-         docx <- rintrosteps[c("Import")] %>%
-            do.call(rbind, .)
+         docx <- do.call(rbind, rintrosteps[c("Import")])
          rintrojs::introjs(session, options = list(steps=docx))
       })
 
@@ -408,8 +406,8 @@ buildServer <- function(
          validate(need(!identical(selTables, isolate(selection$tables)), ""))
          mn <- isolate(model$vn)
          selFK <- mn$edges %>%
-            filter(from %in% selTables | to %in% selTables) %>%
-            pull(id)
+            filter(.data$from %in% selTables | .data$to %in% selTables) %>%
+            pull("id")
          selection$fromVN <- FALSE
          if(length(selTables)==0){
             selection$tables <- NULL
@@ -964,7 +962,7 @@ buildServer <- function(
          # validate(need(mt, ""))
          # selTable <- mt$tableName
          isolate(model$fieldTable) %>%
-            select(-comment) %>%
+            select(-"comment") %>%
             DT::datatable(
                rownames=TRUE,
                filter="top",
@@ -990,7 +988,7 @@ buildServer <- function(
       observe({
          DT::replaceData(
             proxyFieldTable,
-            data=model$fieldTable %>% select(-comment),
+            data=model$fieldTable %>% select(-"comment"),
             clearSelection="all"
          )
       })
@@ -1505,14 +1503,14 @@ buildServer <- function(
          validate(need(mt, ""))
          selTable <- mt$tableName
          if(length(mt$indexes)>0){
-            model$indexTable <- mt$indexes %>%
+            indexTable <- mt$indexes %>%
                lapply(function(x){
                   tibble(
                      Fields=sprintf("[%s]", paste(x$fields, collapse="], [")),
                      Unique=x$unique
                   )
-               }) %>%
-               do.call(rbind, .)
+               })
+            model$indexTable <- do.call(rbind, indexTable)
          }else{
             model$indexTable <- tibble(
                Fields=character(),
@@ -2439,10 +2437,14 @@ buildServer <- function(
          dispNodes <- input$modelNet_nodes
          validate(need(dispNodes, ""))
          m <- isolate(model$x)
-         cp <- lapply(m, function(n)tibble(x=n$display$x, y=n$display$y)) %>%
-            do.call(rbind, .)
-         np <- lapply(dispNodes[names(m)], function(n)tibble(x=n$x, y=n$y)) %>%
-            do.call(rbind, .)
+         cp <- do.call(
+            rbind,
+            lapply(m, function(n)tibble(x=n$display$x, y=n$display$y))
+         )
+         np <- do.call(
+            rbind,
+            lapply(dispNodes[names(m)], function(n)tibble(x=n$x, y=n$y))
+         )
          if(!all(np$x==cp$x & np$y==cp$y)){
             m <- lapply(
                m,

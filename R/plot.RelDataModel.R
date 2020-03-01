@@ -80,9 +80,11 @@ modelToVn <- function(
          ind <- NULL
          # uq <- NULL
          if(!is.null(it)){
-            it <- it %>% filter(index!=0)
+            it <- it %>% filter(.data$index!=0)
             ind <- unique(it$field)
-            uind <- it %>% filter(uniqueIndex) %>% pull(field) %>% unique()
+            uind <- it %>% filter(.data$uniqueIndex) %>%
+               pull("field") %>%
+               unique()
             # uq <- unique(it$field[which(it$unique)])
          }
          f$i <- unlist(lapply(
@@ -166,11 +168,11 @@ modelToVn <- function(
             color.border=!!border,
             color.highlight.border=!!highlightBorder,
             color.background=ifelse(
-               is.na(color.background), !!color, color.background
+               is.na(.data$color.background), !!color, .data$color.background
             )
          ) %>%
          mutate(
-            color.highlight.background=color.background
+            color.highlight.background=.data$color.background
          )
       nodes$id <- names(model)
    }
@@ -187,7 +189,7 @@ modelToVn <- function(
             fk,
             function(k){
                to <- k$refTable
-               kt <- k$key %>% arrange(from, to)
+               kt <- k$key %>% arrange(.data$from, .data$to)
                kcard <- ifelse(k$cardinality==-1, "n", k$cardinality)
                fcard <- paste(kcard["fmin"], kcard["fmax"], sep="..")
                tcard <- paste(kcard["tmin"], kcard["tmax"], sep="..")
@@ -252,27 +254,29 @@ modelToVn <- function(
       edges$smooth.type <- "curvedCCW"
       edges$smooth.roundness <- 0
       edges$selfReferenceSize  <- 30
-      edges <- bind_cols(edges, edges %>% select(from, to) %>%
+      edges <- bind_cols(edges, edges %>% select("from", "to") %>%
          apply(1, function(x) c(sort(x), paste(sort(x), collapse="<->"))) %>%
          t() %>%
          magrittr::set_colnames(c("uef", "uet", "ue")) %>%
          as_tibble()
       )
       edges <- edges %>%
-         group_by(ue) %>%
+         group_by(.data$ue) %>%
          mutate(
             smooth.roundness={
-               mr <- min(1, 0.2*(length(ue)%/%2))
-               seq(-mr, mr, length.out=length(ue))
+               mr <- min(1, 0.2*(length(.data$ue)%/%2))
+               seq(-mr, mr, length.out=length(.data$ue))
             },
             selfReferenceSize={
-               seq(30, 50, length.out=length(ue))
+               seq(30, 50, length.out=length(.data$ue))
             }
          ) %>%
          ungroup() %>%
          mutate(
             smooth.roundness=ifelse(
-               uef==from, smooth.roundness, -smooth.roundness
+               .data$uef==.data$from,
+               .data$smooth.roundness,
+               -.data$smooth.roundness
             )
          ) %>%
          mutate(

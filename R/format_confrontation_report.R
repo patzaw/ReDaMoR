@@ -484,9 +484,9 @@ format_confrontation_report_md <- function(
 #'
 view_confrontation_report <- function(cr, ...){
    tf <- tempfile(fileext=".html")
-   format_confrontation_report_md(cr, ...) %>%
-      markdown::renderMarkdown(text=.) %>%
-      writeLines(tf)
+   on.exit(rm(tf))
+   md <- format_confrontation_report_md(cr, ...)
+   md <- markdown::renderMarkdown(text=md)
+   writeLines(md, tf)
    rstudioapi::viewer(tf)
-   rm(tf)
 }

@@ -246,7 +246,7 @@ format.RelTableModel <- function(x, ...){
    ind <- NULL
    # uq <- NULL
    if(!is.null(it)){
-      it <- it %>% filter(index!=0)
+      it <- it %>% filter(.data$index!=0)
       ind <- unique(it$field)
       # uq <- unique(it$field[which(it$unique)])
    }
@@ -435,7 +435,7 @@ correct_constraints <- function(x){
       }
    }
    ## Field uniqueness
-   uniqueFields <- x$fields %>% filter(unique) %>% pull(name)
+   uniqueFields <- x$fields %>% filter(.data$unique) %>% pull("name")
    if(length(x$indexes)>0 && length(uniqueFields)>0){
       for(i in 1:length(x$indexes)){
          if(any(x$indexes[[i]]$fields %in% uniqueFields)){
@@ -578,8 +578,8 @@ identical_RelTableModel <- function(x, y, includeDisplay=TRUE){
 
    ## Fields ----
    toRet <- toRet && identical(
-      x$fields %>% arrange(name),
-      y$fields %>% arrange(name)
+      x$fields %>% arrange(.data$name),
+      y$fields %>% arrange(.data$name)
    )
 
    ## Primary key ----
@@ -620,7 +620,7 @@ identical_RelTableModel <- function(x, y, includeDisplay=TRUE){
       xfk <- lapply(
          x$foreignKeys,
          function(z){
-            z$key <- z$key %>% arrange(from, to)
+            z$key <- z$key %>% arrange(.data$from, .data$to)
             return(z)
          }
       )
@@ -640,7 +640,7 @@ identical_RelTableModel <- function(x, y, includeDisplay=TRUE){
       yfk <- lapply(
          y$foreignKeys,
          function(z){
-            z$key <- z$key %>% arrange(from, to)
+            z$key <- z$key %>% arrange(.data$from, .data$to)
             return(z)
          }
       )
@@ -698,7 +698,7 @@ get_foreign_keys.RelTableModel <- function(x){
       fk,
       function(k){
          to <- k$refTable
-         kt <- k$key %>% arrange(from, to)
+         kt <- k$key %>% arrange(.data$from, .data$to)
          tibble(
             to=to,
             ff=list(kt$from), tf=list(kt$to)
@@ -710,6 +710,6 @@ get_foreign_keys.RelTableModel <- function(x){
    toRet %>% mutate(
       from=tn
    ) %>%
-      select(from, ff, to, tf, fmin, fmax, tmin, tmax) %>%
+      select("from", "ff", "to", "tf", "fmin", "fmax", "tmin", "tmax") %>%
       return()
 }

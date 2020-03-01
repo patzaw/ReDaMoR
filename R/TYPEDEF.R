@@ -109,20 +109,20 @@ conv_type_ref <- function(x, from=NULL, to=NULL, ignore.case=TRUE){
       r <- match.arg(from, list_type_ref())
       ct <- TYPETABLE[[r]]
       x <- norm_type_ref(x, from, ignore.case=ignore.case)
-      notSupported <- setdiff(x, ct %>% pull(match))
+      notSupported <- setdiff(x, ct %>% pull("match"))
       if(length(notSupported)>0){
          stop(paste(
             sprintf("The following types are not supported %s types:", r),
             paste(notSupported, collapse=", ")
          ))
       }
-      toRet <- ct %>% slice(match(x, match)) %>% pull(R)
+      toRet <- ct %>% slice(match(x, .data$match)) %>% pull("R")
    }
    if(!is.null(to)){
       r <- match.arg(to, list_type_ref())
       ct <- TYPETABLE[[r]]
       check_types(x)
-      toRet <- ct %>% slice(match(x, R)) %>% pull(inst)
+      toRet <- ct %>% slice(match(x, .data$R)) %>% pull("inst")
    }
    return(toRet)
 }
