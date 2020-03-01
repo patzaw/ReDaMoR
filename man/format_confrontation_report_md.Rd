@@ -23,6 +23,18 @@ format_confrontation_report_md(
 
 \item{level}{rmarkdown level in document hierarchy (default:0 ==> highest).
 It should be an integer between 0 and 4.}
+
+\item{bgSuccess}{background color for SUCCESS}
+
+\item{txSuccess}{text color for SUCCESS}
+
+\item{bgFailure}{background color for FAILURE}
+
+\item{txFailure}{text color for FAILURE}
+
+\item{bgMessage}{background color for a warning message}
+
+\item{txMessage}{text color for a warning message}
 }
 \description{
 Format confrontation report in markdown format

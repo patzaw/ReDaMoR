@@ -27,13 +27,13 @@ update_foreign_key(
 
 \item{toFields}{the names of the referenced fields}
 
-\item{fmin:}{from minimum cardinality}
+\item{fmin}{from minimum cardinality}
 
-\item{fmax:}{from maximum cardinality}
+\item{fmax}{from maximum cardinality}
 
-\item{tmin:}{to minimum cardinality}
+\item{tmin}{to minimum cardinality}
 
-\item{tmax:}{to maximum cardinality}
+\item{tmax}{to maximum cardinality}
 }
 \value{
 A \link{RelDataModel}

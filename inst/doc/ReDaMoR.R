@@ -5,6 +5,12 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+cranRef <- function(x){
+  sprintf(
+    "[%s](https://CRAN.R-project.org/package=%s): %s",
+    x, x, packageDescription(x)$Title
+  )
+}
 
 ## ---- eval=FALSE--------------------------------------------------------------
 #  devtools::install_github("patzaw/ReDaMoR")
@@ -39,6 +45,7 @@ confrontation_report <- confront_data(
 )
 
 ## ---- results='asis'----------------------------------------------------------
+# view_confrontation_report(confrontation_report) # Use RStudio viewer
 format_confrontation_report_md(
   confrontation_report,
   title="Example: Confrontation with original data",

@@ -9,9 +9,8 @@ view_confrontation_report(cr, ...)
 \arguments{
 \item{cr}{the confrontation report from \link{confront_data}}
 
-\item{...}{additional params for the \link{format_confrontation_report} function}
-
-\item{title}{report title}
+\item{...}{additional params for
+the \code{\link[=format_confrontation_report_md]{format_confrontation_report_md()}} function}
 }
 \description{
 View confrontation report in rstudio viewer

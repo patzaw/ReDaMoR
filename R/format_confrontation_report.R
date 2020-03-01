@@ -217,6 +217,12 @@ format_confrontation_report <- function(
 #' @param title a character with a single value corresponding to the report
 #' @param level rmarkdown level in document hierarchy (default:0 ==> highest).
 #' It should be an integer between 0 and 4.
+#' @param bgSuccess background color for SUCCESS
+#' @param txSuccess text color for SUCCESS
+#' @param bgFailure background color for FAILURE
+#' @param txFailure text color for FAILURE
+#' @param bgMessage background color for a warning message
+#' @param txMessage text color for a warning message
 #'
 #' @export
 #'
@@ -477,8 +483,8 @@ format_confrontation_report_md <- function(
 #' View confrontation report in rstudio viewer
 #'
 #' @param cr the confrontation report from [confront_data]
-#' @param title report title
-#' @param ... additional params for the [format_confrontation_report] function
+#' @param ... additional params for
+#' the [format_confrontation_report_md()] function
 #'
 #' @export
 #'

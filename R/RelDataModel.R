@@ -944,10 +944,10 @@ remove_foreign_key <- function(
 #' @param fromFields the name of the referencing fields
 #' @param toTable the name of the referenced table
 #' @param toFields the names of the referenced fields
-#' @param fmin: from minimum cardinality
-#' @param fmax: from maximum cardinality
-#' @param tmin: to minimum cardinality
-#' @param tmax: to maximum cardinality
+#' @param fmin from minimum cardinality
+#' @param fmax from maximum cardinality
+#' @param tmin to minimum cardinality
+#' @param tmax to maximum cardinality
 #'
 #' @return A [RelDataModel]
 #'
@@ -1240,7 +1240,7 @@ set_unique_index <- function(x, tableName, fieldNames, unique){
 #'
 #' @param x a [RelDataModel]
 #' @param tableName the name of the table to modify (a single character)
-#' @param name the name of the field to modify (a single character)
+#' @param fieldName the name of the field to modify (a single character)
 #' @param type the type of the field (a single character)
 #' @param nullable if the field is nullable (a single logical)
 #' @param unique if the values are unique (a single logical)

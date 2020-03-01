@@ -26,6 +26,12 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+cranRef <- function(x){
+  sprintf(
+    "[%s](https://CRAN.R-project.org/package=%s): %s",
+    x, x, packageDescription(x)$Title
+  )
+}
 ```
 
 <div style="width:200px;">
@@ -77,20 +83,22 @@ This package is not yet available on CRAN.
 
 The following R packages available on CRAN are required:
 
-- dplyr
-- tibble
-- magrittr
-- visNetwork
-- shiny
-- shinyjs
-- readr
-- jsonlite
-- DT
-- colourpicker
-- rintrojs
-- markdown
-- rstudioapi
-- crayon
+- `r cranRef("dplyr")`
+- `r cranRef("magrittr")`
+- `r cranRef("visNetwork")`
+- `r cranRef("readr")`
+- `r cranRef("shiny")`
+- `r cranRef("shinyjs")`
+- `r cranRef("DT")`
+- `r cranRef("rintrojs")`
+- `r cranRef("colourpicker")`
+- `r cranRef("jsonlite")`
+- `r cranRef("markdown")`
+- `r cranRef("rstudioapi")`
+- `r cranRef("crayon")`
+- `r cranRef("utils")`
+- `r cranRef("graphics")`
+- `r cranRef("stats")`
 
 <!---->
 ## From github
@@ -266,11 +274,12 @@ confrontation_report <- confront_data(
 )
 ```
 
-This report can also be formatted using markdown and included in an document such as this one.
+This report can also be formatted using markdown and included in a document such as this one.
 
 ----
 
 ```{r, results='asis'}
+# view_confrontation_report(confrontation_report) # Use RStudio viewer
 format_confrontation_report_md(
   confrontation_report,
   title="Example: Confrontation with original data",

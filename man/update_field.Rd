@@ -19,6 +19,8 @@ update_field(
 
 \item{tableName}{the name of the table to modify (a single character)}
 
+\item{fieldName}{the name of the field to modify (a single character)}
+
 \item{type}{the type of the field (a single character)}
 
 \item{nullable}{if the field is nullable (a single logical)}
@@ -26,8 +28,6 @@ update_field(
 \item{unique}{if the values are unique (a single logical)}
 
 \item{comment}{a description (a single character)}
-
-\item{name}{the name of the field to modify (a single character)}
 }
 \value{
 A \link{RelDataModel}
