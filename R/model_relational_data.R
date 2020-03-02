@@ -103,7 +103,8 @@ buildUi <- function(fromR){
             tags$a(
                "About ReDaMoR",
                href="doc/ReDaMoR.html",
-               target="_blank"
+               target="_blank",
+               id="about"
             )
          )
       ),

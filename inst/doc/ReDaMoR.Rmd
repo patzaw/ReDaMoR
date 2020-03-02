@@ -340,6 +340,6 @@ new_model %>%
 <!----------------------------------------------------------------------------->
 # Acknowledgments
 
-This work was entirely supported by [UCB Pharma](https://www.ucb.com/).
+This work was entirely supported by [UCB Pharma](https://www.ucb.com/). (Early Solutions department)
 
 
