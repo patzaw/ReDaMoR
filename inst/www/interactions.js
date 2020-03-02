@@ -11,9 +11,6 @@ $(document).keydown(function(event) {
   if($("#tableNewName")[0]){
     $("#tableNewName").focus();
   }
-  if($("#newFieldName")[0]){
-    $("#newFieldName").focus();
-  }
 });
 
 // Validate changes with keyboard
