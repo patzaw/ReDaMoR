@@ -8,6 +8,7 @@ format_confrontation_report_md(
   cr,
   title = "Model",
   level = 0,
+  numbered = TRUE,
   bgSuccess = "green",
   txSuccess = "black",
   bgFailure = "red",
@@ -23,6 +24,9 @@ format_confrontation_report_md(
 
 \item{level}{rmarkdown level in document hierarchy (default:0 ==> highest).
 It should be an integer between 0 and 4.}
+
+\item{numbered}{a logical. If TRUE (default) the sections are part of
+document numbering.}
 
 \item{bgSuccess}{background color for SUCCESS}
 

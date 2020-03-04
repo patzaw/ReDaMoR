@@ -2,20 +2,24 @@
 title: "Modeling Relational Data in R with ReDaMoR"
 author: "Patrice Godard <patrice.godard@ucb.com>"
 date: "`r format(Sys.time(), '%B %d %Y')`"
-package: "ReDaMoR (version `r packageVersion('ReDaMoR')`)"
+always_allow_html: true
+output:
+  html_document:
+    keep_md: no
+    number_sections: yes
+    self_contained: yes
+    theme: cerulean
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    number_sections: yes
+package: ReDaMoR (version `r packageVersion('ReDaMoR')`)
 vignette: >
     %\VignetteIndexEntry{ReDaMoR - Tutorial}
     %\VignetteEncoding{UTF-8}
     %\VignetteEngine{knitr::rmarkdown}
-output:
-   html_document:
-     keep_md: no
-     self_contained: yes
-     number_sections: yes
-     theme: cerulean
-     toc: yes
-     toc_float: yes
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -67,6 +71,8 @@ The main features of ReDaMoR are the following:
 - Check and auto-correct model constraints (types, keys, uniqueness, mandatory fields)
 - Confront data to the model to check their compatibility
 
+The ReDaMoR R package is licensed under [GPL-3](https://www.gnu.org/licenses/gpl-3.0.en.html).
+
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 # Installation
@@ -96,9 +102,9 @@ The following R packages available on CRAN are required:
 - `r cranRef("markdown")`
 - `r cranRef("rstudioapi")`
 - `r cranRef("crayon")`
-- `r cranRef("utils")`
-- `r cranRef("graphics")`
-- `r cranRef("stats")`
+<!-- - utils: [R](https://www.r-project.org/) core package -->
+<!-- - graphics: [R](https://www.r-project.org/) core package -->
+<!-- - stats: [R](https://www.r-project.org/) core package -->
 
 <!---->
 ## From github
@@ -140,7 +146,7 @@ m <- model_relational_data(recover_RelDataModel())
 <!------------------------------------------------->
 
 A data model example is provided within the package.
-It represents data extracted from the [Human Phenotype Ontology (HPO)](https://hpo.jax.org/app/) and for which a subset is also provided within the ReDaMoR package (more details provided in the [Confronting data section](#confronting-data)).
+It represents data extracted from the [Human Phenotype Ontology (HPO)](https://hpo.jax.org/app/)<sup>([1](#hpoRef))</sup> and for which a subset is also provided within the ReDaMoR package (more details provided in the [Confronting data section](#confronting-data)).
 
 This example can be imported from the Shiny app when clicking on the ***Import*** button and then on the ***Try an example*** link.
 It can be also be loaded and displayed (and edited) using the following commands:
@@ -260,7 +266,18 @@ model_relational_data()
 # Confronting data
 
 Data can be confronted to the model using the `confront_data()` function.
-A subset of the [HPO](https://hpo.jax.org/app/) is provided within the package and can be directly confronted to the data model.
+During this process the following checks are performed:
+
+- All the tables in the model and only those are **available**.
+- For each table:
+  - All the columns in the model and only those are **available**.
+  - The **type** of each column corresponds to the type in the model.
+  - Not any *NA* values are found in **non-nullable** columns.
+  - There is no duplicated value in **unique** columns.
+  - There is no duplicated value in **unique indexes**.
+- **Foreign keys** are tested according to their cardinality: all values in on table should be available in the other table if the corresponding minimum cardinality is greater than 0. 
+
+A **subset** (500 phenotypes among more than 14&nbsp;000 in the original resource) of the [HPO](https://hpo.jax.org/app/)<sup>([1](#hpoRef))</sup> is provided within the package and can be directly confronted to the data model.
 The function prints a report with messages about the global success of the data model confrontation and additional failure or warning messages for relevant tables.
 
 ```{r}
@@ -276,19 +293,19 @@ confrontation_report <- confront_data(
 
 This report can also be formatted using markdown and included in a document such as this one.
 
-----
+<div style="background-color:#FFFACD; border-top:5px solid black; border-bottom:5px solid black; margin-top:50px; margin-bottom:50px">
 
 ```{r, results='asis'}
 # view_confrontation_report(confrontation_report) # Use RStudio viewer
 format_confrontation_report_md(
   confrontation_report,
   title="Example: Confrontation with original data",
-  level=1
+  level=1, numbered=FALSE
 ) %>%
   cat()
 ```
 
-----
+</div>
 
 The `returnData` argument is used to keep the data in the confrontation report.
 
@@ -299,7 +316,7 @@ hpo_tables <- confrontation_report$data
 In the example below the data are altered and confronted again to the data model.
 The confrontation report shows the discrepancies between the model and the data in order to facilitate the correction of one or the other.
 
-----
+<div style="background-color:#FFFACD; border-top:5px solid black; border-bottom:5px solid black; margin-top:50px; margin-bottom:50px">
 
 ```{r, results='asis'}
 hpo_tables$HPO_diseases <- hpo_tables$HPO_diseases %>% slice(1:100)
@@ -308,12 +325,12 @@ hpo_tables$HPO_hp <- hpo_tables$HPO_hp %>% mutate(level=as.character(level))
 confront_data(hpo_model, hpo_tables, verbose=FALSE) %>%
   format_confrontation_report_md(
     title="Example: Confrontation with altered data",
-    level=1
+    level=1, numbered=FALSE
   ) %>%
     cat()
 ```
 
-----
+</div>
 
 <!---->
 ## Drafting a data model from data frames
@@ -326,6 +343,7 @@ It can easily be done with `model_relational_data()`.
 
 
 ```{r}
+hpo_tables <- confrontation_report$data
 new_model <- df_to_model(
   list=names(hpo_tables), envir=as.environment(hpo_tables)
 )
@@ -343,3 +361,8 @@ new_model %>%
 This work was entirely supported by [UCB Pharma](https://www.ucb.com/). (Early Solutions department)
 
 
+<!----------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+# References
+
+<p id="hpoRef">**(1)**</a>: [Sebastian Köhler, Leigh Carmody, Nicole Vasilevsky, Julius O B Jacobsen, et al. **Expansion of the Human Phenotype Ontology (HPO) knowledge base and resources.** *Nucleic Acids Research.* (2018) doi: 10.1093/nar/gky1105](https://academic.oup.com/nar/article/47/D1/D1018/5198478)</p>

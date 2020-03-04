@@ -49,7 +49,7 @@ confrontation_report <- confront_data(
 format_confrontation_report_md(
   confrontation_report,
   title="Example: Confrontation with original data",
-  level=1
+  level=1, numbered=FALSE
 ) %>%
   cat()
 
@@ -63,11 +63,12 @@ hpo_tables$HPO_hp <- hpo_tables$HPO_hp %>% mutate(level=as.character(level))
 confront_data(hpo_model, hpo_tables, verbose=FALSE) %>%
   format_confrontation_report_md(
     title="Example: Confrontation with altered data",
-    level=1
+    level=1, numbered=FALSE
   ) %>%
     cat()
 
 ## -----------------------------------------------------------------------------
+hpo_tables <- confrontation_report$data
 new_model <- df_to_model(
   list=names(hpo_tables), envir=as.environment(hpo_tables)
 )

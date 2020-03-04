@@ -147,9 +147,9 @@ Future work
 ===========
 
 We are working on `internalMDB` objects which bind the data to their
-relational model. It allows the manipulation and the combination of
-datasets in a consistent manner. We hope to release the corresponding
-package soon.
+relational model. These objects will allow the manipulation and the
+combination of datasets in a consistent manner. We hope to release the
+corresponding package soon.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->

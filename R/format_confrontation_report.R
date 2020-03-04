@@ -219,6 +219,8 @@ format_confrontation_report <- function(
 #' @param title a character with a single value corresponding to the report
 #' @param level rmarkdown level in document hierarchy (default:0 ==> highest).
 #' It should be an integer between 0 and 4.
+#' @param numbered a logical. If TRUE (default) the sections are part of
+#' document numbering.
 #' @param bgSuccess background color for SUCCESS
 #' @param txSuccess text color for SUCCESS
 #' @param bgFailure background color for FAILURE
@@ -234,6 +236,7 @@ format_confrontation_report_md <- function(
    cr,
    title="Model",
    level=0,
+   numbered=TRUE,
    bgSuccess="green",
    txSuccess="black",
    bgFailure="red",
@@ -477,6 +480,11 @@ format_confrontation_report_md <- function(
       paste0("#", paste(rep("#", level), collapse="")),
       toRet
    )
+   ## Unnumber if requested ----
+   if(!numbered){
+      h <- grep("^[#]", toRet)
+      toRet[h] <- paste(toRet[h], "{.unlisted .unnumbered}")
+   }
 
    ## Concatenate the result ----
    toRet <- paste(toRet, collapse="\n")
