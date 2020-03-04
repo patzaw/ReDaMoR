@@ -365,4 +365,4 @@ This work was entirely supported by [UCB Pharma](https://www.ucb.com/). (Early S
 <!----------------------------------------------------------------------------->
 # References
 
-<p id="hpoRef">**(1)**</a>: [Sebastian Köhler, Leigh Carmody, Nicole Vasilevsky, Julius O B Jacobsen, et al. **Expansion of the Human Phenotype Ontology (HPO) knowledge base and resources.** *Nucleic Acids Research.* (2018) doi: 10.1093/nar/gky1105](https://academic.oup.com/nar/article/47/D1/D1018/5198478)</p>
+<p id="hpoRef">**(1)**</a> [Sebastian Köhler, Leigh Carmody, Nicole Vasilevsky, Julius O B Jacobsen, et al. **Expansion of the Human Phenotype Ontology (HPO) knowledge base and resources.** *Nucleic Acids Research.* (2018) doi: 10.1093/nar/gky1105](https://academic.oup.com/nar/article/47/D1/D1018/5198478)</p>

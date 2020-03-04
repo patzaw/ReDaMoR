@@ -743,9 +743,15 @@ buildServer <- function(
          validate(need(input$confirmAddTable, ""))
          tn <- isolate(input$newTableName)
          m <- isolate(model$x)
+         xs <- 100
+         ys <- 100
          if(!is.null(tn) && tn!="" && !tn %in% names(m)){
             m <- add_table(m, newTable=tn)
-            m <- m %>% update_table_display(tn, px=0, py=0)
+            m <- m %>% update_table_display(
+               tn,
+               px=xs*(2*stats::rbeta(1, 0.6, 0.6)-1),
+               py=ys*(2*stats::rbeta(1, 0.6, 0.6)-1)
+            )
             model$new <- m
             removeModal()
          }
