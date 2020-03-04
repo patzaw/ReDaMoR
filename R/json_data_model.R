@@ -15,14 +15,24 @@ read_json_data_model <- function(txt){
          ## table name ----
          x$tableName <- unlist(x$tableName)
          ## fields ----
-         x$fields <- do.call(rbind, lapply(x$fields, as_tibble)) %>%
-            mutate(
-               name=as.character(.data$name),
-               type=as.character(.data$type),
-               nullable=as.logical(.data$nullable),
-               unique=as.logical(.data$unique),
-               comment=as.character(.data$comment)
+         if(length(x$fields)>0){
+            x$fields <- do.call(rbind, lapply(x$fields, as_tibble)) %>%
+               mutate(
+                  name=as.character(.data$name),
+                  type=as.character(.data$type),
+                  nullable=as.logical(.data$nullable),
+                  unique=as.logical(.data$unique),
+                  comment=as.character(.data$comment)
+               )
+         }else{
+            x$fields <- tibble(
+               name=character(),
+               type=character(),
+               nullable=logical(),
+               unique=logical(),
+               comment=character()
             )
+         }
          ## primary key ----
          x$primaryKey <- as.character(x$primaryKey)
          ## foreign keys ----
