@@ -6,6 +6,8 @@ Author: Patrice Godard
 Maintainer: Patrice Godard <patrice.godard@gmail.com>
 Description: The aim of ReDaMoR is to manipulate relational data models in R.
    It provides functions to create, import and check relational data models.
+   These functions are accessible through a graphical user interface made with
+   Shiny.
 URL: https://github.com/patzaw/ReDaMoR
 BugReports: https://github.com/patzaw/ReDaMoR/issues
 Depends:
@@ -24,6 +26,7 @@ Imports:
    markdown,
    rstudioapi,
    crayon,
+   igraph,
    utils,
    graphics,
    stats
