@@ -9,7 +9,7 @@ Description: The aim of ReDaMoR is to manipulate relational data models in R.
 URL: https://github.com/patzaw/ReDaMoR
 BugReports: https://github.com/patzaw/ReDaMoR/issues
 Depends:
-   R (>= 3.5),
+   R (>= 3.4),
    dplyr,
    magrittr,
    visNetwork
