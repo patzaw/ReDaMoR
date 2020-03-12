@@ -14,7 +14,8 @@ R. It provides functions to create, import and save relational data
 models. These functions are accessible through a graphical user
 interface made with [Shiny](https://shiny.rstudio.com/).
 
-A plublic instance of the Shiny app is available [here]().
+A plublic instance of the Shiny app is available
+[here](https://pgodard.shinyapps.io/ReDaMoR).
 
 The main features of ReDaMoR are the following:
 

@@ -252,7 +252,7 @@ Some *common* keyboard shortcuts are implemented:
 ## Public instance of the app
 <!-------------------------->
 
-A public instance of the app is available [here](http://bel040344:3838/pgodard/ReDaMoR/). **(This will change when the package is accepted for publication)**
+A public instance of the app is available [here](https://pgodard.shinyapps.io/ReDaMoR).
 
 You can easily deploy your own instance by copying these two lines in an *app.R* file:
 
