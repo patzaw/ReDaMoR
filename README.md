@@ -29,6 +29,17 @@ The main features of ReDaMoR are the following:
     mandatory fields)
 -   Confront data to the model to check their compatibility
 
+The package can also be tested in [Rstudio
+Cloud](https://rstudio.cloud/project/1033803).
+
+``` r
+library(ReDaMoR)
+m <- model_relational_data()
+```
+
+You can also run the code documented in the [package
+vignette](https://patzaw.github.io/ReDaMoR/ReDaMoR.html).
+
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 Introduction
