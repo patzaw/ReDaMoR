@@ -6,6 +6,9 @@ dir.create(here("inst/doc"), showWarnings=FALSE)
 for(f in list.files(here("doc"))){
    file.copy(file.path(here("doc"), f), file.path(here("vignettes"), f))
    file.copy(file.path(here("doc"), f), file.path(here("inst/doc"), f))
+   if(sub("^.*[.]", "", f)=="html"){
+      file.copy(file.path(here("doc"), f), file.path(here("docs"), f))
+   }
    file.remove(file.path(here("doc"), f))
 }
 file.remove("doc")
