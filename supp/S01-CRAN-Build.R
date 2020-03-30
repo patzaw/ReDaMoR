@@ -26,7 +26,7 @@ file.remove("doc")
 pv <- desc::desc_get_version(here())
 system(paste(
    sprintf("cd %s", here("..")),
-   "R CMD build --no-build-vignettes ReDaMoR",
+   "R CMD build ReDaMoR", # --no-build-vignettes
    sprintf("R CMD check --as-cran ReDaMoR_%s.tar.gz", pv),
    sep=" ; "
 ))

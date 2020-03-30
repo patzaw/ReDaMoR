@@ -1,10 +1,11 @@
 Package: ReDaMoR
 Type: Package
-Title: Relational Data ModeleR
-Version: 0.4.0
+Title: Relational Data Modeler
+Version: 0.4.1
 Author: Patrice Godard
 Maintainer: Patrice Godard <patrice.godard@gmail.com>
-Description: The aim of ReDaMoR is to manipulate relational data models in R.
+Description: The aim of this package is to manipulate relational
+   data models in R.
    It provides functions to create, import and check relational data models.
    These functions are accessible through a graphical user interface made with
    Shiny.
