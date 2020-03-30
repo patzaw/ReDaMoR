@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^supp$
 ^doc$
+^docs$
 ^Meta$
 ^tests$
 ^README.Rmd$
