@@ -81,7 +81,9 @@ The ReDaMoR R package is licensed under [GPL-3](https://www.gnu.org/licenses/gpl
 ## From CRAN
 <!----------->
 
-This package is not yet available on CRAN.
+```{r, eval=FALSE}
+install.packages("ReDaMoR")
+```
 
 <!---->
 ## Dependencies

@@ -94,7 +94,9 @@ From CRAN
 ---------
 
 <!----------->
-This package is not yet available on CRAN.
+``` r
+install.packages("ReDaMoR")
+```
 
 <!---->
 Dependencies

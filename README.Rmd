@@ -85,7 +85,9 @@ The main features of ReDaMoR are the following:
 ## From CRAN
 <!----------->
 
-This package is not yet available on CRAN.
+```{r, eval=FALSE}
+install.packages("ReDaMoR")
+```
 
 <!---->
 ## Dependencies
