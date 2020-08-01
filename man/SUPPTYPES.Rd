@@ -4,7 +4,9 @@
 \name{SUPPTYPES}
 \alias{SUPPTYPES}
 \title{Supported R types}
-\format{An object of class \code{character} of length 6.}
+\format{
+An object of class \code{character} of length 6.
+}
 \usage{
 SUPPTYPES
 }

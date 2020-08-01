@@ -224,7 +224,7 @@ length.RelDataModel <- function(x){
       l <- lapply(
          l,
          function(tm){
-            if(!is.null(tm$foreignKeys)){
+            if(length(tm$foreignKeys)>0){
                tm$foreignKeys <- tm$foreignKeys[which(unlist(lapply(
                   tm$foreignKeys,
                   function(fk){
