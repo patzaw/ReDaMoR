@@ -313,6 +313,13 @@ print.RelTableModel <- function(x, ...){
 }
 
 ###############################################################################@
+#' @export
+#'
+length.RelTableModel <- function(x){
+   nrow(x$fields)
+}
+
+###############################################################################@
 #' List indexes of a [RelTableModel] object
 #'
 #' @param x a [RelTableModel] object

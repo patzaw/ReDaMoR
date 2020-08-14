@@ -2,9 +2,15 @@
 <!----------------------------------------------------------------------------->
 ## Version 0.4.3
 
+### New features
+
+- `length.RelTableModel()` returns the number of fields in the table.
+Then the `lengths()` function applied on a RelDataModel object returns
+the number of fields in each table.
+
 ### Bug fixes
 
--  '[.RelDataModel': now correctly handles tables without foreign keys.
+- '[.RelDataModel': now correctly handles tables without foreign keys.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
