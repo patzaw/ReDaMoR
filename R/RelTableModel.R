@@ -312,12 +312,22 @@ print.RelTableModel <- function(x, ...){
    cat(format(x, ...), "\n")
 }
 
+
 ###############################################################################@
 #' @export
 #'
 length.RelTableModel <- function(x){
    nrow(x$fields)
 }
+
+
+###############################################################################@
+#' @export
+#'
+lengths.RelTableModel <- function(x, use.names=TRUE){
+   lengths(unclass(x), use.names=use.names)
+}
+
 
 ###############################################################################@
 #' List indexes of a [RelTableModel] object

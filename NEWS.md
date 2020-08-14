@@ -11,6 +11,7 @@ the number of fields in each table.
 ### Bug fixes
 
 - '[.RelDataModel': now correctly handles tables without foreign keys.
+- Allowing the dispatching of `lengths` methods.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
