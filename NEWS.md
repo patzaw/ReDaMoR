@@ -7,6 +7,8 @@
 - `length.RelTableModel()` returns the number of fields in the table.
 Then the `lengths()` function applied on a RelDataModel object returns
 the number of fields in each table.
+- `confront_data()`: `success=TRUE` when an empty model is confronted
+to empty data.
 
 ### Bug fixes
 

@@ -1504,6 +1504,25 @@ confront_data <- function(
          several.ok=TRUE
       )
    }
+
+   ## Empty model and data
+   if(length(x)==0 && length(data)==0 && length(paths)==0){
+      toRet <- list(
+         model=x,
+         checks=checks,
+         n_max=n_max,
+         missingTables=NULL,
+         suppTables=NULL,
+         availableTables=NULL,
+         constraints=list(),
+         success=TRUE
+      )
+      if(verbose){
+         cat(format_confrontation_report(toRet))
+      }
+      return(invisible(toRet))
+   }
+
    ## Data files ----
    if(length(data)==0){
       stopifnot(is.character(paths), length(paths)>0)
