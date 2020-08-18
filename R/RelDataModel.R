@@ -1714,7 +1714,9 @@ identical_RelDataModel <- function(x, y, ...){
          toRet <- toRet && itoRet
       }
    }else{
-      message("Not the same tables")
+      if(length(x)>0){
+         message("Not the same tables")
+      }
    }
    return(toRet)
 }
