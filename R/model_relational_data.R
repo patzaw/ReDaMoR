@@ -2021,7 +2021,8 @@ buildServer <- function(
                5,
                div(
                   selectInput(
-                     "fkFromField", "", ftfields, multiple=FALSE, width="100%"
+                     "fkFromField", "", ftfields, multiple=FALSE, width="100%",
+                     selectize=FALSE
                   ),
                   class="fkFieldSel"
                )
@@ -2031,7 +2032,8 @@ buildServer <- function(
                5,
                div(
                   selectInput(
-                     "fkToField", "", ttfields, multiple=FALSE, width="100%"
+                     "fkToField", "", ttfields, multiple=FALSE, width="100%",
+                     selectize=FALSE
                   ),
                   class="fkFieldSel"
                )
@@ -2221,7 +2223,8 @@ buildServer <- function(
                      length(cmin)==0,
                      ifelse(tns[1]==ft, "0", "1"),
                      cmin
-                  )
+                  ),
+                  selectize=FALSE
                )
             ),
             column(
@@ -2234,7 +2237,8 @@ buildServer <- function(
                      length(cmax)==0,
                      ifelse(tns[1]==ft, "n", "1"),
                      cmax
-                  )
+                  ),
+                  selectize=FALSE
                )
             )
 
@@ -2265,7 +2269,8 @@ buildServer <- function(
                      length(cmin)==0,
                      ifelse(tns[1]!=ft, "0", "1"),
                      cmin
-                  )
+                  ),
+                  selectize=FALSE
                )
             ),
             column(
@@ -2278,7 +2283,8 @@ buildServer <- function(
                      length(cmax)==0,
                      ifelse(tns[1]!=ft, "n", "1"),
                      cmax
-                  )
+                  ),
+                  selectize=FALSE
                )
             )
 

@@ -21,15 +21,15 @@ $(document).keyup(function(event) {
   if($("#confirmRenameTable")[0] && (event.key == "Enter")) {
     $("#confirmRenameTable").click();
   }
-  if($("#confirmAddField")[0] && (event.key == "Enter")) {
-    $("#confirmAddField").click();
-  }
-  if($("#confirmAddFK")[0] && (event.key == "Enter")) {
-    $("#confirmAddFK").click();
-  }
-  if($("#confirmUpdateField")[0] && (event.key == "Enter")) {
-    $("#confirmUpdateField").click();
-  }
+  // if($("#confirmAddField")[0] && (event.key == "Enter")) {
+  //   $("#confirmAddField").click();
+  // }
+  // if($("#confirmAddFK")[0] && (event.key == "Enter")) {
+  //   $("#confirmAddFK").click();
+  // }
+  // if($("#confirmUpdateField")[0] && (event.key == "Enter")) {
+  //   $("#confirmUpdateField").click();
+  // }
 });
 
 // Rename table with F2 key
