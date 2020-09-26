@@ -14,6 +14,7 @@ to empty data.
 
 - '[.RelDataModel': now correctly handles tables without foreign keys.
 - Allowing the dispatching of `lengths` methods.
+- More reliable foreign key checks
 - Remove irrelevant message when comparing 2 empty RelDataModel
 - Solved display issue with foreign key interfaces in firefox
 (selectize did not work as expected in modalDialog)
