@@ -747,10 +747,12 @@ buildServer <- function(
          ys <- 100
          if(!is.null(tn) && tn!="" && !tn %in% names(m)){
             m <- add_table(m, newTable=tn)
+            pr <- rbeta(1, 9, 1)
+            pa <- runif(1, 0, 2*pi)
             m <- m %>% update_table_display(
                tn,
-               px=xs*(2*stats::rbeta(1, 0.6, 0.6)-1),
-               py=ys*(2*stats::rbeta(1, 0.6, 0.6)-1)
+               px=xs*pr*cos(pa),
+               py=ys*pr*sin(pa)
             )
             model$new <- m
             removeModal()
@@ -1880,10 +1882,12 @@ buildServer <- function(
                }
                toAdd <- nm[tn]
                toAdd[[1]]$tableName <- ntn
+               pr <- rbeta(1, 9, 1)
+               pa <- runif(1, 0, 2*pi)
                toAdd[[1]]$display$x <- toAdd[[1]]$display$x +
-                  xs*(2*stats::rbeta(1, 0.3, 0.3)-1)
+                  xs*pr*cos(pa)
                toAdd[[1]]$display$y <- toAdd[[1]]$display$y +
-                  ys*(2*stats::rbeta(1, 0.3, 0.3)-1)
+                  ys*pr*sin(pa)
                names(toAdd) <- ntn
                nm <- c(nm, toAdd)
             }
