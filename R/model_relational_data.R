@@ -747,8 +747,8 @@ buildServer <- function(
          ys <- 100
          if(!is.null(tn) && tn!="" && !tn %in% names(m)){
             m <- add_table(m, newTable=tn)
-            pr <- rbeta(1, 9, 1)
-            pa <- runif(1, 0, 2*pi)
+            pr <- stats::rbeta(1, 9, 1)
+            pa <- stats::runif(1, 0, 2*pi)
             m <- m %>% update_table_display(
                tn,
                px=xs*pr*cos(pa),
@@ -1882,8 +1882,8 @@ buildServer <- function(
                }
                toAdd <- nm[tn]
                toAdd[[1]]$tableName <- ntn
-               pr <- rbeta(1, 9, 1)
-               pa <- runif(1, 0, 2*pi)
+               pr <- stats::rbeta(1, 9, 1)
+               pa <- stats::runif(1, 0, 2*pi)
                toAdd[[1]]$display$x <- toAdd[[1]]$display$x +
                   xs*pr*cos(pa)
                toAdd[[1]]$display$y <- toAdd[[1]]$display$y +
@@ -2738,6 +2738,7 @@ buildServer <- function(
 #' @return The [RelDataModel] designed with the GUI.
 #'
 #' @import shiny
+#' @importFrom stats rbeta runif
 #'
 #' @export
 #'
