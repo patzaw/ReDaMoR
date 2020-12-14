@@ -9,6 +9,9 @@
 
 <img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px" />
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
+[![](http://cranlogs.r-pkg.org/badges/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
+
 The ReDaMoR package allows the manipulation of relational data models in
 R. It provides functions to create, import and save relational data
 models. These functions are accessible through a graphical user
@@ -42,6 +45,7 @@ vignette](https://patzaw.github.io/ReDaMoR/ReDaMoR.html).
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+
 Introduction
 ============
 
@@ -86,23 +90,28 @@ The main features of ReDaMoR are the following:
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+
 Installation
 ============
 
 <!---->
+
 From CRAN
 ---------
 
 <!----------->
+
 ``` r
 install.packages("ReDaMoR")
 ```
 
 <!---->
+
 Dependencies
 ------------
 
 <!----------->
+
 The following R packages available on CRAN are required:
 
 -   [dplyr](https://CRAN.R-project.org/package=dplyr): A Grammar of Data
@@ -123,8 +132,8 @@ The following R packages available on CRAN are required:
     the ‘Intro.js’ Library
 -   [colourpicker](https://CRAN.R-project.org/package=colourpicker): A
     Colour Picker Tool for Shiny and for Selecting Colours in Plots
--   [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Robust,
-    High Performance JSON Parser and Generator for R
+-   [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Simple
+    and Robust JSON Parser and Generator for R
 -   [markdown](https://CRAN.R-project.org/package=markdown): Render
     Markdown with the C Library ‘Sundown’
 -   [rstudioapi](https://CRAN.R-project.org/package=rstudioapi): Safely
@@ -139,16 +148,19 @@ The following R packages available on CRAN are required:
     Package
 
 <!---->
+
 From github
 -----------
 
 <!----------->
+
 ``` r
 devtools::install_github("patzaw/ReDaMoR")
 ```
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+
 Documentation
 =============
 
@@ -157,6 +169,7 @@ vignette](https://patzaw.github.io/ReDaMoR).
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+
 Future work
 ===========
 
@@ -167,6 +180,7 @@ corresponding package soon.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+
 Acknowledgments
 ===============
 
