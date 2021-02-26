@@ -132,12 +132,18 @@ Documentation is available in [this vignette](https://patzaw.github.io/ReDaMoR).
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
-# Future work
+# TKCat: Tailored Knowledge Catalog
 
-We are working on `internalMDB` objects which bind the data to their relational model.
-These objects will allow the manipulation and the combination of datasets in a consistent manner.
-We hope to release the corresponding package soon.
-
+The aim of [TKCat](https://github.com/patzaw/TKCat) (Tailored Knowledge Catalog)
+is to facilitate the management
+of data from knowledge resources that are frequently used alone or together in
+research environments. In TKCat, knowledge resources are manipulated as modeled
+database (MDB) objects. These objects provide access to the data tables along
+with a general description of the resource and a detail data model generated
+with ReDaMoR documenting the tables, their fields and their relationships.
+These MDB are then gathered in catalogs that can be easily explored an shared.
+TKCat provides tools to easily subset, filter and combine MDBs and create new
+catalogs suited for specific needs.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->

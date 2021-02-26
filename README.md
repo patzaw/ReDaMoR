@@ -4,12 +4,13 @@
     -   [Dependencies](#dependencies)
     -   [From github](#from-github)
 -   [Documentation](#documentation)
--   [Future work](#future-work)
+-   [TKCat: Tailored Knowledge
+    Catalog](#tkcat-tailored-knowledge-catalog)
 -   [Acknowledgments](#acknowledgments)
 
 <img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px" />
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 [![](http://cranlogs.r-pkg.org/badges/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 
 The ReDaMoR package allows the manipulation of relational data models in
@@ -46,8 +47,7 @@ vignette](https://patzaw.github.io/ReDaMoR/ReDaMoR.html).
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 
-Introduction
-============
+# Introduction
 
 In R, data are often stored in data frames which are tables in which
 each row represents a record and each column a variable. Because data
@@ -91,13 +91,11 @@ The main features of ReDaMoR are the following:
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 
-Installation
-============
+# Installation
 
 <!---->
 
-From CRAN
----------
+## From CRAN
 
 <!----------->
 
@@ -107,8 +105,7 @@ install.packages("ReDaMoR")
 
 <!---->
 
-Dependencies
-------------
+## Dependencies
 
 <!----------->
 
@@ -149,8 +146,7 @@ The following R packages available on CRAN are required:
 
 <!---->
 
-From github
------------
+## From github
 
 <!----------->
 
@@ -161,8 +157,7 @@ devtools::install_github("patzaw/ReDaMoR")
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 
-Documentation
-=============
+# Documentation
 
 Documentation is available in [this
 vignette](https://patzaw.github.io/ReDaMoR).
@@ -170,19 +165,23 @@ vignette](https://patzaw.github.io/ReDaMoR).
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 
-Future work
-===========
+# TKCat: Tailored Knowledge Catalog
 
-We are working on `internalMDB` objects which bind the data to their
-relational model. These objects will allow the manipulation and the
-combination of datasets in a consistent manner. We hope to release the
-corresponding package soon.
+The aim of [TKCat](https://github.com/patzaw/TKCat) (Tailored Knowledge
+Catalog) is to facilitate the management of data from knowledge
+resources that are frequently used alone or together in research
+environments. In TKCat, knowledge resources are manipulated as modeled
+database (MDB) objects. These objects provide access to the data tables
+along with a general description of the resource and a detail data model
+generated with ReDaMoR documenting the tables, their fields and their
+relationships. These MDB are then gathered in catalogs that can be
+easily explored an shared. TKCat provides tools to easily subset, filter
+and combine MDBs and create new catalogs suited for specific needs.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 
-Acknowledgments
-===============
+# Acknowledgments
 
 This work was entirely supported by [UCB Pharma](https://www.ucb.com/)
 (Early Solutions department).
