@@ -1,6 +1,7 @@
 library(here)
 
 ## Build and copy vignettes ----
+rmarkdown::render(here("README.Rmd"))
 devtools::build_vignettes()
 dir.create(here("inst/doc"), showWarnings=FALSE)
 for(f in list.files(here("doc"))){

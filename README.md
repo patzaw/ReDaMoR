@@ -10,7 +10,7 @@
 
 <img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px" />
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 [![](http://cranlogs.r-pkg.org/badges/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 
 The ReDaMoR package allows the manipulation of relational data models in
@@ -32,6 +32,10 @@ The main features of ReDaMoR are the following:
 -   Check and auto-correct model constraints (types, keys, uniqueness,
     mandatory fields)
 -   Confront data to the model to check their compatibility
+
+The [TKCat](https://github.com/patzaw/TKCat) package relies on ReDaMoR
+to facilitate the management of data from knowledge resources which are
+manipulated as modeled database (MDB) objects.
 
 The package can also be tested in [Rstudio
 Cloud](https://rstudio.cloud/project/1033803).
@@ -87,6 +91,10 @@ The main features of ReDaMoR are the following:
 -   Check and auto-correct model constraints (types, keys, uniqueness,
     mandatory fields)
 -   Confront data to the model to check their compatibility
+
+The [TKCat](https://github.com/patzaw/TKCat) package relies on ReDaMoR
+to facilitate the management of data from knowledge resources which are
+manipulated as modeled database (MDB) objects.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
