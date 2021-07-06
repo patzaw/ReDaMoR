@@ -34,9 +34,6 @@
 #' 2 of types 'row' and 'column' and the 3rd of your choice. In this case
 #' primaryKey is defined automatically as the combination of row and column.
 #'
-#' @import dplyr
-#' @importFrom magrittr %>%
-#'
 #' @return A RelTableModel object.
 #'
 #' @export
@@ -92,8 +89,8 @@ RelTableModel <- function(l){
    ){
       attr(l$fields, att) <- NULL
    }
-   l$fields <- as_tibble(l$fields) %>%
-      select(c("name", "type", "nullable", "unique", "comment"))
+   l$fields <- dplyr::as_tibble(l$fields) %>%
+      dplyr::select(c("name", "type", "nullable", "unique", "comment"))
 
    ## * Primary key ----
    l$primaryKey <- sort(l$primaryKey)
@@ -165,7 +162,7 @@ RelTableModel <- function(l){
             ){
                attr(fk$key, att) <- NULL
             }
-            fk$key <- as_tibble(fk$key)
+            fk$key <- dplyr::as_tibble(fk$key)
             cnames <- c("fmin", "fmax", "tmin", "tmax")
             if("cardinality" %in% names(fko)){
                stopifnot(
@@ -295,7 +292,7 @@ format.RelTableModel <- function(x, ...){
    ind <- NULL
    # uq <- NULL
    if(!is.null(it)){
-      it <- it %>% filter(.data$index!=0)
+      it <- it %>% dplyr::filter(.data$index!=0)
       ind <- unique(it$field)
       # uq <- unique(it$field[which(it$unique)])
    }
@@ -400,7 +397,7 @@ index_table <- function(x){
    toRet <- NULL
    i <- 0
    if(length(pk)>0){
-      toRet <- tibble(
+      toRet <- dplyr::tibble(
          index=i,
          field=pk,
          # unique=length(pk)==1
@@ -409,9 +406,9 @@ index_table <- function(x){
    }
    for(ci in ind){
       i <- i+1
-      toRet <- bind_rows(
+      toRet <- dplyr::bind_rows(
          toRet,
-         tibble(
+         dplyr::tibble(
             index=i,
             field=ci$fields,
             uniqueIndex=ci$unique
@@ -513,7 +510,9 @@ correct_constraints <- function(x){
       }
    }
    ## Field uniqueness
-   uniqueFields <- x$fields %>% filter(.data$unique) %>% pull("name")
+   uniqueFields <- x$fields %>%
+      dplyr::filter(.data$unique) %>%
+      dplyr::pull("name")
    if(length(x$indexes)>0 && length(uniqueFields)>0){
       for(i in 1:length(x$indexes)){
          if(any(x$indexes[[i]]$fields %in% uniqueFields)){
@@ -621,19 +620,19 @@ confront_table_data <- function(
       fe <- x$fields$nullable[which(x$fields$name==fn)]
       fu <- x$fields$unique[which(x$fields$name==fn)]
       toRet$fields[[fn]] <- list(success=TRUE, message=NULL)
-      if(!inherits(pull(d, !!fn), ft)){
+      if(!inherits(dplyr::pull(d, !!fn), ft)){
          toRet$fields[[fn]]$success <- FALSE
          toRet$success <- FALSE
          toRet$fields[[fn]]$message <- paste(c(
             toRet$fields[[fn]]$message,
             sprintf(
                'Unexpected "%s"',
-               paste(class(pull(d, !!fn)), collapse=", ")
+               paste(class(dplyr::pull(d, !!fn)), collapse=", ")
             )
          ), collapse=" ")
       }
       if("not nullable" %in% checks){
-         mis <- sum(is.na(pull(d, !!fn)))
+         mis <- sum(is.na(dplyr::pull(d, !!fn)))
          if(mis!=0){
             toRet$fields[[fn]]$message <- paste(c(
                toRet$fields[[fn]]$message,
@@ -648,7 +647,7 @@ confront_table_data <- function(
             }
          }
       }
-      if("unique" %in% checks && fu && any(duplicated(pull(d, !!fn)))){
+      if("unique" %in% checks && fu && any(duplicated(dplyr::pull(d, !!fn)))){
          toRet$fields[[fn]]$success <- FALSE
          toRet$success <- FALSE
          toRet$fields[[fn]]$message <- paste(c(
@@ -695,13 +694,13 @@ confront_table_data <- function(
       i <- length(toRet$indexes)+1
       rf <- x$fields %>%
          dplyr::filter(.data$type=="row") %>%
-         pull("name")
+         dplyr::pull("name")
       cf <- x$fields %>%
          dplyr::filter(.data$type=="column") %>%
-         pull("name")
+         dplyr::pull("name")
       fe <- x$fields %>%
          dplyr::filter(!.data$type %in% c("row", "column")) %>%
-         pull("nullable")
+         dplyr::pull("nullable")
       ncells <- length(unique(d[,rf])) * length(unique(d[,cf]))
       mis <- ncells - nrow(d)
       if(mis > 0 ){
@@ -744,8 +743,8 @@ identical_RelTableModel <- function(x, y, includeDisplay=TRUE){
 
    ## Fields ----
    toRet <- toRet && identical(
-      x$fields %>% arrange(.data$name),
-      y$fields %>% arrange(.data$name)
+      x$fields %>% dplyr::arrange(.data$name),
+      y$fields %>% dplyr::arrange(.data$name)
    )
 
    ## Primary key ----
@@ -786,7 +785,7 @@ identical_RelTableModel <- function(x, y, includeDisplay=TRUE){
       xfk <- lapply(
          x$foreignKeys,
          function(z){
-            z$key <- z$key %>% arrange(.data$from, .data$to)
+            z$key <- z$key %>% dplyr::arrange(.data$from, .data$to)
             return(z)
          }
       )
@@ -806,7 +805,7 @@ identical_RelTableModel <- function(x, y, includeDisplay=TRUE){
       yfk <- lapply(
          y$foreignKeys,
          function(z){
-            z$key <- z$key %>% arrange(.data$from, .data$to)
+            z$key <- z$key %>% dplyr::arrange(.data$from, .data$to)
             return(z)
          }
       )
@@ -864,18 +863,20 @@ get_foreign_keys.RelTableModel <- function(x){
       fk,
       function(k){
          to <- k$refTable
-         kt <- k$key %>% arrange(.data$from, .data$to)
-         tibble(
+         kt <- k$key %>% dplyr::arrange(.data$from, .data$to)
+         dplyr::tibble(
             to=to,
             ff=list(kt$from), tf=list(kt$to)
          ) %>%
-            bind_cols(as_tibble(t(k$cardinality))) %>%
+            dplyr::bind_cols(dplyr::as_tibble(t(k$cardinality))) %>%
             return()
       }
    ))
-   toRet %>% mutate(
+   toRet %>% dplyr::mutate(
       from=tn
    ) %>%
-      select("from", "ff", "to", "tf", "fmin", "fmax", "tmin", "tmax") %>%
+      dplyr::select(
+         "from", "ff", "to", "tf", "fmin", "fmax", "tmin", "tmax"
+      ) %>%
       return()
 }

@@ -29,16 +29,16 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
       if(length(cBrackPos)!=length(oBrackPos)){
          stop("Closing brackets not matching opening brackets")
       }
-      posBrack <- tibble(
+      posBrack <- dplyr::tibble(
          pos=c(oBrackPos, cBrackPos),
          brack=c(rep("(", length(oBrackPos)), rep(")", length(cBrackPos)))
       ) %>%
-         arrange(.data$pos) %>%
-         mutate(oc=ifelse(.data$brack=="(", 1, -1)) %>%
-         mutate(ib=cumsum(.data$oc))
+         dplyr::arrange(.data$pos) %>%
+         dplyr::mutate(oc=ifelse(.data$brack=="(", 1, -1)) %>%
+         dplyr::mutate(ib=cumsum(.data$oc))
       e <- which(posBrack$ib==0)
       s <- c(1, e[-length(e)]+1)
-      return(tibble(
+      return(dplyr::tibble(
          s=posBrack$pos[s],
          e=posBrack$pos[e]
       ))
@@ -48,9 +48,9 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
    getVarNamePos <- function(x){
       varNamePos <- gregexpr('`[^`]*`', x)[[1]]
       if(varNamePos[1]==-1){
-         return(tibble(s=1, e=1)[-1,])
+         return(dplyr::tibble(s=1, e=1)[-1,])
       }
-      return(tibble(
+      return(dplyr::tibble(
          s=varNamePos,
          e=varNamePos+attr(varNamePos, "match.length")-1
       ))
@@ -148,7 +148,7 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
             comments[i] <- toAdd
          }
       }
-      fields <- tibble(
+      fields <- dplyr::tibble(
          name=sub("[`].*$", "", sub("[`]", "", fields)),
          type=conv_type_ref(types, from=typeRef),
          nullable=nullable,
@@ -198,7 +198,7 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
                '^.*[(]', "",
                sub('[)].*$', "", ref)
             ), sep=","))
-            toRet <- tibble(
+            toRet <- dplyr::tibble(
                from=fk, to=refKeys
             )
             toRet <- list(list(
@@ -267,7 +267,7 @@ read_SQL_data_model <- function(f, typeRef="MySQLWB", mysqlcomments=TRUE){
          }
       ))
       fields <- fields %>%
-         mutate(unique=ifelse(.data$name %in% uindexes, TRUE, FALSE))
+         dplyr::mutate(unique=ifelse(.data$name %in% uindexes, TRUE, FALSE))
 
       toRet <- list(list(
          dbName=dbName,

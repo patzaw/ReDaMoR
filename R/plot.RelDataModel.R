@@ -11,9 +11,6 @@
 #'
 #' @example inst/examples/ex_plot_model.R
 #'
-#' @importFrom graphics plot
-#' @import visNetwork
-#'
 #' @export
 #'
 plot.RelDataModel <- function(
@@ -52,7 +49,7 @@ plot.RelDataModel <- function(
       # ) %>%
       ################################################@
       visNetwork::visLayout(randomSeed=2) %>%
-      visPhysics(enabled=FALSE)
+      visNetwork::visPhysics(enabled=FALSE)
 
 }
 
@@ -82,10 +79,10 @@ modelToVn <- function(
          ind <- NULL
          # uq <- NULL
          if(!is.null(it)){
-            it <- it %>% filter(.data$index!=0)
+            it <- it %>% dplyr::filter(.data$index!=0)
             ind <- unique(it$field)
-            uind <- it %>% filter(.data$uniqueIndex) %>%
-               pull("field") %>%
+            uind <- it %>% dplyr::filter(.data$uniqueIndex) %>%
+               dplyr::pull("field") %>%
                unique()
             # uq <- unique(it$field[which(it$unique)])
          }
@@ -132,7 +129,10 @@ modelToVn <- function(
          ), collapse=" ")
          title <- paste(
             sprintf(
-               '<p><strong style="text-decoration:underline;">%s</strong>%s</p>',
+               paste0(
+                  '<p><strong style="text-decoration:underline;">%s',
+                  '</strong>%s</p>'
+               ),
                m$tableName,
                ifelse(
                   is.na(m$display$comment), "",
@@ -152,7 +152,7 @@ modelToVn <- function(
             ),
             title
          )
-         return(tibble(
+         return(dplyr::tibble(
             tableName=m$tableName,
             label=label,
             title=title,
@@ -167,14 +167,14 @@ modelToVn <- function(
    ))
    if(!is.null(nodes) && nrow(nodes)>0){
       nodes <- nodes %>%
-         mutate(
+         dplyr::mutate(
             color.border=!!border,
             color.highlight.border=!!highlightBorder,
             color.background=ifelse(
                is.na(.data$color.background), !!color, .data$color.background
             )
          ) %>%
-         mutate(
+         dplyr::mutate(
             color.highlight.background=.data$color.background
          )
       nodes$id <- names(model)
@@ -192,7 +192,7 @@ modelToVn <- function(
             fk,
             function(k){
                to <- k$refTable
-               kt <- k$key %>% arrange(.data$from, .data$to)
+               kt <- k$key %>% dplyr::arrange(.data$from, .data$to)
                kcard <- ifelse(k$cardinality==-1, "n", k$cardinality)
                fcard <- paste(kcard["fmin"], kcard["fmax"], sep="..")
                tcard <- paste(kcard["tmin"], kcard["tmax"], sep="..")
@@ -238,7 +238,7 @@ modelToVn <- function(
                id <- paste(kt$from, kt$to, sep="->")
                id <- paste(id, collapse=" && ")
                id <- paste(to, id, sep=": ")
-               return(tibble(
+               return(dplyr::tibble(
                   id=id, to=to, title=title,
                   ff=list(kt$from), tf=list(kt$to)
                ))
@@ -252,20 +252,20 @@ modelToVn <- function(
       }
    ))
    if(is.null(edges)){
-      edges <- tibble(id=character(), from=character(), to=character())
+      edges <- dplyr::tibble(id=character(), from=character(), to=character())
    }else{
       edges$smooth.type <- "curvedCCW"
       edges$smooth.roundness <- 0
       edges$selfReferenceSize  <- 30
-      edges <- bind_cols(edges, edges %>% select("from", "to") %>%
+      edges <- dplyr::bind_cols(edges, edges %>% dplyr::select("from", "to") %>%
          apply(1, function(x) c(sort(x), paste(sort(x), collapse="<->"))) %>%
          t() %>%
          magrittr::set_colnames(c("uef", "uet", "ue")) %>%
-         as_tibble()
+         dplyr::as_tibble()
       )
       edges <- edges %>%
-         group_by(.data$ue) %>%
-         mutate(
+         dplyr::group_by(.data$ue) %>%
+         dplyr::mutate(
             smooth.roundness={
                mr <- min(1, 0.2*(length(.data$ue)%/%2))
                seq(-mr, mr, length.out=length(.data$ue))
@@ -274,15 +274,15 @@ modelToVn <- function(
                seq(30, 50, length.out=length(.data$ue))
             }
          ) %>%
-         ungroup() %>%
-         mutate(
+         dplyr::ungroup() %>%
+         dplyr::mutate(
             smooth.roundness=ifelse(
                .data$uef==.data$from,
                .data$smooth.roundness,
                -.data$smooth.roundness
             )
          ) %>%
-         mutate(
+         dplyr::mutate(
             color.color=border,
             color.highlight=highlightBorder
          )

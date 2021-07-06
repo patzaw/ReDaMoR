@@ -69,7 +69,7 @@ df_to_model <- function(
       if(is.matrix(df)){
          toRet[[tn]] <- RelTableModel(l=list(
             "tableName"=tn,
-            "fields"=tibble(
+            "fields"=dplyr::tibble(
                name=c("row", "column", "value"),
                type=c("row", "column", class(df[1])),
                nullable=c(FALSE, FALSE, TRUE),
@@ -88,10 +88,12 @@ df_to_model <- function(
       }else{
          types <- character()
          for(cn in colnames(df)){
-            ct <- df %>% pull(!!cn) %>% class() %>% `[`(1)
+            ct <- df %>% dplyr::pull(!!cn) %>% class() %>% `[`(1)
             if(!ct %in% SUPPTYPES){
                stop(
-                  sprintf('Type "%s" of column "%s" is not supported. ', ct, cn),
+                  sprintf(
+                     'Type "%s" of column "%s" is not supported. ', ct, cn
+                  ),
                   'Supported types are provided in "SUPPTYPES".'
                )
             }
@@ -99,7 +101,7 @@ df_to_model <- function(
          }
          toRet[[tn]] <- RelTableModel(l=list(
             "tableName"=tn,
-            "fields"=tibble(
+            "fields"=dplyr::tibble(
                name=colnames(df),
                type=types,
                nullable=TRUE,

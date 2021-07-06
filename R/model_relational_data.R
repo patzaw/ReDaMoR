@@ -1,16 +1,16 @@
 ###############################################################################@
 buildUi <- function(fromR){
 
-   addResourcePath(
+   shiny::addResourcePath(
       "www",
       system.file("www", package=utils::packageName())
    )
-   addResourcePath(
+   shiny::addResourcePath(
       "doc",
       system.file("doc", package=utils::packageName())
    )
 
-   shinyUI(fluidPage(
+   shiny::shinyUI(shiny::fluidPage(
       title="ReDaMoR",
       windowTitle="ReDaMoR",
       id="MainApp",
@@ -20,87 +20,87 @@ buildUi <- function(fromR){
       rintrojs::introjsUI(),
 
       ## HEAD ----
-      tags$head(
-         tags$link(
+      shiny::tags$head(
+         shiny::tags$link(
             rel="icon",
             href='www/ReDaMoR.png'
          ),
-         tags$link(
+         shiny::tags$link(
             rel="stylesheet", type="text/css", href="www/cerulean.css"
          ),
-         tags$link(
+         shiny::tags$link(
             rel="stylesheet", type="text/css", href="www/defChanges.css"
          ),
-         tags$link(
+         shiny::tags$link(
             rel="stylesheet", type="text/css", href="www/appElements.css"
          ),
-         tags$script(src='www/interactions.js'),
-         if(fromR) NULL else tags$script(src='www/fromWeb.js')
+         shiny::tags$script(src='www/interactions.js'),
+         if(fromR) NULL else shiny::tags$script(src='www/fromWeb.js')
       ),
 
       ## Main menu ----
-      fluidRow(
+      shiny::fluidRow(
          id="mainMenu",
-         column(
+         shiny::column(
             11,
             id="mainLColumn",
-            div(
+            shiny::div(
                id="mainDone",
                if(fromR){
-                  actionButton(
+                  shiny::actionButton(
                      "done",
-                     list(icon("check", "fa-2x"), "Done")
+                     list(shiny::icon("check", "fa-2x"), "Done")
                   ) %>%
-                     div(title="Return the model in R session")
+                     shiny::div(title="Return the model in R session")
                }else{
-                  img(src='www/ReDaMoR.png', id="mainLogo")
+                  shiny::img(src='www/ReDaMoR.png', id="mainLogo")
                }
             ),
-            div(
+            shiny::div(
                class="mainButton",
-               actionButton(
+               shiny::actionButton(
                   "import",
-                  list(icon("file-import", "fa-2x"), "Import")
+                  list(shiny::icon("file-import", "fa-2x"), "Import")
                ),
-               actionButton(
+               shiny::actionButton(
                   "export",
-                  list("Export", icon("file-export", "fa-2x"))
+                  list("Export", shiny::icon("file-export", "fa-2x"))
                )
             ),
-            div(
+            shiny::div(
                class="mainButton",
-               actionButton(
+               shiny::actionButton(
                   "undo",
-                  list("Undo", icon("undo", "fa-2x"))
+                  list("Undo", shiny::icon("undo", "fa-2x"))
                ),
-               actionButton(
+               shiny::actionButton(
                   "redo",
-                  list(icon("redo", "fa-2x"), "Redo")
+                  list(shiny::icon("redo", "fa-2x"), "Redo")
                ),
                title="Undo (Ctrl+Z) / Redo (Ctrl+Shift+Z)"
             ),
-            div(
+            shiny::div(
                class="mainButton",
-               actionButton(
+               shiny::actionButton(
                   "addTable", "Add table",
-                  icon=icon("plus-square", "fa-2x")
+                  icon=shiny::icon("plus-square", "fa-2x")
                )
             ),
-            div(
+            shiny::div(
                class="mainButton",
-               uiOutput("modelSummary")
+               shiny::uiOutput("modelSummary")
             ),
-            div(
+            shiny::div(
                class="mainButton",
-               actionButton(
-                  "doc", "", icon=icon("question-circle", "fa-2x")
-               ) %>% div(title="Help tour")
+               shiny::actionButton(
+                  "doc", "", icon=shiny::icon("question-circle", "fa-2x")
+               ) %>% shiny::div(title="Help tour")
             )
          ),
-         column(
+         shiny::column(
             1,
             id="mainRColumn",
-            tags$a(
+            shiny::tags$a(
                "About ReDaMoR",
                href="doc/ReDaMoR.html",
                target="_blank",
@@ -109,17 +109,17 @@ buildUi <- function(fromR){
          )
       ),
 
-      fluidRow(
+      shiny::fluidRow(
 
          ## Model view ----
-         column(
+         shiny::column(
             7,
-            fluidRow(
+            shiny::fluidRow(
                id="viewMenu",
-               column(
+               shiny::column(
                   8,
                   id="findTableDiv",
-                  selectInput(
+                  shiny::selectInput(
                      "findTable",
                      label=NULL,
                      choices=NULL,
@@ -128,78 +128,81 @@ buildUi <- function(fromR){
                      width="100%"
                   )
                ),
-               column(
+               shiny::column(
                   4,
                   id="viewButtons",
-                  div(
+                  shiny::div(
                      class="viewButton",
-                     actionButton(
+                     shiny::actionButton(
                         "selectAll",
                         label=NULL,
-                        icon=icon("object-group", "fa-2x"),
+                        icon=shiny::icon("object-group", "fa-2x"),
                         class="shrunkenButton"
-                     ) %>% div(title="Select all tables")
+                     ) %>% shiny::div(title="Select all tables")
                   ),
-                  div(
+                  shiny::div(
                      class="viewButton",
-                     actionButton(
+                     shiny::actionButton(
                         "autoLayout",
                         label=NULL,
-                        icon=icon("pencil-ruler", "fa-2x"),
+                        icon=shiny::icon("pencil-ruler", "fa-2x"),
                         class="shrunkenButton"
-                     ) %>% div(title="Auto layout the model")
+                     ) %>% shiny::div(title="Auto layout the model")
                   ),
-                  div(
+                  shiny::div(
                      class="viewButton",
-                     actionButton(
+                     shiny::actionButton(
                         "fitNet",
                         label=NULL,
-                        icon=icon("vector-square", "fa-2x"),
+                        icon=shiny::icon("vector-square", "fa-2x"),
                         class="shrunkenButton"
-                     ) %>% div(title="Fit model")
+                     ) %>% shiny::div(title="Fit model")
                   )
                )
             ),
-            fluidRow(
+            shiny::fluidRow(
                id="modelFrame",
-               visNetworkOutput("modelNet", height="75vh", width="100%")
+               visNetwork::visNetworkOutput(
+                  "modelNet",
+                  height="75vh", width="100%"
+               )
             )
          ),
 
-         column(
+         shiny::column(
             5,
 
             ## Edit menu ----
-            div(
+            shiny::div(
                id="editMenu",
-               uiOutput(
+               shiny::uiOutput(
                   "setTableColor",
                   class="editMenuSection"
                ),
-               uiOutput(
+               shiny::uiOutput(
                   "dupTablesInput",
                   class="editMenuSection"
                ),
-               uiOutput(
+               shiny::uiOutput(
                   "rmTablesInput",
                   class="editMenuSection"
                ),
-               uiOutput(
+               shiny::uiOutput(
                   "addFKInput",
                   class="editMenuSection"
                ),
-               uiOutput(
+               shiny::uiOutput(
                   "editFKInput",
                   class="editMenuSection"
                ),
-               uiOutput(
+               shiny::uiOutput(
                   "rmFKInput",
                   class="editMenuSection"
                )
             ),
 
             ## Edit table ----
-            uiOutput("editTable")
+            shiny::uiOutput("editTable")
 
          )
       )
@@ -220,11 +223,11 @@ buildServer <- function(
       package = utils::packageName()
    )) %>% lapply(
       function(x){
-         toRet <- as_tibble(x) %>%
-            select("element", "intro")
+         toRet <- dplyr::as_tibble(x) %>%
+            dplyr::select("element", "intro")
          if(!fromR){
             toRet <- toRet %>%
-               filter(is.na(.data$element) | .data$element!="#done")
+               dplyr::filter(is.na(.data$element) | .data$element!="#done")
          }
          return(toRet)
       }
@@ -237,10 +240,10 @@ buildServer <- function(
       ## Help tour ----
       #########################################################################@
 
-      context <- reactiveValues(
+      context <- shiny::reactiveValues(
          x="main"
       )
-      observe(
+      shiny::observe(
          if(length(selection$tables)==0 && length(selection$fk)==0){
             context$x <- "main"
          }else{
@@ -275,11 +278,11 @@ buildServer <- function(
             context$x <- ctxt
          }
       )
-      observeEvent(input$doc, {
+      shiny::observeEvent(input$doc, {
          docx <- do.call(rbind, rintrosteps[context$x])
          rintrojs::introjs(session, options = list(steps=docx))
       })
-      observeEvent(input$docImp, {
+      shiny::observeEvent(input$docImp, {
          docx <- do.call(rbind, rintrosteps[c("Import")])
          rintrojs::introjs(session, options = list(steps=docx))
       })
@@ -292,15 +295,15 @@ buildServer <- function(
       ## Settings ----
       #########################################################################@
 
-      settings <- reactiveValues()
+      settings <- shiny::reactiveValues()
       settings$defaultColor <- defaultColor
       settings$availableColors <- availableColors
-      observe({
+      shiny::observe({
          settings$availableColors <- unique(c(
             settings$defaultColor,
             lapply(model$x, function(x) x$display$color) %>%
                unlist() %>% setdiff(NA),
-            isolate(settings$availableColors)
+            shiny::isolate(settings$availableColors)
          ))
       })
 
@@ -308,7 +311,7 @@ buildServer <- function(
       ## The model ----
       #########################################################################@
 
-      model <- reactiveValues(
+      model <- shiny::reactiveValues(
          x=modelInput,              # The current model
          vn=modelToVn(modelInput),  # VisNet representation
          new=NULL,                  # A new model to add in history
@@ -317,11 +320,11 @@ buildServer <- function(
          toImport=NULL,             # Model to import from file
          merged=NULL,               # merge: c(x, toImport)
          table=NULL,                # The table to edit
-         indexTable=tibble(         # Indexes of the table to edit
+         indexTable=dplyr::tibble(  # Indexes of the table to edit
             fields=character(),
             unique=logical()
          ),
-         fieldTable=tibble(         # Fields of the table to edit
+         fieldTable=dplyr::tibble(  # Fields of the table to edit
             name=character(),
             type=character(),
             nullable=logical(),
@@ -329,14 +332,17 @@ buildServer <- function(
             comment=character()
          )
       )
-      observe(
-         model$vn <- modelToVn(model$x, color=isolate(settings$defaultColor))
+      shiny::observe(
+         model$vn <- modelToVn(
+            model$x,
+            color=shiny::isolate(settings$defaultColor)
+         )
       )
 
-      replot <- reactiveValues(
+      replot <- shiny::reactiveValues(
          x=1                        # Used for triggering model re-plot
       )
-      selection <- reactiveValues(
+      selection <- shiny::reactiveValues(
          release=0,                 # Used for refreshing the visNetwork
          tables=NULL,               # Selected tables
          fk=NULL,                   # Selected foreign keys
@@ -347,35 +353,35 @@ buildServer <- function(
       ## Notifications ----
       #########################################################################@
 
-      warningMessage <- reactiveValues(
+      warningMessage <- shiny::reactiveValues(
          n=0,
          message=NULL
       )
       sendWarning <- function(message){
-         warningMessage$n <- isolate(warningMessage$n) + 1
+         warningMessage$n <- shiny::isolate(warningMessage$n) + 1
          warningMessage$message <- message
       }
-      observe({
-         validate(need(warningMessage$n>0, ""))
-         showNotification(
-            isolate(warningMessage$message),
+      shiny::observe({
+         shiny::req(warningMessage$n>0)
+         shiny::showNotification(
+            shiny::isolate(warningMessage$message),
             duration=5,
             type="warning"
          )
       })
 
-      errorMessage <- reactiveValues(
+      errorMessage <- shiny::reactiveValues(
          n=0,
          message=NULL
       )
       sendError <- function(message){
-         errorMessage$n <- isolate(errorMessage$n) + 1
+         errorMessage$n <- shiny::isolate(errorMessage$n) + 1
          errorMessage$message <- message
       }
-      observe({
-         validate(need(errorMessage$n>0, ""))
-         showNotification(
-            isolate(errorMessage$message),
+      shiny::observe({
+         shiny::req(errorMessage$n>0)
+         shiny::showNotification(
+            shiny::isolate(errorMessage$message),
             duration=5,
             type="error"
          )
@@ -385,61 +391,63 @@ buildServer <- function(
       ## Model view ----
       #########################################################################@
 
-      observe({
+      shiny::observe({
          m <- model$x
-         updateSelectInput(
+         shiny::updateSelectInput(
             session,
             "findTable",
             choices=sort(names(m)),
-            selected=intersect(isolate(selection$tables), names(m))
+            selected=intersect(shiny::isolate(selection$tables), names(m))
          )
       })
-      observe({
+      shiny::observe({
          selTables <- selection$tables
-         updateSelectInput(
+         shiny::updateSelectInput(
             session,
             "findTable",
             selected=as.character(selTables)
          )
       })
-      observe({
+      shiny::observe({
          selTables <- sort(input$findTable)
-         validate(need(!identical(selTables, isolate(selection$tables)), ""))
-         mn <- isolate(model$vn)
+         shiny::req(!identical(selTables, shiny::isolate(selection$tables)))
+         mn <- shiny::isolate(model$vn)
          selFK <- mn$edges %>%
-            filter(.data$from %in% selTables | .data$to %in% selTables) %>%
-            pull("id")
+            dplyr::filter(
+               .data$from %in% selTables | .data$to %in% selTables
+            ) %>%
+            dplyr::pull("id")
          selection$fromVN <- FALSE
          if(length(selTables)==0){
             selection$tables <- NULL
          }else{
             selection$tables <- selTables
          }
-         selection$release <- isolate(selection$release)+1
+         selection$release <- shiny::isolate(selection$release)+1
       })
-      observeEvent(input$selectAll, {
-         m <- isolate(model$x)
-         updateSelectInput(
+      shiny::observeEvent(input$selectAll, {
+         m <- shiny::isolate(model$x)
+         shiny::updateSelectInput(
             session,
             "findTable",
             selected=sort(names(m))
          )
       })
-      observeEvent(input$autoLayout, {
-         m <- auto_layout(isolate(model$x), force=TRUE)
+      shiny::observeEvent(input$autoLayout, {
+         m <- auto_layout(shiny::isolate(model$x), force=TRUE)
          model$new <- m
       })
 
-      output$modelSummary <- renderUI({
+      output$modelSummary <- shiny::renderUI({
          m <- model$x
          mn <- model$vn
          nt <- length(m)
          nfk <- nrow(mn$edges)
          np <- lapply(m, function(x) nrow(x$fields)) %>% unlist() %>% sum()
-         tagList(
-            tags$strong("Tables:"), nt, "-",
-            tags$strong("Foreign keys:"), nfk, "-",
-            tags$strong("Fields:"), np
+         shiny::tagList(
+            shiny::tags$strong("Tables:"), nt, "-",
+            shiny::tags$strong("Foreign keys:"), nfk, "-",
+            shiny::tags$strong("Fields:"), np
          )
       })
 
@@ -447,31 +455,37 @@ buildServer <- function(
       ## Model network ----
       #########################################################################@
 
-      output$modelNet <- renderVisNetwork({
+      output$modelNet <- visNetwork::renderVisNetwork({
          replot$x
          selection$fromVN <- FALSE
          selection$tables <- NULL
          selection$fk <- NULL
-         plot(isolate(model$x), color=isolate(settings$defaultColor)) %>%
-            visEvents(release="releaseVn")
+         plot(
+            shiny::isolate(model$x),
+            color=shiny::isolate(settings$defaultColor)
+         ) %>%
+            visNetwork::visEvents(release="releaseVn")
       })
 
-      observe({
+      shiny::observe({
          input$modelNet_release
-         selection$release <- isolate(selection$release)+1
+         selection$release <- shiny::isolate(selection$release)+1
       })
-      observe({
+      shiny::observe({
          selection$release
-         visNetworkProxy("modelNet") %>% visGetSelectedNodes()
-         visNetworkProxy("modelNet") %>% visGetSelectedEdges()
-         visNetworkProxy("modelNet") %>% visGetNodes()
+         visNetwork::visNetworkProxy("modelNet") %>%
+            visNetwork::visGetSelectedNodes()
+         visNetwork::visNetworkProxy("modelNet") %>%
+            visNetwork::visGetSelectedEdges()
+         visNetwork::visNetworkProxy("modelNet") %>%
+            visNetwork::visGetNodes()
       })
 
 
-      modelNet_selectedNodes <- reactive({
+      modelNet_selectedNodes <- shiny::reactive({
          input$modelNet_selectedNodes
       })
-      observe({
+      shiny::observe({
          selTables <- intersect(
             modelNet_selectedNodes(),
             names(model$x)
@@ -484,8 +498,8 @@ buildServer <- function(
          }
       })
 
-      modelNet_selectedEdges <- reactive({input$modelNet_selectedEdges})
-      observe({
+      modelNet_selectedEdges <- shiny::reactive({input$modelNet_selectedEdges})
+      shiny::observe({
          selFK <- intersect(
             modelNet_selectedEdges(),
             model$vn$edges$id
@@ -498,104 +512,111 @@ buildServer <- function(
          }
       })
 
-      observeEvent(input$fitNet, {
-         visNetworkProxy("modelNet") %>% visFit()
+      shiny::observeEvent(input$fitNet, {
+         visNetwork::visNetworkProxy("modelNet") %>% visNetwork::visFit()
       })
 
       #########################################################################@
       ## Import model ----
       #########################################################################@
 
-      observeEvent(input$import, {
-         showModal(modalDialog(
+      shiny::observeEvent(input$import, {
+         shiny::showModal(shiny::modalDialog(
             title="Import",
-            uiOutput("import"),
+            shiny::uiOutput("import"),
             size="l",
             easyClose=TRUE
          ))
       })
 
-      output$import <- renderUI({
+      output$import <- shiny::renderUI({
          list(
-            fluidRow(
-               column(
+            shiny::fluidRow(
+               shiny::column(
                   6,
                   class="leftBox",
-                  fileInput(
+                  shiny::fileInput(
                      "impModel", "Choose an sql or a json file",
                      multiple=FALSE,
                      accept=c(".sql", ".json", ".sql.gz", ".json.gz"),
                      width="100%"
                   )
                ),
-               column(
+               shiny::column(
                   2,
                   class="leftBox",
-                  uiOutput("exampleModel")
+                  shiny::uiOutput("exampleModel")
                ),
-               column(
+               shiny::column(
                   4,
                   class="rightBox",
-                  div(
+                  shiny::div(
                      class="mainButton",
-                     actionButton(
-                        "docImp", "", icon=icon("question-circle", "fa-2x")
+                     shiny::actionButton(
+                        "docImp", "",
+                        icon=shiny::icon("question-circle", "fa-2x")
                      ),
                      title="Help tour"
                   )
                )
             ),
-            fluidRow(uiOutput("impModel"))
+            shiny::fluidRow(shiny::uiOutput("impModel"))
          )
       })
 
       ## _+ Import preview ----
-      output$impModel <- renderUI({
+      output$impModel <- shiny::renderUI({
          mi <- model$toImport
-         validate(need(!is.null(mi), ""))
+         shiny::req(!is.null(mi))
          if(!is.RelDataModel(mi)){
-            list(p(mi, class="errorMessage"))
+            list(shiny::p(mi, class="errorMessage"))
          }else{
             list(
-               div(
-                  visNetworkOutput("impModelNet", height="65vh", width="100%"),
+               shiny::div(
+                  visNetwork::visNetworkOutput(
+                     "impModelNet",
+                     height="65vh", width="100%"
+                  ),
                   id="impModelFrame"
                ),
-               uiOutput("impMessage")
+               shiny::uiOutput("impMessage")
             )
          }
       })
 
-      output$impModelNet <- renderVisNetwork({
+      output$impModelNet <- visNetwork::renderVisNetwork({
          mi <- model$toImport
-         validate(need(mi, ""))
-         plot(mi, color=isolate(settings$defaultColor))
+         shiny::req(mi)
+         plot(mi, color=shiny::isolate(settings$defaultColor))
       })
 
-      observe({
+      shiny::observe({
          mi <- model$toImport
-         validate(need(mi, ""))
-         m <- isolate(model$x)
+         shiny::req(mi)
+         m <- shiny::isolate(model$x)
          mm <- try(c(m, mi), silent=TRUE)
          model$merged <- mm
       })
 
-      output$impMessage <- renderUI({
+      output$impMessage <- shiny::renderUI({
          mm <- model$merged
          if(is.RelDataModel(mm)){
-            actionButton(
+            shiny::actionButton(
                "importValidate",
-               list(icon("file-import", "fa-2x"), "Merge with current model")
+               list(
+                  shiny::icon("file-import", "fa-2x"),
+                  "Merge with current model"
+               )
             )
          }else{
-            list(p(mm, class="errorMessage"))
+            list(shiny::p(mm, class="errorMessage"))
          }
       })
 
       ## _+ From model ----
-      observe({
+      shiny::observe({
          fi <- input$impModel
-         validate(need(fi, ""))
+         shiny::req(fi)
          fiext <- regexpr(
             "(\\.[[:alnum:]]+)(\\.gz)?$", fi$name, ignore.case=TRUE
          )
@@ -623,32 +644,32 @@ buildServer <- function(
       })
 
       ## _+ From example ----
-      output$exampleModel <- renderUI({
-         validate(need(file.exists(example), ""))
+      output$exampleModel <- shiny::renderUI({
+         shiny::req(file.exists(example))
          m <- try(read_json_data_model(example), silent=TRUE)
          if(!is.RelDataModel(m)){
             m <- try(read_SQL_data_model(example), silent=TRUE)
          }
-         validate(need(m, ""))
-         actionLink("exampleLink", label="Try an example")
+         shiny::req(m)
+         shiny::actionLink("exampleLink", label="Try an example")
       })
-      observeEvent(input$exampleLink, {
-         validate(need(file.exists(example), ""))
+      shiny::observeEvent(input$exampleLink, {
+         shiny::req(file.exists(example))
          mi <- try(read_json_data_model(example), silent=TRUE)
          if(!is.RelDataModel(mi)){
             mi <- try(read_SQL_data_model(example), silent=TRUE)
          }
-         validate(need(mi, ""))
+         shiny::req(mi)
          model$toImport <-  auto_layout(mi, lengthMultiplier=45*length(mi))
       })
 
       ## _+ Validate import ----
-      observe({
-         validate(need(input$importValidate, ""))
-         mm <- isolate(model$merged)
-         validate(need(mm, ""))
+      shiny::observe({
+         shiny::req(input$importValidate)
+         mm <- shiny::isolate(model$merged)
+         shiny::req(mm)
 
-         cmn <- isolate(model$vn)
+         cmn <- shiny::isolate(model$vn)
          if(
             !is.null(cmn$nodes)>0 && nrow(cmn$nodes)>0 &&
             all(!is.na(cmn$nodes$x)) && all(!is.na(cmn$nodes$y))
@@ -656,10 +677,10 @@ buildServer <- function(
             toReplot <- FALSE
             cmxrange <- c(min(cmn$nodes$x), max(cmn$nodes$x))
             cmyrange <- c(min(cmn$nodes$x), max(cmn$nodes$y))
-            validate(need(isolate(model$toImport), ""))
+            shiny::req(shiny::isolate(model$toImport))
             tin <- modelToVn(
-               isolate(model$toImport),
-               color=isolate(settings$defaultColor)
+               shiny::isolate(model$toImport),
+               color=shiny::isolate(settings$defaultColor)
             )
             if(any(is.na(tin$nodes$x)) || any(is.na(tin$nodes$y))){
                tin$nodes$x <- stats::runif(
@@ -691,47 +712,50 @@ buildServer <- function(
          model$new <- mm
          model$merged <- NULL
          model$toImport <- NULL
-         removeModal()
+         shiny::removeModal()
       })
 
       #########################################################################@
       ## Add table ----
       #########################################################################@
 
-      observeEvent(input$addTable, {
-         showModal(modalDialog(
+      shiny::observeEvent(input$addTable, {
+         shiny::showModal(shiny::modalDialog(
             title="Add table",
-            div(
-               fluidRow(
-                  column(
+            shiny::div(
+               shiny::fluidRow(
+                  shiny::column(
                      10,
-                     textInput(
+                     shiny::textInput(
                         "newTableName", label=NULL, width="100%",
                         placeholder="Table name"
                      )
                   ),
-                  column(2, actionButton("confirmAddTable", "Add"))
+                  shiny::column(
+                     2,
+                     shiny::actionButton("confirmAddTable", "Add")
+                  )
                ),
-               fluidRow(uiOutput("newTableExists"))
+               shiny::fluidRow(shiny::uiOutput("newTableExists"))
             ),
             size="s",
             easyClose=TRUE
          ))
       })
 
-      output$newTableExists <- renderUI({
+      output$newTableExists <- shiny::renderUI({
          ntn <- input$newTableName
-         m <- isolate(model$x)
+         m <- shiny::isolate(model$x)
          if(ntn %in% names(m)){
-            p("Table name already used", class="errorMessage")
+            shiny::p("Table name already used", class="errorMessage")
          }else{
             list()
          }
       })
 
-      observe({
+      shiny::observe({
          ntn <- input$newTableName
-         m <- isolate(model$x)
+         m <- shiny::isolate(model$x)
          if(is.null(ntn) || ntn=="" || ntn %in% names(m)){
             shinyjs::disable("confirmAddTable")
          }else{
@@ -739,10 +763,10 @@ buildServer <- function(
          }
       })
 
-      observe({
-         validate(need(input$confirmAddTable, ""))
-         tn <- isolate(input$newTableName)
-         m <- isolate(model$x)
+      shiny::observe({
+         shiny::req(input$confirmAddTable)
+         tn <- shiny::isolate(input$newTableName)
+         m <- shiny::isolate(model$x)
          xs <- 100
          ys <- 100
          if(!is.null(tn) && tn!="" && !tn %in% names(m)){
@@ -755,7 +779,7 @@ buildServer <- function(
                py=ys*pr*sin(pa)
             )
             model$new <- m
-            removeModal()
+            shiny::removeModal()
          }
       })
 
@@ -763,7 +787,7 @@ buildServer <- function(
       ## Edit table ----
       #########################################################################@
 
-      observe({
+      shiny::observe({
          selTables <- selection$tables
          m <- model$x
          if(!is.RelDataModel(m)){
@@ -777,92 +801,95 @@ buildServer <- function(
          }
       })
 
-      output$editTable <- renderUI({
+      output$editTable <- shiny::renderUI({
          mt <- model$table
-         validate(need(mt, ""))
+         shiny::req(mt)
          selTable <- mt$tableName
-         div(
-            fluidRow(
-               column(8, h3(selTable)),
-               column(
+         shiny::div(
+            shiny::fluidRow(
+               shiny::column(8, shiny::h3(selTable)),
+               shiny::column(
                   4,
                   class="rightBox",
-                  actionButton("renameTable", "Rename") %>%
-                     div(title="Rename the table")
+                  shiny::actionButton("renameTable", "Rename") %>%
+                     shiny::div(title="Rename the table")
                )
             ),
-            uiOutput("tableCommentUI"),
-            tags$hr(class="editSeparator"),
-            uiOutput("fields"),
-            tags$hr(class="editSeparator"),
-            uiOutput("primaryKey"),
-            tags$hr(class="editSeparator"),
-            uiOutput("indexes")
+            shiny::uiOutput("tableCommentUI"),
+            shiny::tags$hr(class="editSeparator"),
+            shiny::uiOutput("fields"),
+            shiny::tags$hr(class="editSeparator"),
+            shiny::uiOutput("primaryKey"),
+            shiny::tags$hr(class="editSeparator"),
+            shiny::uiOutput("indexes")
          )
       })
 
       ## _+ Rename table ----
-      observeEvent(input$renameTable, {
-         showModal(modalDialog(
+      shiny::observeEvent(input$renameTable, {
+         shiny::showModal(shiny::modalDialog(
             title="Rename table",
-            div(
-               fluidRow(
-                  column(
+            shiny::div(
+               shiny::fluidRow(
+                  shiny::column(
                      10,
-                     textInput(
+                     shiny::textInput(
                         "tableNewName", label=NULL, width="100%",
                         placeholder="Table new name"
                      )
                   ),
-                  column(2, actionButton("confirmRenameTable", "Rename"))
+                  shiny::column(
+                     2,
+                     shiny::actionButton("confirmRenameTable", "Rename")
+                  )
                ),
-               fluidRow(uiOutput("newNameExists"))
+               shiny::fluidRow(shiny::uiOutput("newNameExists"))
             ),
             size="s",
             easyClose=TRUE
          ))
       })
-      output$newNameExists <- renderUI({
+      output$newNameExists <- shiny::renderUI({
          ntn <- input$tableNewName
-         m <- isolate(model$x)
+         m <- shiny::isolate(model$x)
          if(ntn %in% names(m)){
-            p("Table name already used", class="errorMessage")
+            shiny::p("Table name already used", class="errorMessage")
          }else{
             list()
          }
       })
-      observe({
+      shiny::observe({
          ntn <- input$tableNewName
-         m <- isolate(model$x)
+         m <- shiny::isolate(model$x)
          if(is.null(ntn) || ntn=="" || ntn %in% names(m)){
             shinyjs::disable("confirmRenameTable")
          }else{
             shinyjs::enable("confirmRenameTable")
          }
       })
-      observe({
-         validate(need(input$confirmRenameTable, ""))
-         tn <- isolate(input$tableNewName)
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observe({
+         shiny::req(input$confirmRenameTable)
+         tn <- shiny::isolate(input$tableNewName)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         m <- isolate(model$x)
+         m <- shiny::isolate(model$x)
          if(!is.null(tn) && tn!="" && !tn %in% names(m)){
             m <- rename_table(m, old=selTable, new=tn)
             model$new <- m
-            removeModal()
+            shiny::removeModal()
          }
       })
 
       ## _+ Table commment ----
-      output$tableCommentUI <- renderUI({
+      output$tableCommentUI <- shiny::renderUI({
          mt <- model$table
-         validate(need(mt, ""))
+         shiny::req(mt)
          selTable <- mt$tableName
-         fluidRow(
-            column(
+         shiny::fluidRow(
+            shiny::column(
                8,
-               textAreaInput(
+               shiny::textAreaInput(
                   "tableComment",
                   label=NULL,
                   value=ifelse(
@@ -872,25 +899,25 @@ buildServer <- function(
                   placeholder="Table description"
                )
             ),
-            column(
+            shiny::column(
                4,
-               uiOutput("refreshCommentH", class="updateHighlight"),
-               actionButton(
+               shiny::uiOutput("refreshCommentH", class="updateHighlight"),
+               shiny::actionButton(
                   "refreshComment",
                   label=NULL,
-                  icon=icon("check", "fa-1x"),
+                  icon=shiny::icon("check", "fa-1x"),
                   class="disabled"
-               ) %>% div(title="Update table comment", class="iblock"),
+               ) %>% shiny::div(title="Update table comment", class="iblock"),
                class="rightBox"
             )
          )
       })
-      observe({
+      shiny::observe({
          input$refreshComment
          ntn <- input$tableComment
-         validate(need(length(ntn)>0, ""))
+         shiny::req(length(ntn)>0)
          mt <- model$table
-         validate(need(mt, ""))
+         shiny::req(mt)
          selTable <- mt$tableName
          cc <- mt$display$comment
          ntn <- ifelse(is.na(ntn), "", ntn)
@@ -901,31 +928,31 @@ buildServer <- function(
             shinyjs::enable("refreshComment")
          }
       })
-      output$refreshCommentH <- renderUI({
+      output$refreshCommentH <- shiny::renderUI({
          input$refreshComment
          ntn <- input$tableComment
-         validate(need(length(ntn)>0, ""))
+         shiny::req(length(ntn)>0)
          mt <- model$table
-         validate(need(mt, ""))
+         shiny::req(mt)
          selTable <- mt$tableName
          cc <- mt$display$comment
          ntn <- ifelse(is.na(ntn), "", ntn)
          cc <- ifelse(is.na(cc), "", cc)
-         validate(need(ntn!=cc, ""))
-         icon("arrow-right", "fa-1x")
+         shiny::req(ntn!=cc)
+         shiny::icon("arrow-right", "fa-1x")
       })
-      observe({
+      shiny::observe({
          input$refreshComment
-         nc <- isolate(input$tableComment)
-         validate(need(!is.na(nc), ""))
+         nc <- shiny::isolate(input$tableComment)
+         shiny::req(!is.na(nc))
          if(nc==""){
             nc <- NA
          }
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          cc <- mt$display$comment
-         m <- isolate(model$x)
+         m <- shiny::isolate(model$x)
          if(
             xor(is.na(nc), is.na(cc)) ||
             (!is.na(nc) && !is.na(cc) && nc!=cc)
@@ -938,25 +965,25 @@ buildServer <- function(
       })
 
       ## _+ Table fields ----
-      output$fields <- renderUI({
+      output$fields <- shiny::renderUI({
          mt <- model$table
-         validate(need(mt, ""))
+         shiny::req(mt)
          selTable <- mt$tableName
          list(
-            fluidRow(
-               column(6, h4("Fields")),
-               column(
+            shiny::fluidRow(
+               shiny::column(6, shiny::h4("Fields")),
+               shiny::column(
                   6,
-                  uiOutput("updateFieldDiv", inline=TRUE),
+                  shiny::uiOutput("updateFieldDiv", inline=TRUE),
                   if(is.MatrixModel(mt)){
                      NULL
                   }else{
-                     actionButton(
+                     shiny::actionButton(
                         "addField", label="",
-                        icon=icon("plus-square", "fa-1x"),
+                        icon=shiny::icon("plus-square", "fa-1x"),
                         class="shrunkenButton"
                      ) %>%
-                        div(
+                        shiny::div(
                            title="Add a new field",
                            class="iblock"
                         )
@@ -964,18 +991,18 @@ buildServer <- function(
                   class="rightBox"
                )
             ),
-            fluidRow(
-               column(12, DT::DTOutput("fieldTable"))
+            shiny::fluidRow(
+               shiny::column(12, DT::DTOutput("fieldTable"))
             ),
-            uiOutput("fieldCommentDisplay")
+            shiny::uiOutput("fieldCommentDisplay")
          )
       })
       output$fieldTable <- DT::renderDT({
          mt <- model$table
-         # validate(need(mt, ""))
+         # shiny::req(mt)
          # selTable <- mt$tableName
-         isolate(model$fieldTable) %>%
-            select(-"comment") %>%
+         shiny::isolate(model$fieldTable) %>%
+            dplyr::select(-"comment") %>%
             DT::datatable(
                rownames=TRUE,
                filter="top",
@@ -992,95 +1019,95 @@ buildServer <- function(
             )
       })
       proxyFieldTable <- DT::dataTableProxy("fieldTable")
-      observe({
+      shiny::observe({
          mt <- model$table
-         validate(need(mt, ""))
+         shiny::req(mt)
          selTable <- mt$tableName
          model$fieldTable <- mt$fields
       })
-      observe({
+      shiny::observe({
          DT::replaceData(
             proxyFieldTable,
-            data=model$fieldTable %>% select(-"comment"),
+            data=model$fieldTable %>% dplyr::select(-"comment"),
             clearSelection="all"
          )
       })
       # ## __- Display field comment
-      output$fieldCommentDisplay <- renderUI({
+      output$fieldCommentDisplay <- shiny::renderUI({
          seli <- input$fieldTable_rows_selected
-         validate(need(length(seli)==1, ""))
-         validate(need(nrow(model$fieldTable)>0, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         shiny::req(length(seli)==1)
+         shiny::req(nrow(model$fieldTable)>0)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         validate(need(nrow(mt$fields)>0, ""))
-         validate(need(seli>=1 & seli <= nrow(mt$fields), ""))
-         p(mt$fields$comment[seli])
+         shiny::req(nrow(mt$fields)>0)
+         shiny::req(seli>=1 & seli <= nrow(mt$fields))
+         shiny::p(mt$fields$comment[seli])
       })
       # ## __- Modify fields ----
-      output$updateFieldDiv <- renderUI({
+      output$updateFieldDiv <- shiny::renderUI({
          seli <- input$fieldTable_rows_selected
-         validate(need(length(seli)==1, ""))
-         validate(need(nrow(model$fieldTable)>0, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         shiny::req(length(seli)==1)
+         shiny::req(nrow(model$fieldTable)>0)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         validate(need(nrow(mt$fields)>0, ""))
-         validate(need(seli>=1 & seli <= nrow(mt$fields), ""))
-         div(
-            actionButton(
+         shiny::req(nrow(mt$fields)>0)
+         shiny::req(seli>=1 & seli <= nrow(mt$fields))
+         shiny::div(
+            shiny::actionButton(
                "moveFieldUp",
                label="",
-               icon=icon("arrow-alt-circle-up", "fa-1x"),
+               icon=shiny::icon("arrow-alt-circle-up", "fa-1x"),
                class="shrunkenButton"
             ) %>%
-               div(
+               shiny::div(
                   title="Move up",
                   class="iblock"
                ),
-            actionButton(
+            shiny::actionButton(
                "moveFieldDown",
                label="",
-               icon=icon("arrow-alt-circle-down", "fa-1x"),
+               icon=shiny::icon("arrow-alt-circle-down", "fa-1x"),
                class="shrunkenButton"
             ) %>%
-               div(
+               shiny::div(
                   title="Move up",
                   class="iblock"
                ),
-            actionButton(
+            shiny::actionButton(
                "updateField",
                label="",
-               icon=icon("edit", "fa-1x"),
+               icon=shiny::icon("edit", "fa-1x"),
                class="shrunkenButton"
             ) %>%
-               div(
+               shiny::div(
                   title="Edit field properties",
                   class="iblock"
                ),
             if(is.MatrixModel(mt)){
                NULL
             }else{
-               actionButton(
+               shiny::actionButton(
                   "removeField",
                   label="",
-                  icon=icon("minus-square", "fa-1x"),
+                  icon=shiny::icon("minus-square", "fa-1x"),
                   class="shrunkenButton"
-               ) %>% div(title="Remove field", class="iblock")
+               ) %>% shiny::div(title="Remove field", class="iblock")
             },
             class="iblock"
          )
       })
       # ## __- Remove field ----
-      observe({
-         validate(need(input$removeField>0, ""))
-         seli <- isolate(input$fieldTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observe({
+         shiny::req(input$removeField>0)
+         seli <- shiny::isolate(input$fieldTable_rows_selected)
+         shiny::req(length(seli)==1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         m <- isolate(model$x)
-         validate(need(nrow(mt$fields)>0, ""))
+         m <- shiny::isolate(model$x)
+         shiny::req(nrow(mt$fields)>0)
          fn <- mt$fields$name[seli]
          m <- try(m %>% remove_field(
             tableName=selTable,
@@ -1089,10 +1116,10 @@ buildServer <- function(
          if(is.RelDataModel(m)){
             model$new <- m
          }else{
-            showModal(modalDialog(
+            shiny::showModal(shiny::modalDialog(
                title="Unable to remove field",
-               p(
-                  HTML(paste(
+               shiny::p(
+                  shiny::HTML(paste(
                      sprintf("<u>%s</u> is used in foreign key(s).", fn),
                      "Remove the foreign key(s) before removing this fields.",
                      sep="<br>"
@@ -1105,19 +1132,19 @@ buildServer <- function(
          }
       })
       # ## __- Move field ----
-      observe({
-         validate(need(input$moveFieldUp>0, ""))
-         seli <- isolate(input$fieldTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observe({
+         shiny::req(input$moveFieldUp>0)
+         seli <- shiny::isolate(input$fieldTable_rows_selected)
+         shiny::req(length(seli)==1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         m <- isolate(model$x)
-         validate(need(nrow(mt$fields)>0, ""))
+         m <- shiny::isolate(model$x)
+         shiny::req(nrow(mt$fields)>0)
          fn <- mt$fields$name[seli]
          alli <- 1:nrow(m[[selTable]]$fields)
          fi <- which(m[[selTable]]$fields$name==fn)
-         validate(need(fi>1, ""))
+         shiny::req(fi>1)
          o <- c(
             alli[which(alli < (fi-1))],
             fi, fi-1,
@@ -1129,19 +1156,19 @@ buildServer <- function(
          )
          model$new <- m
       })
-      observe({
-         validate(need(input$moveFieldDown>0, ""))
-         seli <- isolate(input$fieldTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observe({
+         shiny::req(input$moveFieldDown>0)
+         seli <- shiny::isolate(input$fieldTable_rows_selected)
+         shiny::req(length(seli)==1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         m <- isolate(model$x)
-         validate(need(nrow(mt$fields)>0, ""))
+         m <- shiny::isolate(model$x)
+         shiny::req(nrow(mt$fields)>0)
          fn <- mt$fields$name[seli]
          alli <- 1:nrow(m[[selTable]]$fields)
          fi <- which(m[[selTable]]$fields$name==fn)
-         validate(need(fi<length(alli), ""))
+         shiny::req(fi<length(alli))
          o <- c(
             alli[which(alli < fi)],
             fi+1, fi,
@@ -1154,23 +1181,23 @@ buildServer <- function(
          model$new <- m
       })
       ## __- Add field ----
-      observeEvent(input$addField, {
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observeEvent(input$addField, {
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
-         showModal(modalDialog(
+         shiny::showModal(shiny::modalDialog(
             title="Add field",
-            fluidRow(
-               column(
+            shiny::fluidRow(
+               shiny::column(
                   10,
-                  textInput(
+                  shiny::textInput(
                      "newFieldName", label="Field",
                      placeholder="Field name",
                      width="100%"
                   ),
-                  uiOutput("existingNewField"),
-                  selectInput(
+                  shiny::uiOutput("existingNewField"),
+                  shiny::selectInput(
                      "newFieldType", label="Type",
                      choices=if(nrow(fields)==0){
                         c(SUPPTYPES, "row", "column")
@@ -1179,33 +1206,33 @@ buildServer <- function(
                      },
                      selected=NULL, multiple=FALSE
                   ),
-                  checkboxInput(
+                  shiny::checkboxInput(
                      "newFieldNullable", label="Nullable?",
                      value=FALSE,
                   ),
-                  checkboxInput(
+                  shiny::checkboxInput(
                      "newFieldUnique", label="Unique?",
                      value=FALSE,
                   ),
-                  textAreaInput(
+                  shiny::textAreaInput(
                      "newFieldComment", label="Comment",
                      placeholder="Field description",
                      width="100%"
                   )
                ),
-               column(
+               shiny::column(
                   2,
-                  actionButton("confirmAddField", "Add")
+                  shiny::actionButton("confirmAddField", "Add")
                )
             ),
             size="s",
             easyClose=TRUE
          ))
       })
-      observe({
+      shiny::observe({
          nfn <- input$newFieldName
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
          if(
@@ -1219,63 +1246,62 @@ buildServer <- function(
             shinyjs::enable("confirmAddField")
          }
       })
-      output$existingNewField <- renderUI({
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      output$existingNewField <- shiny::renderUI({
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
-         validate(need(input$newFieldName %in% fields$name, ""))
-         p("Field name already used", class="errorMessage")
+         shiny::req(input$newFieldName %in% fields$name)
+         shiny::p("Field name already used", class="errorMessage")
       })
-      observeEvent(input$confirmAddField, {
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observeEvent(input$confirmAddField, {
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
-         nfn <- isolate(input$newFieldName)
-         validate(need(
+         nfn <- shiny::isolate(input$newFieldName)
+         shiny::req(
             !is.null(nfn) &&
             nfn!="" &&
-            !nfn %in% fields$name,
-            ""
-         ))
-         nm <- isolate(model$x) %>%
+            !nfn %in% fields$name
+         )
+         nm <- shiny::isolate(model$x) %>%
             add_field(
                tableName=selTable,
                name=nfn,
-               type=isolate(input$newFieldType),
-               nullable=isolate(input$newFieldNullable),
-               unique=isolate(input$newFieldUnique),
-               comment=as.character(isolate(input$newFieldComment))
+               type=shiny::isolate(input$newFieldType),
+               nullable=shiny::isolate(input$newFieldNullable),
+               unique=shiny::isolate(input$newFieldUnique),
+               comment=as.character(shiny::isolate(input$newFieldComment))
             )
-         if(!identical(nm, isolate(model$x))){
+         if(!identical(nm, shiny::isolate(model$x))){
             model$new <- nm
          }
-         removeModal()
+         shiny::removeModal()
       })
 
       ## __- Update field ----
-      observeEvent(input$updateField, {
-         seli <- isolate(input$fieldTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observeEvent(input$updateField, {
+         seli <- shiny::isolate(input$fieldTable_rows_selected)
+         shiny::req(length(seli)==1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
-         validate(need(nrow(fields)>0, ""))
-         showModal(modalDialog(
+         shiny::req(nrow(fields)>0)
+         shiny::showModal(shiny::modalDialog(
             title="Update field",
-            fluidRow(
-               column(
+            shiny::fluidRow(
+               shiny::column(
                   10,
-                  textInput(
+                  shiny::textInput(
                      "fieldName", label="Field",
                      value=fields$name[seli],
                      placeholder="Field name",
                      width="100%"
                   ),
-                  uiOutput("existingField"),
-                  selectInput(
+                  shiny::uiOutput("existingField"),
+                  shiny::selectInput(
                      "fieldType", label="Type",
                      choices=if(fields$type[seli] %in% c("row", "column")){
                         c("row", "column")
@@ -1287,7 +1313,7 @@ buildServer <- function(
                   if(fields$type[seli] %in% c("row", "column")){
                      NULL
                   }else{
-                     checkboxInput(
+                     shiny::checkboxInput(
                         "fieldNullable", label="Nullable?",
                         value=fields$nullable[seli],
                      )
@@ -1295,34 +1321,34 @@ buildServer <- function(
                   if(fields$type[seli] %in% c("row", "column")){
                      NULL
                   }else{
-                     checkboxInput(
+                     shiny::checkboxInput(
                         "fieldUnique", label="Unique?",
                         value=fields$unique[seli],
                      )
                   },
-                  textAreaInput(
+                  shiny::textAreaInput(
                      "fieldComment", label="Comment",
                      value=fields$comment[seli],
                      placeholder="Field description",
                      width="100%"
                   ),
-                  uiOutput("updateFieldError")
+                  shiny::uiOutput("updateFieldError")
                ),
-               column(
+               shiny::column(
                   2,
-                  actionButton("confirmUpdateField", "Update")
+                  shiny::actionButton("confirmUpdateField", "Update")
                )
             ),
             size="s",
             easyClose=TRUE
          ))
       })
-      observe({
+      shiny::observe({
          nfn <- input$fieldName
-         seli <- isolate(input$fieldTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         seli <- shiny::isolate(input$fieldTable_rows_selected)
+         shiny::req(length(seli)==1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
          if(
@@ -1336,33 +1362,32 @@ buildServer <- function(
             shinyjs::enable("confirmUpdateField")
          }
       })
-      output$existingField <- renderUI({
+      output$existingField <- shiny::renderUI({
          nfn <- input$fieldName
-         seli <- isolate(input$fieldTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         seli <- shiny::isolate(input$fieldTable_rows_selected)
+         shiny::req(length(seli)==1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
-         validate(need(nfn %in% fields$name[-seli], ""))
-         p("Field name already used", class="errorMessage")
+         shiny::req(nfn %in% fields$name[-seli])
+         shiny::p("Field name already used", class="errorMessage")
       })
-      updateField <- reactiveValues(error=NULL)
-      observeEvent(input$confirmUpdateField, {
-         seli <- isolate(input$fieldTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      updateField <- shiny::reactiveValues(error=NULL)
+      shiny::observeEvent(input$confirmUpdateField, {
+         seli <- shiny::isolate(input$fieldTable_rows_selected)
+         shiny::req(length(seli)==1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
-         nfn <- isolate(input$fieldName)
-         validate(need(
+         nfn <- shiny::isolate(input$fieldName)
+         shiny::req(
             !is.null(nfn) &&
                nfn!="" &&
-               !nfn %in% fields$name[-seli],
-            ""
-         ))
-         nm <- isolate(model$x)
+               !nfn %in% fields$name[-seli]
+         )
+         nm <- shiny::isolate(model$x)
          if(nfn != fields$name[seli]){
             nm <- nm %>% rename_field(
                tableName=selTable,
@@ -1374,14 +1399,14 @@ buildServer <- function(
             update_field(
                tableName=selTable,
                fieldName=nfn,
-               type=isolate(input$fieldType),
-               nullable=isolate(input$fieldNullable),
-               unique=isolate(input$fieldUnique),
-               comment=as.character(isolate(input$fieldComment))
+               type=shiny::isolate(input$fieldType),
+               nullable=shiny::isolate(input$fieldNullable),
+               unique=shiny::isolate(input$fieldUnique),
+               comment=as.character(shiny::isolate(input$fieldComment))
             ), silent=TRUE)
          if(is.RelDataModel(nm)){
             updateField$error <- NULL
-            if(!identical(nm, isolate(model$x))){
+            if(!identical(nm, shiny::isolate(model$x))){
                model$new <- nm
                sendWarning(paste(
                   "Uniqueness or mandatory contraints may not have been",
@@ -1395,30 +1420,30 @@ buildServer <- function(
                   "existing indexes or foreign keys."
                ))
             }
-            removeModal()
+            shiny::removeModal()
          }else{
             updateField$error <- nm
          }
       })
-      output$updateFieldError <- renderUI({
+      output$updateFieldError <- shiny::renderUI({
          e <- updateField$error
-         validate(need(!is.null(e), ""))
-         p(e, class="errorMessage")
+         shiny::req(!is.null(e))
+         shiny::p(e, class="errorMessage")
       })
 
 
       ## _+ Table primary key ----
-      output$primaryKey <- renderUI({
+      output$primaryKey <- shiny::renderUI({
          mt <- model$table
-         validate(need(mt, ""))
+         shiny::req(mt)
          selTable <- mt$tableName
          fnames <- mt$fields$name
-         validate(need(fnames, ""))
-         fluidRow(
-            column(3, h4("Primary key")),
-            column(
+         shiny::req(fnames)
+         shiny::fluidRow(
+            shiny::column(3, shiny::h4("Primary key")),
+            shiny::column(
                5,
-               selectInput(
+               shiny::selectInput(
                   "primaryKey", label=NULL,
                   choices=fnames,
                   selected=mt$primaryKey,
@@ -1426,24 +1451,27 @@ buildServer <- function(
                   width="100%"
                )
             ),
-            column(
+            shiny::column(
                4,
-               uiOutput("refreshPKH", class="updateHighlight"),
-               actionButton(
+               shiny::uiOutput("refreshPKH", class="updateHighlight"),
+               shiny::actionButton(
                   "refreshPrimaryKey",
                   label=NULL,
-                  icon=icon("check", "fa-1x"),
+                  icon=shiny::icon("check", "fa-1x"),
                   class="disabled"
-               ) %>% div(title="Update table primary key", class="iblock"),
+               ) %>% shiny::div(
+                  title="Update table primary key",
+                  class="iblock"
+               ),
                class="rightBox"
             )
          )
       })
-      observe({
+      shiny::observe({
          input$refreshPrimaryKey
          npk <- input$primaryKey
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          cpk <- mt$primaryKey
          if(length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk))){
@@ -1457,27 +1485,26 @@ buildServer <- function(
             shinyjs::enable("primaryKey")
          }
       })
-      output$refreshPKH <- renderUI({
+      output$refreshPKH <- shiny::renderUI({
          input$refreshPrimaryKey
          npk <- input$primaryKey
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          cpk <- mt$primaryKey
-         validate(need(
+         shiny::req(
             length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk)),
-            ""
-         ))
-         icon("arrow-right", "fa-1x")
+         )
+         shiny::icon("arrow-right", "fa-1x")
       })
-      observe({
-         validate(need(input$refreshPrimaryKey>0, ""))
-         npk <- isolate(input$primaryKey)
+      shiny::observe({
+         shiny::req(input$refreshPrimaryKey>0)
+         npk <- shiny::isolate(input$primaryKey)
          # npk <- input$primaryKey
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         m <- isolate(model$x)
+         m <- shiny::isolate(model$x)
          cpk <- mt$primaryKey
          if(length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk))){
             model$new <- m %>%
@@ -1490,37 +1517,37 @@ buildServer <- function(
       })
 
       ## _+ Table indexes ----
-      output$indexes <- renderUI({
+      output$indexes <- shiny::renderUI({
          mt <- model$table
-         validate(need(mt, ""))
+         shiny::req(mt)
          selTable <- mt$tableName
          fnames <- mt$fields$name
-         validate(need(fnames, ""))
+         shiny::req(fnames)
          list(
-            fluidRow(
-               column(6, h4("Indexes")),
-               column(
+            shiny::fluidRow(
+               shiny::column(6, shiny::h4("Indexes")),
+               shiny::column(
                   6,
-                  uiOutput("updateIndexDiv", inline=TRUE),
-                  actionButton(
+                  shiny::uiOutput("updateIndexDiv", inline=TRUE),
+                  shiny::actionButton(
                      "addIndex", label="",
-                     icon=icon("plus-square", "fa-1x"),
+                     icon=shiny::icon("plus-square", "fa-1x"),
                      class="shrunkenButton"
                   ) %>%
-                     div(title="Add an index", class="iblock"),
+                     shiny::div(title="Add an index", class="iblock"),
                   class="rightBox"
                )
             ),
-            fluidRow(
-               column(12, DT::DTOutput("indexTable"))
+            shiny::fluidRow(
+               shiny::column(12, DT::DTOutput("indexTable"))
             )
          )
       })
       output$indexTable <- DT::renderDT({
          mt <- model$table
-         # validate(need(mt, ""))
+         # shiny::req(mt)
          # selTable <- mt$tableName
-         isolate(model$indexTable) %>%
+         shiny::isolate(model$indexTable) %>%
             DT::datatable(
                rownames=TRUE,
                filter="top",
@@ -1536,27 +1563,27 @@ buildServer <- function(
             )
       })
       proxyIndexTable <- DT::dataTableProxy("indexTable")
-      observe({
+      shiny::observe({
          mt <- model$table
-         validate(need(mt, ""))
+         shiny::req(mt)
          selTable <- mt$tableName
          if(length(mt$indexes)>0){
             indexTable <- mt$indexes %>%
                lapply(function(x){
-                  tibble(
+                  dplyr::tibble(
                      Fields=sprintf("[%s]", paste(x$fields, collapse="], [")),
                      Unique=x$unique
                   )
                })
             model$indexTable <- do.call(rbind, indexTable)
          }else{
-            model$indexTable <- tibble(
+            model$indexTable <- dplyr::tibble(
                Fields=character(),
                Unique=logical()
             )
          }
       })
-      observe({
+      shiny::observe({
          DT::replaceData(
             proxyIndexTable,
             data=model$indexTable,
@@ -1564,73 +1591,73 @@ buildServer <- function(
          )
       })
       ## __- Update index ----
-      output$updateIndexDiv <- renderUI({
+      output$updateIndexDiv <- shiny::renderUI({
          seli <- input$indexTable_rows_selected
-         validate(need(length(seli)==1, ""))
-         validate(need(nrow(model$indexTable)>0, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         shiny::req(length(seli)==1)
+         shiny::req(nrow(model$indexTable)>0)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         validate(need(length(mt$indexes)>0, ""))
-         validate(need(seli>=1 & seli <= length(mt$indexes), ""))
+         shiny::req(length(mt$indexes)>0)
+         shiny::req(seli>=1 & seli <= length(mt$indexes))
          ui <- mt$indexes[[seli]]$unique
          list(
-            actionButton(
+            shiny::actionButton(
                "updateIndex",
                label="",
-               icon=icon("edit", "fa-1x"),
+               icon=shiny::icon("edit", "fa-1x"),
                class="shrunkenButton"
             ) %>%
-               div(
+               shiny::div(
                   title="Update index properties",
                   class="iblock"
                ),
-            actionButton(
+            shiny::actionButton(
                "removeIndex",
                label="",
-               icon=icon("minus-square", "fa-1x"),
+               icon=shiny::icon("minus-square", "fa-1x"),
                class="shrunkenButton"
             ) %>%
-               div(
+               shiny::div(
                   title="Remove index",
                   class="iblock"
                )
          )
       })
-      observeEvent(input$updateIndex,{
-         seli <- isolate(input$indexTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         validate(need(nrow(model$indexTable)>0, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observeEvent(input$updateIndex,{
+         seli <- shiny::isolate(input$indexTable_rows_selected)
+         shiny::req(length(seli)==1)
+         shiny::req(nrow(model$indexTable)>0)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         validate(need(length(mt$indexes)>0, ""))
-         validate(need(seli>=1 & seli <= length(mt$indexes), ""))
+         shiny::req(length(mt$indexes)>0)
+         shiny::req(seli>=1 & seli <= length(mt$indexes))
          ui <- mt$indexes[[seli]]$unique
-         showModal(modalDialog(
+         shiny::showModal(shiny::modalDialog(
             title="Update field",
-            checkboxInput("setUniqueIndex", "Unique?", value=ui),
+            shiny::checkboxInput("setUniqueIndex", "Unique?", value=ui),
             size="s",
             easyClose=TRUE
          ))
       })
-      observe({
+      shiny::observe({
          ui <- input$setUniqueIndex
-         validate(need(!is.null(ui) && !is.na(ui), ""))
-         seli <- isolate(input$indexTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+         shiny::req(!is.null(ui) && !is.na(ui))
+         seli <- shiny::isolate(input$indexTable_rows_selected)
+         shiny::req(length(seli)==1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         validate(need(length(mt$indexes)>0, ""))
-         m <- isolate(model$x)
+         shiny::req(length(mt$indexes)>0)
+         m <- shiny::isolate(model$x)
          if(mt$indexes[[seli]]$unique!=ui){
             m <- m %>% set_unique_index(
                tableName=selTable,
                fieldNames=mt$indexes[[seli]]$fields,
                unique=ui
             )
-            if(!identical(m, isolate(model$x))){
+            if(!identical(m, shiny::isolate(model$x))){
                model$new <- m
             }else{
                sendError(paste(
@@ -1638,19 +1665,19 @@ buildServer <- function(
                   "for primary or foreign keys."
                ))
             }
-            removeModal()
+            shiny::removeModal()
          }
       })
       ## __- Remove index ----
-      observe({
-         validate(need(input$removeIndex>0, ""))
-         seli <- isolate(input$indexTable_rows_selected)
-         validate(need(length(seli)==1, ""))
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observe({
+         shiny::req(input$removeIndex>0)
+         seli <- shiny::isolate(input$indexTable_rows_selected)
+         shiny::req(length(seli)==1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         validate(need(length(mt$indexes)>0, ""))
-         m <- isolate(model$x)
+         shiny::req(length(mt$indexes)>0)
+         m <- shiny::isolate(model$x)
          nm <- m %>% remove_index(
             tableName=selTable,
             fieldNames=mt$indexes[[seli]]$fields
@@ -1666,53 +1693,59 @@ buildServer <- function(
          }
       })
       ## __- Add index ----
-      observeEvent(input$addIndex, {
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observeEvent(input$addIndex, {
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
          fnames <- mt$fields$name
-         showModal(modalDialog(
+         shiny::showModal(shiny::modalDialog(
             title="Add index",
-            div(
-               fluidRow(
-                  column(
+            shiny::div(
+               shiny::fluidRow(
+                  shiny::column(
                      8,
-                     selectInput(
+                     shiny::selectInput(
                         "newIndexFields", label=NULL,
                         choices=fnames,
                         multiple=TRUE
                      )
                   ),
-                  column(
+                  shiny::column(
                      2,
-                     checkboxInput("uniqueNewIndex", "Unique?", value=FALSE)
+                     shiny::checkboxInput(
+                        "uniqueNewIndex", "Unique?",
+                        value=FALSE
+                     )
                   ),
-                  column(2, actionButton("confirmAddIndex", "Add"))
+                  shiny::column(
+                     2,
+                     shiny::actionButton("confirmAddIndex", "Add")
+                  )
                )
             ),
             size="s",
             easyClose=TRUE
          ))
       })
-      observe({
+      shiny::observe({
          if(length(input$newIndexFields)==0){
             shinyjs::disable("confirmAddIndex")
          }else{
             shinyjs::enable("confirmAddIndex")
          }
       })
-      observeEvent(input$confirmAddIndex, {
-         mt <- isolate(model$table)
-         validate(need(mt, ""))
+      shiny::observeEvent(input$confirmAddIndex, {
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
          selTable <- mt$tableName
-         validate(need(length(input$newIndexFields)>0, ""))
-         nm <- isolate(model$x) %>%
+         shiny::req(length(input$newIndexFields)>0)
+         nm <- shiny::isolate(model$x) %>%
             add_index(
                tableName=selTable,
                fieldNames=input$newIndexFields,
                unique=input$uniqueNewIndex
             )
-         if(!identical(nm, isolate(model$x))){
+         if(!identical(nm, shiny::isolate(model$x))){
             model$new <- nm
          }else{
             sendError(paste(
@@ -1720,78 +1753,78 @@ buildServer <- function(
                "it may already exist or it may not fit other constraints."
             ))
          }
-         removeModal()
+         shiny::removeModal()
       })
 
       #########################################################################@
       ## Edit menu ----
       #########################################################################@
 
-      output$addFKInput <- renderUI({
+      output$addFKInput <- shiny::renderUI({
          selTable <- selection$tables
-         validate(need(length(selTable)>0 & length(selTable)<=2, ""))
-         actionButton(
+         shiny::req(length(selTable)>0 & length(selTable)<=2)
+         shiny::actionButton(
             "addForeignKey", "Key",
-            icon=icon("plus", "fa-2x"),
-            # icon=icon("external-link-alt", "fa-2x"),
+            icon=shiny::icon("plus", "fa-2x"),
+            # icon=shiny::icon("external-link-alt", "fa-2x"),
             class="shrunkenButton"
-         ) %>% div(
+         ) %>% shiny::div(
             title="Add a foreign key"
          )
       })
-      output$editFKInput <- renderUI({
+      output$editFKInput <- shiny::renderUI({
          selFK <- selection$fk
-         validate(need(length(selFK)==1, ""))
-         actionButton(
+         shiny::req(length(selFK)==1)
+         shiny::actionButton(
             "editFK",
-            label=HTML(paste(
+            label=shiny::HTML(paste(
                '<i class="far fa-edit fa-2x"></i>',
                'keys'
             )),
             class="shrunkenButton"
-         ) %>% div(
+         ) %>% shiny::div(
             title="Edit cardinalities of the selected foreign key (F2)"
          )
       })
-      output$rmFKInput <- renderUI({
+      output$rmFKInput <- shiny::renderUI({
          selFK <- selection$fk
-         validate(need(length(selFK)>0, ""))
-         actionButton(
+         shiny::req(length(selFK)>0)
+         shiny::actionButton(
             "removeFK",
-            label=HTML(paste(
+            label=shiny::HTML(paste(
                '<i class="far fa-trash-alt fa-2x"></i>',
                'keys'
             )),
             class="shrunkenButton"
-         ) %>% div(
+         ) %>% shiny::div(
             title="Remove selected foreign keys (del)"
          )
       })
-      output$rmTablesInput <- renderUI({
+      output$rmTablesInput <- shiny::renderUI({
          selTable <- selection$tables
-         validate(need(length(selTable)>0, ""))
-         actionButton(
+         shiny::req(length(selTable)>0)
+         shiny::actionButton(
             "removeTables",
-            label=HTML(paste(
+            label=shiny::HTML(paste(
                '<i class="fas fa-trash fa-2x"></i>',
                'tables'
             )),
             class="shrunkenButton"
-         ) %>% div(
+         ) %>% shiny::div(
             title="Remove selected tables (del)"
          )
       })
-      output$dupTablesInput <- renderUI({
+      output$dupTablesInput <- shiny::renderUI({
          selTable <- selection$tables
-         validate(need(length(selTable)>0, ""))
-         actionButton(
+         shiny::req(length(selTable)>0)
+         shiny::actionButton(
             "duplicateTables",
-            label=HTML(paste(
+            label=shiny::HTML(paste(
                '<i class="fas fa-copy fa-2x"></i>',
                'tables'
             )),
             class="shrunkenButton"
-         ) %>% div(
+         ) %>% shiny::div(
             title="Duplicate selected tables"
          )
       })
@@ -1800,11 +1833,11 @@ buildServer <- function(
       ## Table color ----
       #########################################################################@
 
-      output$setTableColor <- renderUI({
+      output$setTableColor <- shiny::renderUI({
          selTables <- selection$tables
-         validate(need(length(selTables)>0, ""))
+         shiny::req(length(selTables)>0)
          tval <- lapply(
-            isolate(model$x),
+            shiny::isolate(model$x),
             function(x) x$display$color
          ) %>% unlist()
          tval <- tval[selTables] %>% unique()
@@ -1818,20 +1851,20 @@ buildServer <- function(
             showColour="background",
             palette="limited",
             allowedCols=c(
-               "", isolate(settings$availableColors)
+               "", shiny::isolate(settings$availableColors)
             ),
             allowTransparent=TRUE
-         ) %>% div(
+         ) %>% shiny::div(
             id="tabColPick",
             title="Select table color"
          )
       })
-      observe({
+      shiny::observe({
          newCol <- input$tableColor
-         validate(need(newCol!="", ""))
-         selTables <- isolate(selection$tables)
-         validate(need(length(selTables)>0, ""))
-         m <- isolate(model$x)
+         shiny::req(newCol!="")
+         selTables <- shiny::isolate(selection$tables)
+         shiny::req(length(selTables)>0)
+         m <- shiny::isolate(model$x)
          tval <- lapply(
             m,
             function(x) x$display$color
@@ -1852,13 +1885,13 @@ buildServer <- function(
       ## Remove tables ----
       #########################################################################@
 
-      observe({
+      shiny::observe({
          takeAction <- (
             (!is.null(input$removeTables) && input$removeTables > 0)
          )
-         validate(need(takeAction, ""))
-         tns <- isolate(selection$tables)
-         m <- isolate(model$x)
+         shiny::req(takeAction)
+         tns <- shiny::isolate(selection$tables)
+         m <- shiny::isolate(model$x)
          if(length(tns)>0 && all(tns!="") && all(tns %in% names(m))){
             for(tn in tns){
                m <- try(remove_table(m, tableName=tn), silent=TRUE)
@@ -1869,10 +1902,10 @@ buildServer <- function(
             if(is.RelDataModel(m)){
                model$new <- m
             }else{
-               showModal(modalDialog(
+               shiny::showModal(shiny::modalDialog(
                   title="Unable to remove table",
-                  p(
-                     HTML(paste(
+                  shiny::p(
+                     shiny::HTML(paste(
                         sprintf("<u>%s</u> is referenced by other tables.", tn),
                         "Remove foreign key(s) before removing this table.",
                         sep="<br>"
@@ -1890,14 +1923,14 @@ buildServer <- function(
       ## Duplicate tables ----
       #########################################################################@
 
-      observe({
+      shiny::observe({
          takeAction <- (
             (!is.null(input$duplicateTables) && input$duplicateTables > 0)
          )
-         validate(need(takeAction, ""))
-         tns <- isolate(selection$tables)
-         m <- isolate(model$x)
-         vn <- isolate(model$vn)
+         shiny::req(takeAction)
+         tns <- shiny::isolate(selection$tables)
+         m <- shiny::isolate(model$x)
+         vn <- shiny::isolate(model$vn)
          xs <- 100
          ys <- 100
          nm <- unclass(m)
@@ -1928,7 +1961,7 @@ buildServer <- function(
       ## Add foreign keys ----
       #########################################################################@
 
-      foreignKey <- reactiveValues(
+      foreignKey <- shiny::reactiveValues(
          triggered=0,
          fromTable=NULL,
          toTable=NULL,
@@ -1940,72 +1973,75 @@ buildServer <- function(
          tmax=NULL
       )
 
-      observe({
-         validate(need(input$addForeignKey > 0, ""))
-         tns <- isolate(selection$tables)
-         m <- isolate(model$x)
+      shiny::observe({
+         shiny::req(input$addForeignKey > 0)
+         tns <- shiny::isolate(selection$tables)
+         m <- shiny::isolate(model$x)
          foreignKey$fromTable <- foreignKey$toTable <-
             foreignKey$fromFields <- foreignKey$toFields <- NULL
-         foreignKey$triggered=isolate(foreignKey$triggered)+1
+         foreignKey$triggered=shiny::isolate(foreignKey$triggered)+1
          if(length(tns)>0 && all(tns!="") && all(tns %in% names(m))){
-            showModal(modalDialog(
+            shiny::showModal(shiny::modalDialog(
                title="Add foreign key",
-               uiOutput("addForeignKey"),
+               shiny::uiOutput("addForeignKey"),
                size="m",
                easyClose=TRUE
             ))
          }
       })
 
-      output$addForeignKey <- renderUI({
+      output$addForeignKey <- shiny::renderUI({
          tns <- selection$tables
-         validate(need(length(tns)>0, ""))
-         validate(need(foreignKey$triggered>0, ""))
+         shiny::req(length(tns)>0)
+         shiny::req(foreignKey$triggered>0)
          foreignKey$fromTable <- tns[1]
          foreignKey$toTable <- tns[length(tns)]
-         div(
-            fluidRow(
-               column(
+         shiny::div(
+            shiny::fluidRow(
+               shiny::column(
                   5,
-                  fluidRow(h4(tns[1]), class="centerBox"),
-                  fluidRow(uiOutput("ilcard"))
+                  shiny::fluidRow(shiny::h4(tns[1]), class="centerBox"),
+                  shiny::fluidRow(shiny::uiOutput("ilcard"))
                ),
                if(length(tns)==1){
-                  column(
+                  shiny::column(
                      2,
-                     actionButton("confirmAddFK", "Add", disabled=TRUE),
-                     tags$br(),
-                     icon("long-arrow-alt-right", "fa-2x"),
+                     shiny::actionButton("confirmAddFK", "Add", disabled=TRUE),
+                     shiny::tags$br(),
+                     shiny::icon("long-arrow-alt-right", "fa-2x"),
                      class="centerBox"
                   )
                }else{
-                  column(
+                  shiny::column(
                      2,
-                     actionButton("confirmAddFK", "Add", disabled=TRUE),
-                     tags$br(),
-                     actionButton(
+                     shiny::actionButton("confirmAddFK", "Add", disabled=TRUE),
+                     shiny::tags$br(),
+                     shiny::actionButton(
                         "fkDirection", "",
-                        icon=icon("long-arrow-alt-right", "fa-2x")
-                     ) %>% div(title="Change foreign key direction"),
+                        icon=shiny::icon("long-arrow-alt-right", "fa-2x")
+                     ) %>% shiny::div(title="Change foreign key direction"),
                      class="centerBox"
                   )
                },
-               column(
+               shiny::column(
                   5,
-                  fluidRow(h4(tns[length(tns)]), class="centerBox"),
-                  fluidRow(uiOutput("ircard"))
+                  shiny::fluidRow(
+                     shiny::h4(tns[length(tns)]),
+                     class="centerBox"
+                  ),
+                  shiny::fluidRow(shiny::uiOutput("ircard"))
                )
             ),
-            tags$hr(class="editSeparator"),
+            shiny::tags$hr(class="editSeparator"),
             ##
-            fluidRow(uiOutput("fkFields")),
-            tags$hr(class="editSeparator"),
+            shiny::fluidRow(shiny::uiOutput("fkFields")),
+            shiny::tags$hr(class="editSeparator"),
             ##
-            fluidRow(uiOutput("possibleFkFields"))
+            shiny::fluidRow(shiny::uiOutput("possibleFkFields"))
          )
       })
 
-      observe({
+      shiny::observe({
          if(
             length(foreignKey$fromTable)==0 || length(foreignKey$toTable)==0 ||
             length(foreignKey$fromFields)==0 || length(foreignKey$toFields)==0
@@ -2016,37 +2052,37 @@ buildServer <- function(
          }
       })
 
-      observe({
-         validate(need(input$fkDirection>0, ""))
-         ft <- isolate(foreignKey$toTable)
-         tt <- isolate(foreignKey$fromTable)
-         validate(need(ft, ""))
-         validate(need(tt, ""))
-         validate(need(ft!=tt, ""))
+      shiny::observe({
+         shiny::req(input$fkDirection>0)
+         ft <- shiny::isolate(foreignKey$toTable)
+         tt <- shiny::isolate(foreignKey$fromTable)
+         shiny::req(ft)
+         shiny::req(tt)
+         shiny::req(ft!=tt)
          tns <- sort(c(ft, tt))
          foreignKey$fromTable <- ft
          foreignKey$toTable <- tt
          foreignKey$fromFields <- foreignKey$toFields <- NULL
          if(ft==tns[1]){
-            updateActionButton(
+            shiny::updateActionButton(
                session, "fkDirection",
-               icon=icon("long-arrow-alt-right", "fa-2x")
+               icon=shiny::icon("long-arrow-alt-right", "fa-2x")
             )
          }else{
-            updateActionButton(
+            shiny::updateActionButton(
                session, "fkDirection",
-               icon=icon("long-arrow-alt-left", "fa-2x")
+               icon=shiny::icon("long-arrow-alt-left", "fa-2x")
             )
          }
       })
 
-      output$possibleFkFields <- renderUI({
+      output$possibleFkFields <- shiny::renderUI({
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
-         validate(need(ft, ""))
-         validate(need(tt, ""))
+         shiny::req(ft)
+         shiny::req(tt)
          tns <- sort(c(ft, tt))
-         m <- isolate(model$x)
+         m <- shiny::isolate(model$x)
          if(is.MatrixModel(m[[ft]])){
             ftfields <- m[[ft]]$fields$name[which(
                m[[ft]]$fields$type %in% c("row", "column")
@@ -2062,21 +2098,21 @@ buildServer <- function(
             ttfields <- m[[tt]]$fields$name
          }
          toRet <- list(
-            column(
+            shiny::column(
                5,
-               div(
-                  selectInput(
+               shiny::div(
+                  shiny::selectInput(
                      "fkFromField", "", ftfields, multiple=FALSE, width="100%",
                      selectize=FALSE
                   ),
                   class="fkFieldSel"
                )
             ),
-            column(2, uiOutput("addFkFields"), class="centerBox"),
-            column(
+            shiny::column(2, shiny::uiOutput("addFkFields"), class="centerBox"),
+            shiny::column(
                5,
-               div(
-                  selectInput(
+               shiny::div(
+                  shiny::selectInput(
                      "fkToField", "", ttfields, multiple=FALSE, width="100%",
                      selectize=FALSE
                   ),
@@ -2090,67 +2126,69 @@ buildServer <- function(
          return(toRet)
       })
 
-      output$addFkFields <- renderUI({
+      output$addFkFields <- shiny::renderUI({
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
-         validate(need(ft, ""))
-         validate(need(tt, ""))
-         m <- isolate(model$x)
+         shiny::req(ft)
+         shiny::req(tt)
+         m <- shiny::isolate(model$x)
          ftfields <- m[[ft]]$fields
          ttfields <- m[[tt]]$fields
          from <- input$fkFromField
          to <- input$fkToField
-         validate(need(from %in% ftfields$name, ""))
-         validate(need(to %in% ttfields$name, ""))
+         shiny::req(from %in% ftfields$name)
+         shiny::req(to %in% ttfields$name)
          fft <- ftfields[which(ftfields$name==from),]$type
          fft <- ifelse(fft %in% c("row", "column"), "character", fft)
          tft <- ttfields[which(ttfields$name==to),]$type
          tft <- ifelse(tft %in% c("row", "column"), "character", tft)
          if(fft != tft){
-            return(tagList(
-               tags$br(),
-               p("Incompatible types", class="errorMessage")
+            return(shiny::tagList(
+               shiny::tags$br(),
+               shiny::p("Incompatible types", class="errorMessage")
             ))
          }else{
             selFrom <- foreignKey$fromFields
             selTo <- foreignKey$toFields
             alreadyIn <- length(which(selFrom==from & selTo==to))>0
             if(alreadyIn){
-               return(tagList(
-                  tags$br(),
-                  p("Already in key", class="errorMessage")
+               return(shiny::tagList(
+                  shiny::tags$br(),
+                  shiny::p("Already in key", class="errorMessage")
                ))
             }else{
-               return(tagList(
-                  tags$br(),
-                  actionButton(
+               return(shiny::tagList(
+                  shiny::tags$br(),
+                  shiny::actionButton(
                      "addFkField", label="",
-                     icon=icon("plus-square", "fa-1x")
-                  ) %>% div(title="Add key field")))
+                     icon=shiny::icon("plus-square", "fa-1x")
+                  ) %>% shiny::div(title="Add key field")))
             }
          }
       })
 
-      observe({
-         validate(need(input$addFkField>0, ""))
+      shiny::observe({
+         shiny::req(input$addFkField>0)
          foreignKey$fromFields <- c(
-            isolate(foreignKey$fromFields), isolate(input$fkFromField)
+            shiny::isolate(foreignKey$fromFields),
+            shiny::isolate(input$fkFromField)
          )
          foreignKey$toFields <- c(
-            isolate(foreignKey$toFields), isolate(input$fkToField)
+            shiny::isolate(foreignKey$toFields),
+            shiny::isolate(input$fkToField)
          )
       })
 
-      output$fkFields <- renderUI({
+      output$fkFields <- shiny::renderUI({
          from <- foreignKey$fromFields
          to <- foreignKey$toFields
-         validate(need(from, ""))
-         validate(need(to, ""))
-         fluidRow(
-            column(1, ""),
-            column(10, DT::DTOutput("fkFieldTable")),
-            column(1,
-               uiOutput("rmFkField"),
+         shiny::req(from)
+         shiny::req(to)
+         shiny::fluidRow(
+            shiny::column(1, ""),
+            shiny::column(10, DT::DTOutput("fkFieldTable")),
+            shiny::column(1,
+               shiny::uiOutput("rmFkField"),
                class="rightBox"
             )
          )
@@ -2158,10 +2196,10 @@ buildServer <- function(
       output$fkFieldTable <- DT::renderDT({
          from <- foreignKey$fromFields
          to <- foreignKey$toFields
-         validate(need(from, ""))
-         validate(need(to, ""))
-         ft <- isolate(foreignKey$fromTable)
-         tt <- isolate(foreignKey$toTable)
+         shiny::req(from)
+         shiny::req(to)
+         ft <- shiny::isolate(foreignKey$fromTable)
+         tt <- shiny::isolate(foreignKey$toTable)
          tns <- sort(c(ft, tt))
          if(tns[1]==ft){
             left <- from
@@ -2171,7 +2209,7 @@ buildServer <- function(
             right <- from
          }
          DT::datatable(
-            tibble(l=left, r=right),
+            dplyr::tibble(l=left, r=right),
             rownames=FALSE,
             colnames=c("", ""),
             options=list(
@@ -2185,47 +2223,47 @@ buildServer <- function(
             DT::formatStyle(1, "text-align"="left") %>%
             DT::formatStyle(2, "text-align"="right")
       })
-      output$rmFkField <- renderUI({
+      output$rmFkField <- shiny::renderUI({
          sel <- input$fkFieldTable_rows_selected
-         validate(need(sel, ""))
+         shiny::req(sel)
          return(
-            actionButton(
+            shiny::actionButton(
                "confirmRmFkField",
                label="",
-               icon=icon("minus-square", "fa-1x")
-            ) %>% div(title="Remove key field")
+               icon=shiny::icon("minus-square", "fa-1x")
+            ) %>% shiny::div(title="Remove key field")
          )
       })
-      observe({
-         validate(need(input$confirmRmFkField, ""))
-         sel <- isolate(input$fkFieldTable_rows_selected)
-         validate(need(length(sel)>0, ""))
-         foreignKey$fromFields <- isolate(foreignKey$fromFields)[-sel]
-         foreignKey$toFields <- isolate(foreignKey$toFields)[-sel]
+      shiny::observe({
+         shiny::req(input$confirmRmFkField)
+         sel <- shiny::isolate(input$fkFieldTable_rows_selected)
+         shiny::req(length(sel)>0)
+         foreignKey$fromFields <- shiny::isolate(foreignKey$fromFields)[-sel]
+         foreignKey$toFields <- shiny::isolate(foreignKey$toFields)[-sel]
       })
 
-      observe({
-         validate(need(input$confirmAddFK > 0, ""))
-         m <- isolate(model$x)
+      shiny::observe({
+         shiny::req(input$confirmAddFK > 0)
+         m <- shiny::isolate(model$x)
          suppressWarnings(
                nm <- try({
                   m %>%
                      add_foreign_key(
-                        fromTable=isolate(foreignKey$fromTable),
-                        toTable=isolate(foreignKey$toTable),
-                        fromFields=isolate(foreignKey$fromFields),
-                        toFields=isolate(foreignKey$toFields),
-                        fmin=isolate(foreignKey$fmin),
-                        fmax=isolate(foreignKey$fmax),
-                        tmin=isolate(foreignKey$tmin),
-                        tmax=isolate(foreignKey$tmax)
+                        fromTable=shiny::isolate(foreignKey$fromTable),
+                        toTable=shiny::isolate(foreignKey$toTable),
+                        fromFields=shiny::isolate(foreignKey$fromFields),
+                        toFields=shiny::isolate(foreignKey$toFields),
+                        fmin=shiny::isolate(foreignKey$fmin),
+                        fmax=shiny::isolate(foreignKey$fmax),
+                        tmin=shiny::isolate(foreignKey$tmin),
+                        tmax=shiny::isolate(foreignKey$tmax)
                      )
                }, silent=TRUE)
          )
          if(inherits(nm, "try-error")){
             sendError(as.character(nm))
          }else{
-            removeModal()
+            shiny::removeModal()
             if(identical(nm, m)){
                sendError(paste(
                   "The foreign key could not be added:",
@@ -2251,23 +2289,23 @@ buildServer <- function(
       })
 
       ## _+ Cardinality ----
-      output$ilcard <- renderUI({
+      output$ilcard <- shiny::renderUI({
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
-         validate(need(ft, ""))
-         validate(need(tt, ""))
+         shiny::req(ft)
+         shiny::req(tt)
          tns <- sort(c(ft, tt))
-         m <- isolate(model$x)
-         cmin <- if(tns[1]==ft) isolate(foreignKey$fmin)
-         else isolate(foreignKey$tmin)
-         cmax <- if(tns[1]==ft) isolate(foreignKey$fmax)
-         else isolate(foreignKey$tmax)
+         m <- shiny::isolate(model$x)
+         cmin <- if(tns[1]==ft) shiny::isolate(foreignKey$fmin)
+         else shiny::isolate(foreignKey$tmin)
+         cmax <- if(tns[1]==ft) shiny::isolate(foreignKey$fmax)
+         else shiny::isolate(foreignKey$tmax)
          cmin <- as.character(cmin)
          cmax <- ifelse(cmax==-1, "n", as.character(cmax))
          toRet <- list(
-            column(
+            shiny::column(
                6,
-               selectInput(
+               shiny::selectInput(
                   "leftcardmin",
                   "Min. card.",
                   choices=c("0", "1"),
@@ -2279,9 +2317,9 @@ buildServer <- function(
                   selectize=FALSE
                )
             ),
-            column(
+            shiny::column(
                6,
-               selectInput(
+               shiny::selectInput(
                   "leftcardmax",
                   "Max. card.",
                   choices=c("1", "n"),
@@ -2297,23 +2335,23 @@ buildServer <- function(
          )
          return(toRet)
       })
-      output$ircard <- renderUI({
+      output$ircard <- shiny::renderUI({
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
-         validate(need(ft, ""))
-         validate(need(tt, ""))
+         shiny::req(ft)
+         shiny::req(tt)
          tns <- sort(c(ft, tt))
-         m <- isolate(model$x)
-         cmin <- if(tns[1]!=ft) isolate(foreignKey$fmin)
-         else isolate(foreignKey$tmin)
-         cmax <- if(tns[1]!=ft) isolate(foreignKey$fmax)
-         else isolate(foreignKey$tmax)
+         m <- shiny::isolate(model$x)
+         cmin <- if(tns[1]!=ft) shiny::isolate(foreignKey$fmin)
+         else shiny::isolate(foreignKey$tmin)
+         cmax <- if(tns[1]!=ft) shiny::isolate(foreignKey$fmax)
+         else shiny::isolate(foreignKey$tmax)
          cmin <- as.character(cmin)
          cmax <- ifelse(cmax==-1, "n", as.character(cmax))
          toRet <- list(
-            column(
+            shiny::column(
                6,
-               selectInput(
+               shiny::selectInput(
                   "rightcardmin",
                   "Min. card.",
                   choices=c("0", "1"),
@@ -2325,9 +2363,9 @@ buildServer <- function(
                   selectize=FALSE
                )
             ),
-            column(
+            shiny::column(
                6,
-               selectInput(
+               shiny::selectInput(
                   "rightcardmax",
                   "Max. card.",
                   choices=c("1", "n"),
@@ -2344,21 +2382,21 @@ buildServer <- function(
          return(toRet)
       })
 
-      observe({
+      shiny::observe({
          cval <- c("0"=0L, "1"=1L, "n"=-1L)
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
-         validate(need(ft, ""))
-         validate(need(tt, ""))
+         shiny::req(ft)
+         shiny::req(tt)
          tns <- sort(c(ft, tt))
          lftmin <- input$leftcardmin
          lftmax <- input$leftcardmax
          rgtmin <- input$rightcardmin
          rgtmax <- input$rightcardmax
-         validate(need(lftmin,""))
-         validate(need(lftmax,""))
-         validate(need(rgtmin,""))
-         validate(need(rgtmax,""))
+         shiny::req(lftmin)
+         shiny::req(lftmax)
+         shiny::req(rgtmin)
+         shiny::req(rgtmax)
          foreignKey$fmin <- as.integer(cval[ifelse(
             tns[1]==ft, lftmin, rgtmin
          )])
@@ -2378,85 +2416,88 @@ buildServer <- function(
       ## Update foreign keys ----
       #########################################################################@
 
-      observe({
-         validate(need(input$editFK > 0, ""))
-         selFK <- isolate(selection$fk)
-         validate(need(length(selFK)==1, ""))
-         m <- isolate(model$x)
-         mne <- isolate(model$vn)$edges
-         validate(need(selFK %in% mne$id, ""))
+      shiny::observe({
+         shiny::req(input$editFK > 0)
+         selFK <- shiny::isolate(selection$fk)
+         shiny::req(length(selFK)==1)
+         m <- shiny::isolate(model$x)
+         mne <- shiny::isolate(model$vn)$edges
+         shiny::req(selFK %in% mne$id)
          i <- which(mne$id==selFK)
          foreignKey$fromTable <- mne$from[i]
          foreignKey$toTable <- mne$to[i]
          foreignKey$fromFields <- mne$ff[[i]]
          foreignKey$toFields <- mne$tf[[i]]
-         foreignKey$triggered=isolate(foreignKey$triggered)+1
-         showModal(modalDialog(
+         foreignKey$triggered=shiny::isolate(foreignKey$triggered)+1
+         shiny::showModal(shiny::modalDialog(
             title="Edit foreign key",
-            uiOutput("editForeignKey"),
+            shiny::uiOutput("editForeignKey"),
             size="m",
             easyClose=TRUE
          ))
       })
 
-      output$editForeignKey <- renderUI({
-         validate(need(foreignKey$triggered>0, ""))
-         ft <- isolate(foreignKey$fromTable)
-         tt <- isolate(foreignKey$toTable)
-         ff <- isolate(foreignKey$fromFields)
-         tf <- isolate(foreignKey$toFields)
-         validate(need(ft, ""))
-         validate(need(tt, ""))
-         validate(need(ff, ""))
-         validate(need(tf, ""))
+      output$editForeignKey <- shiny::renderUI({
+         shiny::req(foreignKey$triggered>0)
+         ft <- shiny::isolate(foreignKey$fromTable)
+         tt <- shiny::isolate(foreignKey$toTable)
+         ff <- shiny::isolate(foreignKey$fromFields)
+         tf <- shiny::isolate(foreignKey$toFields)
+         shiny::req(ft)
+         shiny::req(tt)
+         shiny::req(ff)
+         shiny::req(tf)
          tns <- sort(c(ft, tt))
-         div(
-            fluidRow(
-               column(
+         shiny::div(
+            shiny::fluidRow(
+               shiny::column(
                   5,
-                  fluidRow(h4(tns[1]), class="centerBox"),
-                  fluidRow(uiOutput("ilcard"))
+                  shiny::fluidRow(shiny::h4(tns[1]), class="centerBox"),
+                  shiny::fluidRow(shiny::uiOutput("ilcard"))
                ),
                if(tns[1]==ft){
-                  column(
+                  shiny::column(
                      2,
-                     actionButton("confirmUpdateFK", "Update"),
-                     tags$br(),
-                     icon("long-arrow-alt-right", "fa-2x"),
+                     shiny::actionButton("confirmUpdateFK", "Update"),
+                     shiny::tags$br(),
+                     shiny::icon("long-arrow-alt-right", "fa-2x"),
                      class="centerBox"
                   )
                }else{
-                  column(
+                  shiny::column(
                      2,
-                     actionButton("confirmUpdateFK", "Update"),
-                     tags$br(),
-                     icon("long-arrow-alt-left", "fa-2x"),
+                     shiny::actionButton("confirmUpdateFK", "Update"),
+                     shiny::fluidPage$br(),
+                     shiny::icon("long-arrow-alt-left", "fa-2x"),
                      class="centerBox"
                   )
                },
-               column(
+               shiny::column(
                   5,
-                  fluidRow(h4(tns[length(tns)]), class="centerBox"),
-                  fluidRow(uiOutput("ircard"))
+                  shiny::fluidRow(
+                     shiny::h4(tns[length(tns)]),
+                     class="centerBox"
+                  ),
+                  shiny::fluidRow(shiny::uiOutput("ircard"))
                )
             )
          )
       })
 
-      observe({
-         validate(need(input$confirmUpdateFK > 0, ""))
-         model$new <- isolate(model$x) %>%
+      shiny::observe({
+         shiny::req(input$confirmUpdateFK > 0)
+         model$new <- shiny::isolate(model$x) %>%
             update_foreign_key(
-               fromTable=isolate(foreignKey$fromTable),
-               toTable=isolate(foreignKey$toTable),
-               fromFields=isolate(foreignKey$fromFields),
-               toFields=isolate(foreignKey$toFields),
-               fmin=isolate(foreignKey$fmin),
-               fmax=isolate(foreignKey$fmax),
-               tmin=isolate(foreignKey$tmin),
-               tmax=isolate(foreignKey$tmax)
+               fromTable=shiny::isolate(foreignKey$fromTable),
+               toTable=shiny::isolate(foreignKey$toTable),
+               fromFields=shiny::isolate(foreignKey$fromFields),
+               toFields=shiny::isolate(foreignKey$toFields),
+               fmin=shiny::isolate(foreignKey$fmin),
+               fmax=shiny::isolate(foreignKey$fmax),
+               tmin=shiny::isolate(foreignKey$tmin),
+               tmax=shiny::isolate(foreignKey$tmax)
             )
-         removeModal()
+         shiny::removeModal()
          foreignKey$fromTable <- NULL
          foreignKey$toTable <- NULL
          foreignKey$fromFields <- NULL
@@ -2472,14 +2513,14 @@ buildServer <- function(
       ## Remove foreign keys ----
       #########################################################################@
 
-      observe({
+      shiny::observe({
          takeAction <- (
             (!is.null(input$removeFK) && input$removeFK > 0)
          )
-         validate(need(takeAction, ""))
-         fks <- isolate(selection$fk)
-         m <- isolate(model$x)
-         mne <- isolate(model$vn)$edges
+         shiny::req(takeAction)
+         fks <- shiny::isolate(selection$fk)
+         m <- shiny::isolate(model$x)
+         mne <- shiny::isolate(model$vn)$edges
          if(length(fks)>0 && all(fks!="") && all(fks %in% mne$id)){
             for(fk in fks){
                i <- which(mne$id==fk)
@@ -2498,17 +2539,17 @@ buildServer <- function(
       ## Node positions ----
       #########################################################################@
 
-      observe({
+      shiny::observe({
          dispNodes <- input$modelNet_nodes
-         validate(need(dispNodes, ""))
-         m <- isolate(model$x)
+         shiny::req(dispNodes)
+         m <- shiny::isolate(model$x)
          cp <- do.call(
             rbind,
-            lapply(m, function(n)tibble(x=n$display$x, y=n$display$y))
+            lapply(m, function(n)dplyr::tibble(x=n$display$x, y=n$display$y))
          )
          np <- do.call(
             rbind,
-            lapply(dispNodes[names(m)], function(n)tibble(x=n$x, y=n$y))
+            lapply(dispNodes[names(m)], function(n)dplyr::tibble(x=n$x, y=n$y))
          )
          if(!all(np$x==cp$x & np$y==cp$y)){
             m <- lapply(
@@ -2531,16 +2572,16 @@ buildServer <- function(
       ## Update model ----
       #########################################################################@
 
-      observe({
+      shiny::observe({
          nm <- model$new
-         validate(need(nm, ""))
+         shiny::req(nm)
          updateVis <- attr(nm, "updateVis")
          if(is.null(updateVis)){
             updateVis <- TRUE
          }
          attr(nm, "updateVis") <- NULL
-         dm <- isolate(model$x)
-         validate(need(!identical(nm, dm), ""))
+         dm <- shiny::isolate(model$x)
+         shiny::req(!identical(nm, dm))
 
          ##
          tdm <- nm
@@ -2549,27 +2590,30 @@ buildServer <- function(
          }else{
             toReplot <- FALSE
             if(updateVis){
-               ndm <- isolate(model$vn)
-               ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
+               ndm <- shiny::isolate(model$vn)
+               ntdm <- modelToVn(
+                  tdm,
+                  color=shiny::isolate(settings$defaultColor)
+               )
                edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
                if(length(edgeToDel)>0){
-                  visNetworkProxy("modelNet") %>%
-                     visRemoveEdges(edgeToDel)
+                  visNetwork::visNetworkProxy("modelNet") %>%
+                     visNetwork::visRemoveEdges(edgeToDel)
                }
                nodeToDel <- setdiff(names(dm), names(tdm))
                if(length(nodeToDel)>0){
-                  visNetworkProxy("modelNet") %>%
-                     visRemoveNodes(nodeToDel)
+                  visNetwork::visNetworkProxy("modelNet") %>%
+                     visNetwork::visRemoveNodes(nodeToDel)
                }
-               visNetworkProxy("modelNet") %>%
-                  visUpdateNodes(ntdm$nodes) %>%
-                  visUpdateEdges(ntdm$edges)
+               visNetwork::visNetworkProxy("modelNet") %>%
+                  visNetwork::visUpdateNodes(ntdm$nodes) %>%
+                  visNetwork::visUpdateEdges(ntdm$edges)
             }
          }
          ##
 
-         ch <- isolate(model$history)
-         cm <- isolate(model$current)
+         ch <- shiny::isolate(model$history)
+         cm <- shiny::isolate(model$current)
          ch <- ch[-((cm:length(ch))+1)]
          ch <- c(ch, list(nm))
          cm <- cm+1
@@ -2578,24 +2622,24 @@ buildServer <- function(
          model$x <- nm
          model$new <- NULL
          if(toReplot){
-            replot$x <- isolate(replot$x)+1
+            replot$x <- shiny::isolate(replot$x)+1
          }
       })
 
-      observe({
+      shiny::observe({
          selTables <- selection$tables
-         validate(need(!isolate(selection$fromVN), ""))
-         visNetworkProxy("modelNet") %>%
-            visSelectNodes(selTables)
+         shiny::req(!shiny::isolate(selection$fromVN))
+         visNetwork::visNetworkProxy("modelNet") %>%
+            visNetwork::visSelectNodes(selTables)
       })
 
-      observe({
+      shiny::observe({
          selFK <- selection$fk
          selTables <- intersect(names(model$x), selection$tables)
-         validate(need(!isolate(selection$fromVN), ""))
+         shiny::req(!shiny::isolate(selection$fromVN))
          if(length(selTables)==0){
-            visNetworkProxy("modelNet") %>%
-               visSelectEdges(selFK)
+            visNetwork::visNetworkProxy("modelNet") %>%
+               visNetwork::visSelectEdges(selFK)
          }
       })
 
@@ -2603,90 +2647,90 @@ buildServer <- function(
       ## Manage history ----
       #########################################################################@
 
-      observe({
+      shiny::observe({
          m <- model$x
          mn <- model$vn
          selection$tables <- sort(intersect(
-            isolate(selection$tables), names(m)
+            shiny::isolate(selection$tables), names(m)
          ))
          selection$fk <- sort(intersect(
-            isolate(selection$fk), mn$edges$id
+            shiny::isolate(selection$fk), mn$edges$id
          ))
       })
 
-      observe({
-         validate(need(input$undo, ""))
-         ch <- isolate(model$history)
-         cm <- isolate(model$current)
+      shiny::observe({
+         shiny::req(input$undo)
+         ch <- shiny::isolate(model$history)
+         cm <- shiny::isolate(model$current)
          cm <- cm -1
-         validate(need(cm>0, ""))
+         shiny::req(cm>0)
 
          ###########################@
          ## The commented code below was first used to
          ## replot the network from scratch
          # model$x <- ch[[cm]]
          # model$current <- cm
-         # replot$x <- isolate(replot$x)+1
+         # replot$x <- shiny::isolate(replot$x)+1
          ###########################@
 
-         dm <- isolate(model$x)
+         dm <- shiny::isolate(model$x)
          tdm <- ch[[cm]]
-         ndm <- isolate(model$vn)
-         ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
+         ndm <- shiny::isolate(model$vn)
+         ntdm <- modelToVn(tdm, color=shiny::isolate(settings$defaultColor))
          edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
          if(length(edgeToDel)>0){
-            visNetworkProxy("modelNet") %>%
-               visRemoveEdges(edgeToDel)
+            visNetwork::visNetworkProxy("modelNet") %>%
+               visNetwork::visRemoveEdges(edgeToDel)
          }
          nodeToDel <- setdiff(names(dm), names(tdm))
          if(length(nodeToDel)>0){
-            visNetworkProxy("modelNet") %>%
-               visRemoveNodes(nodeToDel)
+            visNetwork::visNetworkProxy("modelNet") %>%
+               visNetwork::visRemoveNodes(nodeToDel)
          }
-         visNetworkProxy("modelNet") %>%
-            visUpdateNodes(ntdm$nodes) %>%
-            visUpdateEdges(ntdm$edges)
+         visNetwork::visNetworkProxy("modelNet") %>%
+            visNetwork::visUpdateNodes(ntdm$nodes) %>%
+            visNetwork::visUpdateEdges(ntdm$edges)
          model$x <- tdm
          model$current <- cm
       })
 
-      observe({
-         validate(need(input$redo, ""))
-         ch <- isolate(model$history)
-         cm <- isolate(model$current)
+      shiny::observe({
+         shiny::req(input$redo)
+         ch <- shiny::isolate(model$history)
+         cm <- shiny::isolate(model$current)
          cm <- cm +1
-         validate(need(cm<=length(ch), ""))
+         shiny::req(cm<=length(ch))
 
          ###########################@
          ## The commented code below was first used to
          ## replot the network from scratch
          # model$x <- ch[[cm]]
          # model$current <- cm
-         # replot$x <- isolate(replot$x)+1
+         # replot$x <- shiny::isolate(replot$x)+1
          ###########################@
 
-         dm <- isolate(model$x)
+         dm <- shiny::isolate(model$x)
          tdm <- ch[[cm]]
-         ndm <- isolate(model$vn)
-         ntdm <- modelToVn(tdm, color=isolate(settings$defaultColor))
+         ndm <- shiny::isolate(model$vn)
+         ntdm <- modelToVn(tdm, color=shiny::isolate(settings$defaultColor))
          edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
          if(length(edgeToDel)>0){
-            visNetworkProxy("modelNet") %>%
-               visRemoveEdges(edgeToDel)
+            visNetwork::visNetworkProxy("modelNet") %>%
+               visNetwork::visRemoveEdges(edgeToDel)
          }
          nodeToDel <- setdiff(names(dm), names(tdm))
          if(length(nodeToDel)>0){
-            visNetworkProxy("modelNet") %>%
-               visRemoveNodes(nodeToDel)
+            visNetwork::visNetworkProxy("modelNet") %>%
+               visNetwork::visRemoveNodes(nodeToDel)
          }
-         visNetworkProxy("modelNet") %>%
-            visUpdateNodes(ntdm$nodes) %>%
-            visUpdateEdges(ntdm$edges)
+         visNetwork::visNetworkProxy("modelNet") %>%
+            visNetwork::visUpdateNodes(ntdm$nodes) %>%
+            visNetwork::visUpdateEdges(ntdm$edges)
          model$x <- tdm
          model$current <- cm
       })
 
-      observe({
+      shiny::observe({
          if(model$current==1){
             shinyjs::disable("undo")
          }
@@ -2705,51 +2749,52 @@ buildServer <- function(
       ## Export model ----
       #########################################################################@
 
-      observeEvent(input$export, {
-         showModal(modalDialog(
+      shiny::observeEvent(input$export, {
+         shiny::showModal(shiny::modalDialog(
             title="Export",
-            uiOutput("export"),
+            shiny::uiOutput("export"),
             size="s",
             easyClose=TRUE
          ))
       })
 
-      output$export <- renderUI({
-         fluidRow(
-            column(6, downloadButton(
+      output$export <- shiny::renderUI({
+         shiny::fluidRow(
+            shiny::column(6, shiny::downloadButton(
                "exportJson",
-               list(icon("file-code", "fa-2x"), "JSON"),
+               list(shiny::icon("file-code", "fa-2x"), "JSON"),
                class="exportButtons"
             )),
-            column(6, downloadButton(
+            shiny::column(6, shiny::downloadButton(
                "exportHtml",
-               list(icon("map", "fa-2x"), "HTML"),
+               list(shiny::icon("map", "fa-2x"), "HTML"),
                class="exportButtons"
             ))
          )
       })
 
       ## _+ JSON ----
-      output$exportJson <- downloadHandler(
+      output$exportJson <- shiny::downloadHandler(
          filename = function() {
             paste0("Data-model", ".json")
          },
          content = function(file) {
-            m <- isolate(model$x)
-            validate(need(m, ""))
+            m <- shiny::isolate(model$x)
+            shiny::req(m)
             write_json_data_model(m, file)
          }
       )
 
       ## _+ HTML ----
-      output$exportHtml <- downloadHandler(
+      output$exportHtml <- shiny::downloadHandler(
          filename = function() {
             paste0("Data-model", ".html")
          },
          content = function(file) {
-            m <- isolate(model$x)
-            validate(need(m, ""))
-            plot(m, color=isolate(settings$defaultColor)) %>% visSave(file)
+            m <- shiny::isolate(model$x)
+            shiny::req(m)
+            plot(m, color=shiny::isolate(settings$defaultColor)) %>%
+               visNetwork::visSave(file)
          }
       )
 
@@ -2759,12 +2804,12 @@ buildServer <- function(
 
       if(fromR){
          ## _+ Autosaved object ----
-         observe({
+         shiny::observe({
             assign(bcko, model$x, envir=modelEnv)
          })
          ## _+ Done button ----
-         observeEvent(input$done, {
-            stopApp(invisible(model$x))
+         shiny::observeEvent(input$done, {
+            shiny::stopApp(invisible(model$x))
          })
       }
 
@@ -2784,9 +2829,6 @@ buildServer <- function(
 #' is launched (default: FALSE)
 #'
 #' @return The [RelDataModel] designed with the GUI.
-#'
-#' @import shiny
-#' @importFrom stats rbeta runif
 #'
 #' @export
 #'
@@ -2866,10 +2908,10 @@ model_relational_data <- function(
             "\n"
          )
       )
-      runApp(shinyApp(ui, server))
+      shiny::runApp(shiny::shinyApp(ui, server))
    }else{
       ## Remote app ----
-      shinyApp(ui, server)
+      shiny::shinyApp(ui, server)
    }
 
 }

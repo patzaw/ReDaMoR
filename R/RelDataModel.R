@@ -384,7 +384,7 @@ toDBM <- function(rdm){
       rdm,
       function(tm){
          ##
-         tables <- tibble(
+         tables <- dplyr::tibble(
             name=tm$tableName,
             x=as.numeric(NA),
             y=as.numeric(NA),
@@ -398,22 +398,25 @@ toDBM <- function(rdm){
          }
          ##
          fields <- tm$fields %>%
-            mutate(
+            dplyr::mutate(
                table=tm$tableName,
                fieldOrder=1:nrow(tm$fields)
             )
          ##
          if(length(tm$primaryKey)==0){
-            primaryKeys <- tibble(
+            primaryKeys <- dplyr::tibble(
                table=character(),
                field=character()
             )
          }else{
-            primaryKeys <- tibble(table=tm$tableName, field=tm$primaryKey)
+            primaryKeys <- dplyr::tibble(
+               table=tm$tableName,
+               field=tm$primaryKey
+            )
          }
          ##
          if(length(tm$foreignKeys)==0){
-            foreignKeys <- tibble(
+            foreignKeys <- dplyr::tibble(
                table=character(),
                fki=integer(),
                field=character(),
@@ -421,7 +424,7 @@ toDBM <- function(rdm){
                refField=character()
             )
          }else{
-            foreignKeys <- do.call(bind_rows, lapply(
+            foreignKeys <- do.call(dplyr::bind_rows, lapply(
                1:length(tm$foreignKeys),
                function(fki){
                   fmin <- tm$foreignKeys[[fki]]$cardinality["fmin"]
@@ -429,7 +432,7 @@ toDBM <- function(rdm){
                   tmin <- tm$foreignKeys[[fki]]$cardinality["tmin"]
                   tmax <- tm$foreignKeys[[fki]]$cardinality["tmax"]
                   toRet <- tm$foreignKeys[[fki]]$key %>%
-                     mutate(
+                     dplyr::mutate(
                         table=tm$tableName,
                         refTable=tm$foreignKeys[[fki]]$refTable,
                         fki=fki,
@@ -439,8 +442,8 @@ toDBM <- function(rdm){
                         tmax=tmax
                      )
                   toRet %>%
-                     rename("field"="from", "refField"="to") %>%
-                     select(
+                     dplyr::rename("field"="from", "refField"="to") %>%
+                     dplyr::select(
                         "table", "fki", "field", "refTable", "refField",
                         "fmin", "fmax", "tmin", "tmax"
                      )
@@ -449,25 +452,25 @@ toDBM <- function(rdm){
          }
          ##
          if(length(tm$indexes)==0){
-            indexes <- tibble(
+            indexes <- dplyr::tibble(
                table=character(),
                idx=integer(),
                field=character(),
                unique=logical()
             )
          }else{
-            indexes <- do.call(bind_rows, lapply(
+            indexes <- do.call(dplyr::bind_rows, lapply(
                1:length(tm$indexes),
                function(idx){
                   if(length(idx)==0){
                      return(NULL)
                   }
-                  toRet <- tibble(
+                  toRet <- dplyr::tibble(
                      table=tm$tableName,
                      idx=idx,
                      unique=tm$indexes[[idx]]$unique,
                      field=tm$indexes[[idx]]$fields
-                  ) %>% select("table", "idx", "field", "unique")
+                  ) %>% dplyr::select("table", "idx", "field", "unique")
                   return(toRet)
                }
             ))
@@ -483,11 +486,17 @@ toDBM <- function(rdm){
       }
    )
    return(list(
-      tables=do.call(bind_rows, lapply(toRet, function(x) x$tables)),
-      fields=do.call(bind_rows, lapply(toRet, function(x) x$fields)),
-      primaryKeys=do.call(bind_rows, lapply(toRet, function(x) x$primaryKeys)),
-      foreignKeys=do.call(bind_rows, lapply(toRet, function(x) x$foreignKeys)),
-      indexes=do.call(bind_rows, lapply(toRet, function(x) x$indexes))
+      tables=do.call(dplyr::bind_rows, lapply(toRet, function(x) x$tables)),
+      fields=do.call(dplyr::bind_rows, lapply(toRet, function(x) x$fields)),
+      primaryKeys=do.call(
+         dplyr::bind_rows,
+         lapply(toRet, function(x) x$primaryKeys)
+      ),
+      foreignKeys=do.call(
+         dplyr::bind_rows,
+         lapply(toRet, function(x) x$foreignKeys)
+      ),
+      indexes=do.call(dplyr::bind_rows, lapply(toRet, function(x) x$indexes))
    ))
 }
 
@@ -542,42 +551,42 @@ fromDBM <- function(dbm){
       tm <- list()
       tm$tableName <- tn
       tm$fields <- dbm$fields %>%
-         filter(.data$table==tn) %>%
-         select(-"table")
+         dplyr::filter(.data$table==tn) %>%
+         dplyr::select(-"table")
       if("fieldOrder" %in% colnames(tm$fields)){
          tm$fields <- tm$fields %>%
-            arrange(.data$fieldOrder) %>%
-            select(-"fieldOrder")
+            dplyr::arrange(.data$fieldOrder) %>%
+            dplyr::select(-"fieldOrder")
       }
       tm$primaryKey <- dbm$primaryKeys %>%
-         filter(.data$table==tn) %>%
-         pull("field")
+         dplyr::filter(.data$table==tn) %>%
+         dplyr::pull("field")
       if(length(tm$primaryKey)==0){
          tm$primaryKey <- NULL
          tm <- c(tm, list(primaryKey=NULL))
       }
       tm$foreignKeys <- dbm$foreignKeys %>%
-         filter(.data$table==tn) %>%
-         select(-"table")
+         dplyr::filter(.data$table==tn) %>%
+         dplyr::select(-"table")
       if(nrow(tm$foreignKeys)>0){
          tm$foreignKeys <- split(tm$foreignKeys, tm$foreignKeys$fki) %>%
             lapply(function(x){
                x %>%
-                  select(-"fki") %>%
+                  dplyr::select(-"fki") %>%
                   split(x$refTable) %>%
                   lapply(function(y){
                      toRet <- list(
                         refTable=unique(y$refTable),
                         key=y %>%
-                           select("field", "refField") %>%
-                           rename("from"="field", "to"="refField")
+                           dplyr::select("field", "refField") %>%
+                           dplyr::rename("from"="field", "to"="refField")
                      )
                      cnames <- c("fmin", "fmax", "tmin", "tmax")
                      if(
                         all(cnames %in% colnames(y))
                      ){
                         toRet$cardinality=y %>%
-                           select("fmin", "fmax", "tmin", "tmax") %>%
+                           dplyr::select("fmin", "fmax", "tmin", "tmax") %>%
                            unique() %>% unlist() %>% as.integer()
                      }else{
                         toRet$cardinality=c(0, -1, 1, 1) %>% as.integer()
@@ -594,8 +603,8 @@ fromDBM <- function(dbm){
          tm <- c(tm, list(foreignKeys=NULL))
       }
       tm$indexes <- dbm$indexes %>%
-         filter(.data$table==tn) %>%
-         select(-"table")
+         dplyr::filter(.data$table==tn) %>%
+         dplyr::select(-"table")
       if(nrow(tm$indexes)>0){
          tm$indexes <- split(tm$indexes, tm$indexes$idx) %>%
             lapply(function(x){
@@ -607,8 +616,8 @@ fromDBM <- function(dbm){
          tm <- c(tm, list(indexes=NULL))
       }
       tm$display <- dbm$tables %>%
-         filter(dbm$tables$name==tn) %>%
-         select(-"name") %>%
+         dplyr::filter(dbm$tables$name==tn) %>%
+         dplyr::select(-"name") %>%
          as.list()
       toRet <- c(toRet, list(RelTableModel(tm)))
    }
@@ -660,7 +669,7 @@ add_table <- function(x, newTable){
       )
       newTable <- RelTableModel(list(
          "tableName"=newTable,
-         "fields"=tibble(
+         "fields"=dplyr::tibble(
             name=character(),
             type=character(),
             nullable=logical(),
@@ -747,7 +756,7 @@ add_field <- function(
       stopifnot(
          length(x[[tableName]])==0 #, !nullable, unique
       )
-      x[[tableName]]$fields <- tibble(
+      x[[tableName]]$fields <- dplyr::tibble(
          name=c(
             name,
             paste0(
@@ -763,9 +772,9 @@ add_field <- function(
       )
       x[[tableName]]$primaryKey <- x[[tableName]]$fields$name[1:2]
    }else{
-      x[[tableName]]$fields <- bind_rows(
+      x[[tableName]]$fields <- dplyr::bind_rows(
          x[[tableName]]$fields,
-         tibble(
+         dplyr::tibble(
             name=name,
             type=type,
             nullable=nullable,
@@ -939,7 +948,7 @@ add_foreign_key <- function(
       x[[fromTable]]$foreignKeys,
       list(list(
          refTable=toTable,
-         key=tibble(
+         key=dplyr::tibble(
             from=fromFields,
             to=toFields
          ),
@@ -1113,7 +1122,7 @@ remove_field <- function(
    }
    ## Removing the field ----
    x[[tableName]]$fields <- x[[tableName]]$fields %>%
-      filter(.data$name!=fieldName)
+      dplyr::filter(.data$name!=fieldName)
    ## Returning the results ----
    return(RelDataModel(x))
 
@@ -1318,8 +1327,8 @@ update_field <- function(
       fieldName %in% x[[tableName]]$fields$name
    )
    curType <- x[[tableName]]$fields %>%
-      filter(.data$name==fieldName) %>%
-      pull("type")
+      dplyr::filter(.data$name==fieldName) %>%
+      dplyr::pull("type")
    type <- ifelse(
       is.null(type),
       curType,
@@ -1328,22 +1337,22 @@ update_field <- function(
    nullable <- ifelse(
       is.null(nullable),
       x[[tableName]]$fields %>%
-         filter(.data$name==fieldName) %>%
-         pull("nullable"),
+         dplyr::filter(.data$name==fieldName) %>%
+         dplyr::pull("nullable"),
       nullable
    )
    unique <- ifelse(
       is.null(unique),
       x[[tableName]]$fields %>%
-         filter(.data$name==fieldName) %>%
-         pull("unique"),
+         dplyr::filter(.data$name==fieldName) %>%
+         dplyr::pull("unique"),
       unique
    )
    comment <- ifelse(
       is.null(comment),
       x[[tableName]]$fields %>%
-         filter(.data$name==fieldName) %>%
-         pull("comment"),
+         dplyr::filter(.data$name==fieldName) %>%
+         dplyr::pull("comment"),
       comment
    )
    type <- as.character(type)
@@ -1370,10 +1379,10 @@ update_field <- function(
       d2CurType <- setdiff(c("row", "column"), curType)
       d2Type <- setdiff(c("row", "column"), type)
       d2fn <- x[[tableName]]$fields %>%
-         filter(.data$type==!!d2CurType) %>%
-         pull("name")
+         dplyr::filter(.data$type==!!d2CurType) %>%
+         dplyr::pull("name")
       x[[tableName]]$fields <- x[[tableName]]$fields %>%
-         mutate(
+         dplyr::mutate(
             type=ifelse(
                .data$name==fieldName, !!type,
                ifelse(.data$name==d2fn, !!d2Type, .data$type)
@@ -1421,7 +1430,7 @@ update_field <- function(
       }
       ## Updating field information ----
       x[[tableName]]$fields <- x[[tableName]]$fields %>%
-         mutate(
+         dplyr::mutate(
             type=ifelse(.data$name==fieldName, !!type, .data$type),
             nullable=ifelse(.data$name==fieldName, !!nullable, .data$nullable),
             unique=ifelse(.data$name==fieldName, !!unique, .data$unique),
@@ -1523,8 +1532,10 @@ auto_layout <- function(
       mn$nodes$y <- NA
    }
    if(any(is.na(mn$nodes$x)) || any(is.na(mn$nodes$y))){
-      vp <- visNetwork(mn$nodes %>% select(-"x", -"y"), mn$edges) %>%
-         visIgraphLayout(layout=layout, randomSeed=2)
+      vp <- mn$nodes %>%
+         dplyr::select(-"x", -"y") %>%
+         visNetwork::visNetwork(mn$edges) %>%
+         visNetwork::visIgraphLayout(layout=layout, randomSeed=2)
       x <- lapply(
          x,
          function(n){
@@ -1801,7 +1812,7 @@ confront_data <- function(
                   . <- NULL
                   mt <- dplyr::anti_join(
                      dplyr::select(rtd, dplyr::all_of(tfki$key$to)) %>%
-                        dplyr::filter_all(any_vars(!is.na(.))),
+                        dplyr::filter_all(dplyr::any_vars(!is.na(.))),
                      dplyr::select(td, dplyr::all_of(tfki$key$from)),
                      by=dplyr::all_of(magrittr::set_names(
                         tfki$key$from, tfki$key$to
@@ -1854,7 +1865,7 @@ confront_data <- function(
                   . <- NULL
                   mt <- dplyr::anti_join(
                      dplyr::select(td, dplyr::all_of(tfki$key$from)) %>%
-                        dplyr::filter_all(any_vars(!is.na(.))),
+                        dplyr::filter_all(dplyr::any_vars(!is.na(.))),
                      dplyr::select(rtd, dplyr::all_of(tfki$key$to)),
                      by=dplyr::all_of(magrittr::set_names(
                         tfki$key$to, tfki$key$from

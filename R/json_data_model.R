@@ -16,8 +16,8 @@ read_json_data_model <- function(txt){
          x$tableName <- unlist(x$tableName)
          ## fields ----
          if(length(x$fields)>0){
-            x$fields <- do.call(rbind, lapply(x$fields, as_tibble)) %>%
-               mutate(
+            x$fields <- do.call(rbind, lapply(x$fields, dplyr::as_tibble)) %>%
+               dplyr::mutate(
                   name=as.character(.data$name),
                   type=as.character(.data$type),
                   nullable=as.logical(.data$nullable),
@@ -25,7 +25,7 @@ read_json_data_model <- function(txt){
                   comment=as.character(.data$comment)
                )
          }else{
-            x$fields <- tibble(
+            x$fields <- dplyr::tibble(
                name=character(),
                type=character(),
                nullable=logical(),
@@ -40,7 +40,7 @@ read_json_data_model <- function(txt){
             x$foreignKeys,
             function(y){
                y$refTable <- unlist(y$refTable)
-               y$key <- do.call(rbind, lapply(y$key, as_tibble))
+               y$key <- do.call(rbind, lapply(y$key, dplyr::as_tibble))
                y$cardinality <- as.integer(unlist(y$cardinality))
                names(y$cardinality) <- c("fmin", "fmax", "tmin", "tmax")
                return(y)
