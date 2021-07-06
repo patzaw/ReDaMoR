@@ -387,6 +387,27 @@ new_model %>%
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+# Support of matrices
+
+Matrices (2 dimensions) are supported by ReDaMoR (>= 0.5).
+A matrix is modeled as a table
+with 3 and only 3 fields: 2 of types *row* and *column* and the third
+of your choice. The *row* and *column* compose the primary index of this
+special table, but they cannot be unique independently (a cell in a matrix
+is always identified by its row and its column). The example below shows a model
+of a *gene_expression* matrix: the rows correspond to genes, the column to
+samples and the value to the gene expression value in each sample.
+Genes and samples are further described in the *genes* and *samples* tables.
+
+```{r}
+ge_model <- read_json_data_model(
+  system.file("examples/GE-model.json", package="ReDaMoR")
+)
+plot(ge_model)
+```
+
+<!----------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
 # TKCat: Tailored Knowledge Catalog
 
 The aim of [TKCat](https://github.com/patzaw/TKCat) (Tailored Knowledge Catalog)

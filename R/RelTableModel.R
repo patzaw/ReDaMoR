@@ -10,7 +10,7 @@
 #'    + *comment*:  character
 #' - **primaryKey**: a character vector of any length. All
 #' values should be in fields$name
-#' - **foreignKeys**: a list of foreign keys. Each foreigned key is defined
+#' - **foreignKeys**: a list of foreign keys. Each foreign key is defined
 #' as a list with the following elements:
 #'    + *refTable*: a character vector of length one (the referenced table)
 #'    + *key*: a tibble with a "from" and a "to" columns
@@ -29,6 +29,10 @@
 #'    + *y*: single numeric value for the y position of the table
 #'    + *color*: single character value corresponding to the color of the table
 #'    + *comment*: single character value with some description of the table
+#'
+#' @details When defining a matrix, 3 and only 3 fields must be defined:
+#' 2 of types 'row' and 'column' and the 3rd of your choice. In this case
+#' primaryKey is defined automatically as the combination of row and column.
 #'
 #' @import dplyr
 #' @importFrom magrittr %>%
@@ -68,6 +72,7 @@ RelTableModel <- function(l){
       # nrow(l$fields) > 0,
       is.character(l$fields$name),
       all(!is.na(l$fields$name)),
+      !any(duplicated(l$fields$name)),
       is.character(l$fields$type),
       all(!is.na(l$fields$type)),
       is.logical(l$fields$nullable),
@@ -99,8 +104,35 @@ RelTableModel <- function(l){
       ] <- TRUE
    }
 
-   ## * Field types ----
-   check_types(l$fields$type)
+   ## * Matrix and Field types ----
+   if(any(l$fields$type %in% c("row", "column"))){
+      if(!all(c("row", "column") %in% l$fields$type)){
+         stop("Both row and column should be provided when modelling a matrix")
+      }
+      if(nrow(l$fields) !=3 ){
+         stop("A matrix model should have 3 and only 3 fields")
+      }
+      if(length(unique(l$fields$type)) != 3){
+         stop(paste(
+            "A matrix model should have 3 fields":
+            "2 of types 'row' and 'column' and the 3rd of your choice"
+         ))
+      }
+      rcfields <- l$fields %>% dplyr::filter(.data$type %in% c("row", "column"))
+      if(any(rcfields$nullable)){
+         stop("Matrix row and column cannot be nullable")
+      }
+      if(any(rcfields$unique)){
+         stop(paste(
+            "The combination of row and column is unique (primary key)",
+            " but not row names and column names independently"
+         ))
+      }
+      l$primaryKey <- rcfields$name
+      check_types(setdiff(l$fields$type, c("row", "column")))
+   }else{
+      check_types(l$fields$type)
+   }
 
    ## * Foreign keys ----
    if(!is.null(l$foreignKeys)){
@@ -217,7 +249,7 @@ RelTableModel <- function(l){
 }
 
 ###############################################################################@
-#' Check the object is  a [RelTableModel] object
+#' Check if the object is  a [RelTableModel] object
 #'
 #' @param x any object
 #'
@@ -227,6 +259,23 @@ RelTableModel <- function(l){
 #'
 is.RelTableModel <- function(x){
    inherits(x, "RelTableModel")
+}
+
+###############################################################################@
+#' Check if the object is a [RelTableModel] matrix object
+#'
+#' A matrix model is a special [RelTableModel] object with 3 and only 3 fields:
+#' 2 of types 'row' and 'column' and the 3rd of your choice.
+#'
+#' @param x any object
+#'
+#' @return A single logical: TRUE if x is a [RelTableModel] matrix object
+#'
+#' @export
+#'
+is.MatrixModel <- function(x){
+   inherits(x, "RelTableModel") &&
+      "row" %in% x$fields$type
 }
 
 ###############################################################################@
@@ -257,8 +306,11 @@ format.RelTableModel <- function(x, ...){
       }
    ))
    toRet <- paste0(
-      # sprintf("Database: %s", x$dbName), "\n",
-      sprintf("Table name: %s", x$tableName), "\n",
+      sprintf(
+         "Table name: %s%s",
+         x$tableName,
+         ifelse(is.MatrixModel(x), " (matrix)", "")
+      ), "\n",
       paste(
          apply(
             f, 1,
@@ -388,6 +440,8 @@ col_types <- function(x){
             function(y){
                switch(
                   y,
+                  "row"=readr::col_character(),
+                  "column"=readr::col_character(),
                   "integer"=readr::col_integer(),
                   "numeric"=readr::col_double(),
                   "logical"=readr::col_logical(),
@@ -445,6 +499,13 @@ correct_constraints <- function(x){
    if(length(x$indexes)>0){
       for(i in 1:length(x$indexes)){
          if(x$indexes[[i]]$unique && length(x$indexes[[i]]$fields)==1){
+            if(
+               x$fields[
+                  which(x$fields$name==x$indexes[[i]]$fields), "type"
+               ] %in% c("row", "column")
+            ){
+               stop("Matrix row and column cannot be unique individually")
+            }
             x$fields[
                which(x$fields$name==x$indexes[[i]]$fields), "unique"
                ] <- TRUE
@@ -468,7 +529,7 @@ correct_constraints <- function(x){
 #' Confront a [RelTableModel] to actual data
 #'
 #' @param x a [RelTableModel]
-#' @param d a data frame
+#' @param d a data frame or a matrix for matrix model
 #' @param checks a character vector with the name of optional checks to be done
 #' (Default: all of them c("unique", "not nullable"))
 #'
@@ -481,10 +542,6 @@ confront_table_data <- function(
    d,
    checks=c("unique", "not nullable")
 ){
-   stopifnot(is.RelTableModel(x))
-   stopifnot(
-      is.data.frame(d)
-   )
    ## Optional checks ----
    if(length(checks)>0){
       checks <- match.arg(
@@ -493,6 +550,59 @@ confront_table_data <- function(
          several.ok=TRUE
       )
    }
+   stopifnot(is.RelTableModel(x))
+   ## Matrix model ----
+   if(is.MatrixModel(x) & is.matrix(d)){
+      vf <- x$fields %>% dplyr::filter(!.data$type %in% c("row", "column"))
+      toRet <- list(
+         missingFields = character(0),
+         suppFields = character(0),
+         availableFields = vf$name,
+         fields=list(),
+         success=TRUE
+      )
+      toRet$fields[[vf$name]] <- list(success=TRUE, message=NULL)
+      if(!inherits(d[1], vf$type)){
+         toRet$fields[[vf$name]]$success <- FALSE
+         toRet$success <- FALSE
+         toRet$fields[[vf$name]]$message <- paste(c(
+            toRet$fields[[vf$name]]$message,
+            sprintf(
+               'Unexpected "%s"',
+               paste(class(d[1]), collapse=", ")
+            )
+         ), collapse=" ")
+      }
+      if("not nullable" %in% checks){
+         mis <- sum(is.na(d))
+         if(mis!=0){
+            toRet$fields[[vf$name]]$message <- paste(c(
+               toRet$fields[[vf$name]]$message,
+               sprintf(
+                  'Missing values %s/%s = %s%s',
+                  mis, length(d), round(mis*100/length(d)), "%"
+               )
+            ), collapse=" ")
+            if(!vf$nullable){
+               toRet$fields[[vf$name]]$success <- FALSE
+               toRet$success <- FALSE
+            }
+         }
+      }
+      if("unique" %in% checks && vf$unique && any(duplicated(d))){
+         toRet$fields[[vf$name]]$success <- FALSE
+         toRet$success <- FALSE
+         toRet$fields[[vf$name]]$message <- paste(c(
+            toRet$fields[[vf$name]]$message,
+            "Some values are duplicated"
+         ), collapse=" ")
+      }
+      return(toRet)
+   }
+
+   stopifnot(
+      is.data.frame(d)
+   )
    ## Available fields ----
    missingFields <- setdiff(x$fields$name, colnames(d))
    suppFields <- setdiff(colnames(d), x$fields$name)
@@ -505,11 +615,11 @@ confront_table_data <- function(
       success=length(missingFields)==0 && length(suppFields)==0
    )
    ## Fields ----
-   for(i in 1:nrow(x$fields)){
-      fn <- x$fields$name[i]
-      ft <- x$fields$type[i]
-      fe <- x$fields$nullable[i]
-      fu <- x$fields$unique[i]
+   for(fn in availableFields){
+      ft <- x$fields$type[which(x$fields$name==fn)]
+      ft <- ifelse(ft %in% c("row", "column"), "character", ft)
+      fe <- x$fields$nullable[which(x$fields$name==fn)]
+      fu <- x$fields$unique[which(x$fields$name==fn)]
       toRet$fields[[fn]] <- list(success=TRUE, message=NULL)
       if(!inherits(pull(d, !!fn), ft)){
          toRet$fields[[fn]]$success <- FALSE
@@ -553,19 +663,58 @@ confront_table_data <- function(
       for(i in 1:length(x$indexes)){
          toRet$indexes[[i]] <- list()
          idx <- x$indexes[[i]]
-         if(!idx$unique){
-            toRet$indexes[[i]]$success <- TRUE
+         if(any(idx$fields %in% missingFields)){
+            toRet$indexes[[i]]$success <- FALSE
+            toRet$indexes[[i]]$message <- paste(c(
+               toRet$indexes[[i]]$message,
+               "Missing field"
+            ), collapse=" ")
+            toRet$success <- FALSE
          }else{
-            if(any(duplicated(d[,idx$fields]))){
-               toRet$indexes[[i]]$success <- FALSE
-               toRet$indexes[[i]]$message <- paste(c(
-                  toRet$indexes[[i]]$message,
-                  "Some values are duplicated"
-               ), collapse=" ")
-               toRet$success <- FALSE
-            }else{
+            if(!idx$unique){
                toRet$indexes[[i]]$success <- TRUE
+            }else{
+               if(any(duplicated(d[,idx$fields]))){
+                  toRet$indexes[[i]]$success <- FALSE
+                  toRet$indexes[[i]]$message <- paste(c(
+                     toRet$indexes[[i]]$message,
+                     "Some values are duplicated"
+                  ), collapse=" ")
+                  toRet$success <- FALSE
+               }else{
+                  toRet$indexes[[i]]$success <- TRUE
+               }
             }
+         }
+      }
+   }
+   if("not nullable" %in% checks && is.MatrixModel(x)){
+      if(!"indexes" %in% names(toRet)){
+         toRet$indexes <- list()
+      }
+      i <- length(toRet$indexes)+1
+      rf <- x$fields %>%
+         dplyr::filter(.data$type=="row") %>%
+         pull("name")
+      cf <- x$fields %>%
+         dplyr::filter(.data$type=="column") %>%
+         pull("name")
+      fe <- x$fields %>%
+         dplyr::filter(!.data$type %in% c("row", "column")) %>%
+         pull("nullable")
+      ncells <- length(unique(d[,rf])) * length(unique(d[,cf]))
+      mis <- ncells - nrow(d)
+      if(mis > 0 ){
+         toRet$indexes[[i]]$message <- paste(c(
+            toRet$indexes[[i]]$message,
+            sprintf(
+               'Missing cells %s/%s = %s%s',
+               mis, ncells, round(mis*100/ncells), "%"
+            )
+         ), collapse=" ")
+         if(!fe){
+            toRet$indexes[[i]]$success <- FALSE
+            toRet$success <- FALSE
          }
       }
    }

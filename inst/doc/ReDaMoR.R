@@ -80,6 +80,12 @@ new_model %>%
   plot()
 # model_relational_data(new_model)
 
+## -----------------------------------------------------------------------------
+ge_model <- read_json_data_model(
+  system.file("examples/GE-model.json", package="ReDaMoR")
+)
+plot(ge_model)
+
 ## ---- eval="TKCat" %in% rownames(installed.packages())------------------------
 library(TKCat)
 file_hpo <- read_fileMDB(

@@ -1,0 +1,134 @@
+{
+  "gene_expression": {
+    "tableName": ["gene_expression"],
+    "fields": [
+      {
+        "name": "sample",
+        "type": "column",
+        "nullable": false,
+        "unique": false,
+        "comment": "Sample identifier"
+      },
+      {
+        "name": "gene",
+        "type": "row",
+        "nullable": false,
+        "unique": false,
+        "comment": "Gene Ensembl identifier"
+      },
+      {
+        "name": "expression",
+        "type": "numeric",
+        "nullable": false,
+        "unique": false,
+        "comment": "Expression value: log2(cpm)"
+      }
+    ],
+    "indexes": [
+      {
+        "fields": ["gene", "sample"],
+        "unique": [true]
+      }
+    ],
+    "display": {
+      "x": [25],
+      "y": [-85],
+      "color": ["NA"],
+      "comment": ["Expression value of each gene in each sample."]
+    },
+    "primaryKey": ["gene", "sample"],
+    "foreignKeys": [
+      {
+        "refTable": ["genes"],
+        "key": [
+          {
+            "from": "gene",
+            "to": "ensembl"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      },
+      {
+        "refTable": ["samples"],
+        "key": [
+          {
+            "from": "sample",
+            "to": "id"
+          }
+        ],
+        "cardinality": [0, -1, 1, 1]
+      }
+    ]
+  },
+  "genes": {
+    "tableName": ["genes"],
+    "fields": [
+      {
+        "name": "ensembl",
+        "type": "character",
+        "nullable": false,
+        "unique": true,
+        "comment": "Ensembl gene identifier"
+      },
+      {
+        "name": "symbol",
+        "type": "integer",
+        "nullable": true,
+        "unique": false,
+        "comment": "Gene symbol"
+      },
+      {
+        "name": "name",
+        "type": "character",
+        "nullable": true,
+        "unique": false,
+        "comment": "Gene name"
+      }
+    ],
+    "indexes": [
+      {
+        "fields": ["ensembl"],
+        "unique": [true]
+      }
+    ],
+    "display": {
+      "x": [-202],
+      "y": [76],
+      "color": ["NA"],
+      "comment": ["NA"]
+    },
+    "primaryKey": ["ensembl"]
+  },
+  "samples": {
+    "tableName": ["samples"],
+    "fields": [
+      {
+        "name": "id",
+        "type": "character",
+        "nullable": false,
+        "unique": true,
+        "comment": "Sample identifier"
+      },
+      {
+        "name": "condition",
+        "type": "character",
+        "nullable": false,
+        "unique": false,
+        "comment": "Sample condition (e.g.  \"treatment\" or \"Control\")"
+      }
+    ],
+    "indexes": [
+      {
+        "fields": ["id"],
+        "unique": [true]
+      }
+    ],
+    "display": {
+      "x": [197],
+      "y": [70],
+      "color": ["NA"],
+      "comment": ["NA"]
+    },
+    "primaryKey": ["id"]
+  }
+}

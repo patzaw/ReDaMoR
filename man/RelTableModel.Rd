@@ -19,7 +19,7 @@ RelTableModel(l)
 }
 \item \strong{primaryKey}: a character vector of any length. All
 values should be in fields$name
-\item \strong{foreignKeys}: a list of foreign keys. Each foreigned key is defined
+\item \strong{foreignKeys}: a list of foreign keys. Each foreign key is defined
 as a list with the following elements:
 \itemize{
 \item \emph{refTable}: a character vector of length one (the referenced table)
@@ -53,4 +53,9 @@ A RelTableModel object.
 }
 \description{
 Create a RelTableModel object
+}
+\details{
+When defining a matrix, 3 and only 3 fields must be defined:
+2 of types 'row' and 'column' and the 3rd of your choice. In this case
+primaryKey is defined automatically as the combination of row and column.
 }

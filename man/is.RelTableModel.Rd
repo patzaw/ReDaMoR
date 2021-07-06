@@ -2,7 +2,7 @@
 % Please edit documentation in R/RelTableModel.R
 \name{is.RelTableModel}
 \alias{is.RelTableModel}
-\title{Check the object is  a \link{RelTableModel} object}
+\title{Check if the object is  a \link{RelTableModel} object}
 \usage{
 is.RelTableModel(x)
 }
@@ -13,5 +13,5 @@ is.RelTableModel(x)
 A single logical: TRUE if x is a \link{RelTableModel} object
 }
 \description{
-Check the object is  a \link{RelTableModel} object
+Check if the object is  a \link{RelTableModel} object
 }

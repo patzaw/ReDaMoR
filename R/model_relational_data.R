@@ -948,15 +948,19 @@ buildServer <- function(
                column(
                   6,
                   uiOutput("updateFieldDiv", inline=TRUE),
-                  actionButton(
-                     "addField", label="",
-                     icon=icon("plus-square", "fa-1x"),
-                     class="shrunkenButton"
-                  ) %>%
-                     div(
-                        title="Add a new field",
-                        class="iblock"
-                     ),
+                  if(is.MatrixModel(mt)){
+                     NULL
+                  }else{
+                     actionButton(
+                        "addField", label="",
+                        icon=icon("plus-square", "fa-1x"),
+                        class="shrunkenButton"
+                     ) %>%
+                        div(
+                           title="Add a new field",
+                           class="iblock"
+                        )
+                  },
                   class="rightBox"
                )
             ),
@@ -1054,12 +1058,16 @@ buildServer <- function(
                   title="Edit field properties",
                   class="iblock"
                ),
-            actionButton(
-               "removeField",
-               label="",
-               icon=icon("minus-square", "fa-1x"),
-               class="shrunkenButton"
-            ) %>% div(title="Remove field", class="iblock"),
+            if(is.MatrixModel(mt)){
+               NULL
+            }else{
+               actionButton(
+                  "removeField",
+                  label="",
+                  icon=icon("minus-square", "fa-1x"),
+                  class="shrunkenButton"
+               ) %>% div(title="Remove field", class="iblock")
+            },
             class="iblock"
          )
       })
@@ -1164,7 +1172,11 @@ buildServer <- function(
                   uiOutput("existingNewField"),
                   selectInput(
                      "newFieldType", label="Type",
-                     choices=SUPPTYPES,
+                     choices=if(nrow(fields)==0){
+                        c(SUPPTYPES, "row", "column")
+                     }else{
+                        SUPPTYPES
+                     },
                      selected=NULL, multiple=FALSE
                   ),
                   checkboxInput(
@@ -1265,17 +1277,29 @@ buildServer <- function(
                   uiOutput("existingField"),
                   selectInput(
                      "fieldType", label="Type",
-                     choices=SUPPTYPES,
+                     choices=if(fields$type[seli] %in% c("row", "column")){
+                        c("row", "column")
+                     }else{
+                        SUPPTYPES
+                     },
                      selected=fields$type[seli], multiple=FALSE
                   ),
-                  checkboxInput(
-                     "fieldNullable", label="Nullable?",
-                     value=fields$nullable[seli],
-                  ),
-                  checkboxInput(
-                     "fieldUnique", label="Unique?",
-                     value=fields$unique[seli],
-                  ),
+                  if(fields$type[seli] %in% c("row", "column")){
+                     NULL
+                  }else{
+                     checkboxInput(
+                        "fieldNullable", label="Nullable?",
+                        value=fields$nullable[seli],
+                     )
+                  },
+                  if(fields$type[seli] %in% c("row", "column")){
+                     NULL
+                  }else{
+                     checkboxInput(
+                        "fieldUnique", label="Unique?",
+                        value=fields$unique[seli],
+                     )
+                  },
                   textAreaInput(
                      "fieldComment", label="Comment",
                      value=fields$comment[seli],
@@ -1426,6 +1450,11 @@ buildServer <- function(
             shinyjs::enable("refreshPrimaryKey")
          }else{
             shinyjs::disable("refreshPrimaryKey")
+         }
+         if(is.MatrixModel(mt)){
+            shinyjs::disable("primaryKey")
+         }else{
+            shinyjs::enable("primaryKey")
          }
       })
       output$refreshPKH <- renderUI({
@@ -2018,8 +2047,20 @@ buildServer <- function(
          validate(need(tt, ""))
          tns <- sort(c(ft, tt))
          m <- isolate(model$x)
-         ftfields <- m[[ft]]$fields$name
-         ttfields <- m[[tt]]$fields$name
+         if(is.MatrixModel(m[[ft]])){
+            ftfields <- m[[ft]]$fields$name[which(
+               m[[ft]]$fields$type %in% c("row", "column")
+            )]
+         }else{
+            ftfields <- m[[ft]]$fields$name
+         }
+         if(is.MatrixModel(m[[tt]])){
+            ttfields <- m[[tt]]$fields$name[which(
+               m[[tt]]$fields$type %in% c("row", "column")
+            )]
+         }else{
+            ttfields <- m[[tt]]$fields$name
+         }
          toRet <- list(
             column(
                5,
@@ -2061,10 +2102,11 @@ buildServer <- function(
          to <- input$fkToField
          validate(need(from %in% ftfields$name, ""))
          validate(need(to %in% ttfields$name, ""))
-         if(
-            ftfields[which(ftfields$name==from),]$type !=
-            ttfields[which(ttfields$name==to),]$type
-         ){
+         fft <- ftfields[which(ftfields$name==from),]$type
+         fft <- ifelse(fft %in% c("row", "column"), "character", fft)
+         tft <- ttfields[which(ttfields$name==to),]$type
+         tft <- ifelse(tft %in% c("row", "column"), "character", tft)
+         if(fft != tft){
             return(tagList(
                tags$br(),
                p("Incompatible types", class="errorMessage")
@@ -2166,40 +2208,46 @@ buildServer <- function(
          validate(need(input$confirmAddFK > 0, ""))
          m <- isolate(model$x)
          suppressWarnings(
-               nm <- m %>%
-               add_foreign_key(
-                  fromTable=isolate(foreignKey$fromTable),
-                  toTable=isolate(foreignKey$toTable),
-                  fromFields=isolate(foreignKey$fromFields),
-                  toFields=isolate(foreignKey$toFields),
-                  fmin=isolate(foreignKey$fmin),
-                  fmax=isolate(foreignKey$fmax),
-                  tmin=isolate(foreignKey$tmin),
-                  tmax=isolate(foreignKey$tmax)
-               )
+               nm <- try({
+                  m %>%
+                     add_foreign_key(
+                        fromTable=isolate(foreignKey$fromTable),
+                        toTable=isolate(foreignKey$toTable),
+                        fromFields=isolate(foreignKey$fromFields),
+                        toFields=isolate(foreignKey$toFields),
+                        fmin=isolate(foreignKey$fmin),
+                        fmax=isolate(foreignKey$fmax),
+                        tmin=isolate(foreignKey$tmin),
+                        tmax=isolate(foreignKey$tmax)
+                     )
+               }, silent=TRUE)
          )
-         removeModal()
-         if(identical(nm, m)){
-            sendError(paste(
-               "The foreign key could not be added:",
-               "it may already exist or it may not fit other constraints."
-            ))
+         if(inherits(nm, "try-error")){
+            sendError(as.character(nm))
          }else{
-            sendWarning(paste(
-               "Some indexes, uniqueness and mandatory constraints may",
-               "have been added to fields to support the foreign key",
-               "cardinalities."
-            ))
+            removeModal()
+            if(identical(nm, m)){
+               sendError(paste(
+                  "The foreign key could not be added:",
+                  "it may already exist or it may not fit other constraints."
+               ))
+            }else{
+               sendWarning(paste(
+                  "Some indexes, uniqueness and mandatory constraints may",
+                  "have been added to fields to support the foreign key",
+                  "cardinalities."
+               ))
+            }
+            model$new <- nm
+            foreignKey$fromTable <- NULL
+            foreignKey$toTable <- NULL
+            foreignKey$fromFields <- NULL
+            foreignKey$toFields <- NULL
+            foreignKey$fmin <- NULL
+            foreignKey$fmax <- NULL
+            foreignKey$tmin <- NULL
+            foreignKey$tmax <- NULL
          }
-         model$new <- nm
-         foreignKey$fromTable <- NULL
-         foreignKey$toTable <- NULL
-         foreignKey$fromFields <- NULL
-         foreignKey$toFields <- NULL
-         foreignKey$fmin <- NULL
-         foreignKey$fmax <- NULL
-         foreignKey$tmin <- NULL
-         foreignKey$tmax <- NULL
       })
 
       ## _+ Cardinality ----

@@ -117,8 +117,9 @@ modelToVn <- function(
          ), collapse="\n")
          label <- paste(
             sprintf(
-               '<b>%s</b>',
-               m$tableName
+               '<b>%s%s</b>',
+               m$tableName,
+               ifelse(is.MatrixModel(m), " []", "")
             ),
             flab,
             sep="\n"

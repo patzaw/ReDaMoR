@@ -179,7 +179,13 @@ check_foreign_keys <- function(x){
                      ))
                   }
                   fromt <- tm$fields$type[which(tm$fields$name==from)]
+                  fromt <- ifelse(
+                     fromt %in% c("row", "column"), "character", fromt
+                  )
                   tot <- ft$fields$type[which(ft$fields$name==to)]
+                  tot <- ifelse(
+                     tot %in% c("row", "column"), "character", tot
+                  )
                   if(fromt != tot){
                      stop(sprintf(
                         paste(
@@ -722,13 +728,14 @@ add_field <- function(
    stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(tableName), length(tableName)==1,
+      !is.MatrixModel(x[[tableName]]),
       !is.na(tableName),
       tableName %in% names(x),
       is.character(name), length(name)==1,
       !is.na(name),
       !name %in% x[[tableName]]$fields$name,
       is.character(type), length(type)==1,
-      !is.na(type), type %in% SUPPTYPES,
+      !is.na(type), type %in% c(SUPPTYPES, "row", "column"),
       is.logical(nullable), length(nullable)==1,
       !is.na(nullable),
       is.logical(unique), length(unique)==1,
@@ -736,16 +743,37 @@ add_field <- function(
       is.character(comment), length(comment)==1
    )
    x <- unclass(x)
-   x[[tableName]]$fields <- bind_rows(
-      x[[tableName]]$fields,
-      tibble(
-         name=name,
-         type=type,
-         nullable=nullable,
-         unique=unique,
-         comment=comment
+   if(type %in% c("row", "column")){
+      stopifnot(
+         length(x[[tableName]])==0 #, !nullable, unique
       )
-   )
+      x[[tableName]]$fields <- tibble(
+         name=c(
+            name,
+            paste0(
+               toupper(setdiff(c("row", "column"), type)),
+               "_TO_UPDATE"
+            ),
+            "VALUE_TO_UPDATE"
+         ),
+         type=c(type, setdiff(c("row", "column"), type), "character"),
+         nullable=c(FALSE, FALSE, TRUE),
+         unique=c(FALSE, FALSE, FALSE),
+         comment=c(comment, NA, NA)
+      )
+      x[[tableName]]$primaryKey <- x[[tableName]]$fields$name[1:2]
+   }else{
+      x[[tableName]]$fields <- bind_rows(
+         x[[tableName]]$fields,
+         tibble(
+            name=name,
+            type=type,
+            nullable=nullable,
+            unique=unique,
+            comment=comment
+         )
+      )
+   }
    return(RelDataModel(x))
 }
 
@@ -855,6 +883,14 @@ add_foreign_key <- function(
    fmin=0L, fmax=-1L, tmin=1L, tmax=1L
 ){
    stopifnot(is.RelDataModel(x))
+   ft <- x[[fromTable]]$fields$type[
+      match(fromFields, x[[fromTable]]$fields$name)
+   ]
+   ft <- ifelse(ft %in% c("row", "column"), "character", ft)
+   tt <- x[[toTable]]$fields$type[
+      match(toFields, x[[toTable]]$fields$name)
+   ]
+   tt <- ifelse(tt %in% c("row", "column"), "character", tt)
    stopifnot(
       is.character(fromTable), length(fromTable)==1,
       fromTable %in% names(x),
@@ -864,16 +900,35 @@ add_foreign_key <- function(
       is.character(toFields), length(toFields)==length(fromFields),
       all(fromFields %in% x[[fromTable]]$fields$name),
       all(toFields %in% x[[toTable]]$fields$name),
-      all(
-         x[[fromTable]]$fields$type[match(fromFields, x[[fromTable]]$fields$name)]==
-            x[[toTable]]$fields$type[match(toFields, x[[toTable]]$fields$name)]
-      ),
+      all(ft == tt),
       all(!is.na(c(fmin, fmax, tmin, tmax))),
       is.integer(fmin), is.integer(fmax), is.integer(tmin), is.integer(tmax),
       fmin > -1, tmin > -1,
       fmax==-1 || (fmax > 0 && fmax >= fmin),
       tmax==-1 || (tmax > 0 && tmax >= tmin)
    )
+   if(is.MatrixModel(x[[fromTable]])){
+      fi <- x[[fromTable]]$fields %>% dplyr::filter(.data$name %in% fromFields)
+      if(any(!fi$type %in% c("row", "column"))){
+         stop(paste(
+            "Only row and column of matrices can be used in foreign keys"
+         ))
+      }
+      if(fmax==1 && nrow(fi)==1){
+         stop("Matix row and column cannot be mapped individually unambiguisly")
+      }
+   }
+   if(is.MatrixModel(x[[toTable]])){
+      fi <- x[[toTable]]$fields %>% dplyr::filter(.data$name %in% toFields)
+      if(any(!fi$type %in% c("row", "column"))){
+         stop(paste(
+            "Only row and column of matrices can be used in foreign keys"
+         ))
+      }
+      if(tmax==1 && nrow(fi)==1){
+         stop("Matix row and column cannot be mapped individually unambiguisly")
+      }
+   }
    efk <- fk_match(x, fromTable, fromFields, toTable, toFields)
    if(length(efk)!=0){
       warning("The foreign key already exists ==> no change")
@@ -992,6 +1047,7 @@ remove_field <- function(
    stopifnot(is.RelDataModel(x))
    stopifnot(
       is.character(tableName), length(tableName)==1,
+      !is.MatrixModel(x[[tableName]]),
       tableName %in% names(x),
       is.character(fieldName), length(fieldName)==1,
       fieldName %in% x[[tableName]]$fields$name
@@ -1108,6 +1164,7 @@ set_primary_key <- function(x, tableName, fieldNames){
    fieldNames <- as.character(fieldNames)
    stopifnot(
       is.character(tableName), length(tableName)==1,
+      !is.MatrixModel(x[[tableName]]),
       tableName %in% names(x),
       all(fieldNames %in% x[[tableName]]$fields$name)
    )
@@ -1299,49 +1356,79 @@ update_field <- function(
       is.logical(unique), length(unique)==1, !is.na(unique),
       is.character(comment), length(comment)==1
    )
-   check_types(type)
-   ## Foreign keys ----
-   if(type != curType){
-      refk <- lapply(
-         x[[tableName]]$foreignKeys,
-         function(y){
-            fieldName %in% y$key$from
-         }
-      ) %>%
-         unlist() %>%
-         as.logical() %>%
-         which()
-      tefk <- lapply(
-         x,
-         function(y){
-            lapply(
-               y$foreignKeys,
-               function(z){
-                  tableName==z$refTable &
-                     fieldName %in% z$key$to
-               }
-            ) %>%
-               unlist() %>%
-               as.logical() %>%
-               which()
-         }
-      )
-      if(length(refk)>0 || any(unlist(lapply(tefk, length))>0)){
-         stop(
-            "Cannot change the type of a field involved in a foreign key.\n",
-            "You should first remove the foreign key involving it."
-         )
-      }
-   }
-   ## Updating field information ----
+
    x <- unclass(x)
-   x[[tableName]]$fields <- x[[tableName]]$fields %>%
-      mutate(
-         type=ifelse(.data$name==fieldName, !!type, .data$type),
-         nullable=ifelse(.data$name==fieldName, !!nullable, .data$nullable),
-         unique=ifelse(.data$name==fieldName, !!unique, .data$unique),
-         comment=ifelse(.data$name==fieldName, !!comment, .data$comment)
-      )
+   if(is.MatrixModel(x[[tableName]]) && curType %in% c("row", "column")){
+      ## row/column type ----
+      if(!type %in% c("row", "column")){
+         stop("row and column can only be mutated in row and column")
+      }
+      if(nullable || unique){
+         stop("row and column cannot be nullable nor unique")
+      }
+      ## Updating field information ----
+      d2CurType <- setdiff(c("row", "column"), curType)
+      d2Type <- setdiff(c("row", "column"), type)
+      d2fn <- x[[tableName]]$fields %>%
+         filter(.data$type==!!d2CurType) %>%
+         pull("name")
+      x[[tableName]]$fields <- x[[tableName]]$fields %>%
+         mutate(
+            type=ifelse(
+               .data$name==fieldName, !!type,
+               ifelse(.data$name==d2fn, !!d2Type, .data$type)
+            ),
+            comment=ifelse(.data$name==fieldName, !!comment, .data$comment)
+         )
+   }else{
+      ## Other type ----
+      if(type %in% c("row", "column")){
+         stop("Cannot set this field as row or column")
+      }
+      check_types(type)
+      ## Foreign keys ----
+      if(type != curType){
+         refk <- lapply(
+            x[[tableName]]$foreignKeys,
+            function(y){
+               fieldName %in% y$key$from
+            }
+         ) %>%
+            unlist() %>%
+            as.logical() %>%
+            which()
+         tefk <- lapply(
+            x,
+            function(y){
+               lapply(
+                  y$foreignKeys,
+                  function(z){
+                     tableName==z$refTable &
+                        fieldName %in% z$key$to
+                  }
+               ) %>%
+                  unlist() %>%
+                  as.logical() %>%
+                  which()
+            }
+         )
+         if(length(refk)>0 || any(unlist(lapply(tefk, length))>0)){
+            stop(
+               "Cannot change the type of a field involved in a foreign key.\n",
+               "You should first remove the foreign key involving it."
+            )
+         }
+      }
+      ## Updating field information ----
+      x[[tableName]]$fields <- x[[tableName]]$fields %>%
+         mutate(
+            type=ifelse(.data$name==fieldName, !!type, .data$type),
+            nullable=ifelse(.data$name==fieldName, !!nullable, .data$nullable),
+            unique=ifelse(.data$name==fieldName, !!unique, .data$unique),
+            comment=ifelse(.data$name==fieldName, !!comment, .data$comment)
+         )
+   }
+
    return(RelDataModel(x))
 }
 
@@ -1496,6 +1583,68 @@ confront_data <- function(
    ...
 ){
    stopifnot(is.RelDataModel(x))
+
+   read_td <- function(tm, tn){
+      if(is.MatrixModel(tm)){
+         cn <- readLines(paths[tn], n=1) %>%
+            strsplit(split=delim) %>%
+            unlist()
+         cn <- gsub("['`]", "", cn)
+         cn <- gsub('["]', "", cn)
+         if(all(cn %in% tm$fields$name)){
+            td <- readr::read_delim(
+               paths[tn],
+               delim=delim, n_max=n_max,
+               col_types=col_types(tm),
+               ...
+            )
+         }else{
+            vt <- tm$fields %>%
+               dplyr::filter(!.data$type %in% c("row", "column")) %>%
+               dplyr::pull("type")
+            ctypes <- do.call(
+               readr::cols,
+               structure(
+                  list(
+                     readr::col_character(),
+                     .default = switch(
+                        vt,
+                        "integer"=readr::col_integer(),
+                        "numeric"=readr::col_double(),
+                        "logical"=readr::col_logical(),
+                        "character"=readr::col_character(),
+                        "Date"=readr::col_date(),
+                        "POSIXct"=readr::col_datetime()
+                     )
+                  ),
+                  .Names=c("___ROWNAMES___", ".default")
+               )
+            )
+            td <- readr::read_delim(
+               paths[tn],
+               delim=delim, n_max=n_max, skip=1,
+               col_types=ctypes,
+               col_names=c("___ROWNAMES___", cn[-1]),
+               ...
+            ) %>% as.data.frame(stringsAsFactors=FALSE)
+            stopifnot(
+               !any(duplicated(colnames(td))),
+               !any(duplicated(td[[1]]))
+            )
+            rownames(td) <- td[[1]]
+            td <- as.matrix(td[, -1, drop=FALSE])
+         }
+      }else{
+         td <- readr::read_delim(
+            paths[tn],
+            delim=delim, n_max=n_max,
+            col_types=col_types(tm),
+            ...
+         )
+      }
+      return(td)
+   }
+
    ## Optional checks ----
    if(length(checks)>0){
       checks <- match.arg(
@@ -1571,12 +1720,7 @@ confront_data <- function(
       if(tn %in% names(data)){
          td <- data[[tn]]
       }else{
-         td <- readr::read_delim(
-            paths[tn],
-            delim=delim, n_max=n_max,
-            col_types=col_types(tm),
-            ...
-         )
+         td <- read_td(tm, tn)
          if(returnData){
             data[[tn]] <- td
          }
@@ -1608,54 +1752,64 @@ confront_data <- function(
             ##
             if(rtn==tn){
                rtd <- td
+               rtm <- tm
             }else{
+               rtm <- x[[rtn]]
                if(rtn %in% names(data)){
                   rtd <- data[[rtn]]
                }else{
-                  rtd <- readr::read_delim(
-                     paths[rtn], delim=delim, n_max=n_max,
-                     col_types=col_types(x[[rtn]]),
-                     ...
-                  )
+                  rtd <- read_td(rtm, rtn)
                   if(returnData){
                      data[[rtn]] <- rtd
                   }
                }
             }
             ##
-            # if(length(tfki$key$from)==1){
-            #    tfki_fid <- td %>% pull(tfki$key$from)
-            #    tfki_tid <- rtd %>% pull(tfki$key$to)
-            # }else{
-            #    tfki_fid <- do.call(
-            #       paste,
-            #       c(
-            #          unique(td[, tfki$key$from, drop=FALSE]),
-            #          list(sep="_")
-            #       )
-            #    )
-            #    tfki_tid <- do.call(
-            #       paste,
-            #       c(
-            #          unique(rtd[, tfki$key$to, drop=FALSE]),
-            #          list(sep="_")
-            #       )
-            #    )
-            # }
             success <- TRUE
             message <- NULL
             if(tfki$cardinality["fmin"]>0){
-               . <- NULL
-               mt <- dplyr::anti_join(
-                  dplyr::select(rtd, dplyr::all_of(tfki$key$to)) %>%
-                     dplyr::filter_all(any_vars(!is.na(.))),
-                  dplyr::select(td, dplyr::all_of(tfki$key$from)),
-                  by=dplyr::all_of(magrittr::set_names(
-                     tfki$key$from, tfki$key$to
-                  ))
-               )
-               # if(any(!tfki_tid %in% tfki_fid)){
-               if(nrow(mt)>0){
+               if(is.matrix(td) || is.matrix(rtd)){
+                  for(j in 1:length(tfki$key$from)){
+                     ff <- tfki$key$from[j]
+                     if(is.matrix(td)){
+                        fft <- tm$fields$type[which(tm$fields$name==ff)]
+                        if(fft=="row"){
+                           ffv <- rownames(td)
+                        }else{
+                           ffv <- colnames(td)
+                        }
+                     }else{
+                        ffv <- unique(td[[ff]])
+                     }
+                     tf <- tfki$key$to[j]
+                     if(is.matrix(rtd)){
+                        tft <- rtm$fields$type[which(rtm$fields$name==tf)]
+                        if(tft=="row"){
+                           tfv <- rownames(rtd)
+                        }else{
+                           tfv <- colnames(rtd)
+                        }
+                     }else{
+                        tfv <- unique(rtd[[tf]])
+                     }
+                     fkissue <- !all(tfv %in% ffv)
+                     if(fkissue){
+                        break()
+                     }
+                  }
+               }else{
+                  . <- NULL
+                  mt <- dplyr::anti_join(
+                     dplyr::select(rtd, dplyr::all_of(tfki$key$to)) %>%
+                        dplyr::filter_all(any_vars(!is.na(.))),
+                     dplyr::select(td, dplyr::all_of(tfki$key$from)),
+                     by=dplyr::all_of(magrittr::set_names(
+                        tfki$key$from, tfki$key$to
+                     ))
+                  )
+                  fkissue <- nrow(mt)>0
+               }
+               if(fkissue>0){
                   success <- FALSE
                   message <- paste(c(
                      message,
@@ -1667,17 +1821,48 @@ confront_data <- function(
                }
             }
             if(tfki$cardinality["tmin"]>0){
-               . <- NULL
-               mt <- dplyr::anti_join(
-                  dplyr::select(td, dplyr::all_of(tfki$key$from)) %>%
-                     dplyr::filter_all(any_vars(!is.na(.))),
-                  dplyr::select(rtd, dplyr::all_of(tfki$key$to)),
-                  by=dplyr::all_of(magrittr::set_names(
-                     tfki$key$to, tfki$key$from
-                  ))
-               )
-               # if(any(!tfki_fid %in% tfki_tid)){
-               if(nrow(mt)>0){
+               if(is.matrix(td) || is.matrix(rtd)){
+                  for(j in 1:length(tfki$key$from)){
+                     ff <- tfki$key$from[j]
+                     if(is.matrix(td)){
+                        fft <- tm$fields$type[which(tm$fields$name==ff)]
+                        if(fft=="row"){
+                           ffv <- rownames(td)
+                        }else{
+                           ffv <- colnames(td)
+                        }
+                     }else{
+                        ffv <- unique(td[[ff]])
+                     }
+                     tf <- tfki$key$to[j]
+                     if(is.matrix(rtd)){
+                        tft <- rtm$fields$type[which(rtm$fields$name==tf)]
+                        if(tft=="row"){
+                           tfv <- rownames(rtd)
+                        }else{
+                           tfv <- colnames(rtd)
+                        }
+                     }else{
+                        tfv <- unique(rtd[[tf]])
+                     }
+                     fkissue <- !all(ffv %in% tfv)
+                     if(fkissue){
+                        break()
+                     }
+                  }
+               }else{
+                  . <- NULL
+                  mt <- dplyr::anti_join(
+                     dplyr::select(td, dplyr::all_of(tfki$key$from)) %>%
+                        dplyr::filter_all(any_vars(!is.na(.))),
+                     dplyr::select(rtd, dplyr::all_of(tfki$key$to)),
+                     by=dplyr::all_of(magrittr::set_names(
+                        tfki$key$to, tfki$key$from
+                     ))
+                  )
+                  fkissue <- nrow(mt)>0
+               }
+               if(fkissue){
                   success <- FALSE
                   message <- paste(c(
                      message,

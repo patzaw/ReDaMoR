@@ -48,9 +48,14 @@ df_to_model <- function(
    }
    list <- c(list, names) %>% unique()
    ## Get and check object values ----
-   values <- lapply(list, get, envir=envir, mode="list", inherits=TRUE)
+   values <- lapply(list, get, envir=envir, mode="any", inherits=TRUE)
    names(values) <- list
-   isdf <- lapply(values, is.data.frame) %>% unlist()
+   isdf <- lapply(
+      values, function(x){
+         is.data.frame(x) || is.matrix(x)
+      }
+   ) %>%
+      unlist()
    if(any(!isdf)){
       stop(
          "The following objects are not data frames: ",
@@ -61,35 +66,56 @@ df_to_model <- function(
    toRet <- list()
    for(tn in names(values)){
       df <- values[[tn]]
-      types <- character()
-      for(cn in colnames(df)){
-         ct <- df %>% pull(!!cn) %>% class() %>% `[`(1)
-         if(!ct %in% SUPPTYPES){
-            stop(
-               sprintf('Type "%s" of column "%s" is not supported. ', ct, cn),
-               'Supported types are provided in "SUPPTYPES".'
+      if(is.matrix(df)){
+         toRet[[tn]] <- RelTableModel(l=list(
+            "tableName"=tn,
+            "fields"=tibble(
+               name=c("row", "column", "value"),
+               type=c("row", "column", class(df[1])),
+               nullable=c(FALSE, FALSE, TRUE),
+               unique=c(FALSE, FALSE, FALSE),
+               comment=as.character(NA)
+            ),
+            "primaryKey"=c("row", "column"),
+            "foreignKeys"=NULL,
+            "indexes"=NULL,
+            "display"=list(
+               x=as.numeric(NA), y=as.numeric(NA),
+               color=as.character(NA),
+               comment=as.character(NA)
             )
+         ))
+      }else{
+         types <- character()
+         for(cn in colnames(df)){
+            ct <- df %>% pull(!!cn) %>% class() %>% `[`(1)
+            if(!ct %in% SUPPTYPES){
+               stop(
+                  sprintf('Type "%s" of column "%s" is not supported. ', ct, cn),
+                  'Supported types are provided in "SUPPTYPES".'
+               )
+            }
+            types <- c(types, ct)
          }
-         types <- c(types, ct)
+         toRet[[tn]] <- RelTableModel(l=list(
+            "tableName"=tn,
+            "fields"=tibble(
+               name=colnames(df),
+               type=types,
+               nullable=TRUE,
+               unique=FALSE,
+               comment=as.character(NA)
+            ),
+            "primaryKey"=NULL,
+            "foreignKeys"=NULL,
+            "indexes"=NULL,
+            "display"=list(
+               x=as.numeric(NA), y=as.numeric(NA),
+               color=as.character(NA),
+               comment=as.character(NA)
+            )
+         ))
       }
-      toRet[[tn]] <- RelTableModel(l=list(
-         "tableName"=tn,
-         "fields"=tibble(
-            name=colnames(df),
-            type=types,
-            nullable=TRUE,
-            unique=FALSE,
-            comment=as.character(NA)
-         ),
-         "primaryKey"=NULL,
-         "foreignKeys"=NULL,
-         "indexes"=NULL,
-         "display"=list(
-            x=as.numeric(NA), y=as.numeric(NA),
-            color=as.character(NA),
-            comment=as.character(NA)
-         )
-      ))
    }
    return(RelDataModel(toRet))
 }

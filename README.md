@@ -8,7 +8,7 @@
     Catalog](#tkcat-tailored-knowledge-catalog)
 -   [Acknowledgments](#acknowledgments)
 
-<img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px" />
+<img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px"/>
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 [![](http://cranlogs.r-pkg.org/badges/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
@@ -32,6 +32,7 @@ The main features of ReDaMoR are the following:
 -   Check and auto-correct model constraints (types, keys, uniqueness,
     mandatory fields)
 -   Confront data to the model to check their compatibility
+-   Support of matrices (&gt;= 0.5.0)
 
 The [TKCat](https://github.com/patzaw/TKCat) package relies on ReDaMoR
 to facilitate the management of data from knowledge resources which are
@@ -47,9 +48,6 @@ m <- model_relational_data()
 
 You can also run the code documented in the [package
 vignette](https://patzaw.github.io/ReDaMoR/ReDaMoR.html).
-
-<!----------------------------------------------------------------------------->
-<!----------------------------------------------------------------------------->
 
 # Introduction
 
@@ -91,31 +89,21 @@ The main features of ReDaMoR are the following:
 -   Check and auto-correct model constraints (types, keys, uniqueness,
     mandatory fields)
 -   Confront data to the model to check their compatibility
+-   Support of matrices (&gt;= 0.5.0)
 
 The [TKCat](https://github.com/patzaw/TKCat) package relies on ReDaMoR
 to facilitate the management of data from knowledge resources which are
 manipulated as modeled database (MDB) objects.
 
-<!----------------------------------------------------------------------------->
-<!----------------------------------------------------------------------------->
-
 # Installation
 
-<!---->
-
 ## From CRAN
-
-<!----------->
 
 ``` r
 install.packages("ReDaMoR")
 ```
 
-<!---->
-
 ## Dependencies
-
-<!----------->
 
 The following R packages available on CRAN are required:
 
@@ -152,26 +140,16 @@ The following R packages available on CRAN are required:
 -   [stats](https://CRAN.R-project.org/package=stats): The R Stats
     Package
 
-<!---->
-
 ## From github
-
-<!----------->
 
 ``` r
 devtools::install_github("patzaw/ReDaMoR")
 ```
 
-<!----------------------------------------------------------------------------->
-<!----------------------------------------------------------------------------->
-
 # Documentation
 
 Documentation is available in [this
 vignette](https://patzaw.github.io/ReDaMoR).
-
-<!----------------------------------------------------------------------------->
-<!----------------------------------------------------------------------------->
 
 # TKCat: Tailored Knowledge Catalog
 
@@ -185,9 +163,6 @@ generated with ReDaMoR documenting the tables, their fields and their
 relationships. These MDB are then gathered in catalogs that can be
 easily explored an shared. TKCat provides tools to easily subset, filter
 and combine MDBs and create new catalogs suited for specific needs.
-
-<!----------------------------------------------------------------------------->
-<!----------------------------------------------------------------------------->
 
 # Acknowledgments
 

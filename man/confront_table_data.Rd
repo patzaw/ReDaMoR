@@ -9,7 +9,7 @@ confront_table_data(x, d, checks = c("unique", "not nullable"))
 \arguments{
 \item{x}{a \link{RelTableModel}}
 
-\item{d}{a data frame}
+\item{d}{a data frame or a matrix for matrix model}
 
 \item{checks}{a character vector with the name of optional checks to be done
 (Default: all of them c("unique", "not nullable"))}
