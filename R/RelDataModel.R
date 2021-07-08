@@ -1602,49 +1602,42 @@ confront_data <- function(
             unlist()
          cn <- gsub("['`]", "", cn)
          cn <- gsub('["]', "", cn)
-         if(all(cn %in% tm$fields$name)){
-            td <- readr::read_delim(
-               paths[tn],
-               delim=delim, n_max=n_max,
-               col_types=col_types(tm),
-               ...
+
+         vt <- tm$fields %>%
+            dplyr::filter(!.data$type %in% c("row", "column")) %>%
+            dplyr::pull("type")
+         ctypes <- do.call(
+            readr::cols,
+            structure(
+               list(
+                  readr::col_character(),
+                  .default = switch(
+                     vt,
+                     "integer"=readr::col_integer(),
+                     "numeric"=readr::col_double(),
+                     "logical"=readr::col_logical(),
+                     "character"=readr::col_character(),
+                     "Date"=readr::col_date(),
+                     "POSIXct"=readr::col_datetime()
+                  )
+               ),
+               .Names=c("___ROWNAMES___", ".default")
             )
-         }else{
-            vt <- tm$fields %>%
-               dplyr::filter(!.data$type %in% c("row", "column")) %>%
-               dplyr::pull("type")
-            ctypes <- do.call(
-               readr::cols,
-               structure(
-                  list(
-                     readr::col_character(),
-                     .default = switch(
-                        vt,
-                        "integer"=readr::col_integer(),
-                        "numeric"=readr::col_double(),
-                        "logical"=readr::col_logical(),
-                        "character"=readr::col_character(),
-                        "Date"=readr::col_date(),
-                        "POSIXct"=readr::col_datetime()
-                     )
-                  ),
-                  .Names=c("___ROWNAMES___", ".default")
-               )
-            )
-            td <- readr::read_delim(
-               paths[tn],
-               delim=delim, n_max=n_max, skip=1,
-               col_types=ctypes,
-               col_names=c("___ROWNAMES___", cn[-1]),
-               ...
-            ) %>% as.data.frame(stringsAsFactors=FALSE)
-            stopifnot(
-               !any(duplicated(colnames(td))),
-               !any(duplicated(td[[1]]))
-            )
-            rownames(td) <- td[[1]]
-            td <- as.matrix(td[, -1, drop=FALSE])
-         }
+         )
+         td <- readr::read_delim(
+            paths[tn],
+            delim=delim, n_max=n_max, skip=1,
+            col_types=ctypes,
+            col_names=c("___ROWNAMES___", cn[-1]),
+            ...
+         ) %>% as.data.frame(stringsAsFactors=FALSE)
+         stopifnot(
+            !any(duplicated(colnames(td))),
+            !any(duplicated(td[[1]]))
+         )
+         rownames(td) <- td[[1]]
+         td <- as.matrix(td[, -1, drop=FALSE])
+
       }else{
          td <- readr::read_delim(
             paths[tn],
@@ -1779,10 +1772,10 @@ confront_data <- function(
             success <- TRUE
             message <- NULL
             if(tfki$cardinality["fmin"]>0){
-               if(is.matrix(td) || is.matrix(rtd)){
+               if(is.MatrixModel(tm) || is.MatrixModel(rtm)){
                   for(j in 1:length(tfki$key$from)){
                      ff <- tfki$key$from[j]
-                     if(is.matrix(td)){
+                     if(is.MatrixModel(tm)){
                         fft <- tm$fields$type[which(tm$fields$name==ff)]
                         if(fft=="row"){
                            ffv <- rownames(td)
@@ -1793,7 +1786,7 @@ confront_data <- function(
                         ffv <- unique(td[[ff]])
                      }
                      tf <- tfki$key$to[j]
-                     if(is.matrix(rtd)){
+                     if(is.MatrixModel(rtm)){
                         tft <- rtm$fields$type[which(rtm$fields$name==tf)]
                         if(tft=="row"){
                            tfv <- rownames(rtd)
@@ -1832,10 +1825,10 @@ confront_data <- function(
                }
             }
             if(tfki$cardinality["tmin"]>0){
-               if(is.matrix(td) || is.matrix(rtd)){
+               if(is.MatrixModel(tm) || is.MatrixModel(rtm)){
                   for(j in 1:length(tfki$key$from)){
                      ff <- tfki$key$from[j]
-                     if(is.matrix(td)){
+                     if(is.MatrixModel(tm)){
                         fft <- tm$fields$type[which(tm$fields$name==ff)]
                         if(fft=="row"){
                            ffv <- rownames(td)
@@ -1846,7 +1839,7 @@ confront_data <- function(
                         ffv <- unique(td[[ff]])
                      }
                      tf <- tfki$key$to[j]
-                     if(is.matrix(rtd)){
+                     if(is.MatrixModel(rtm)){
                         tft <- rtm$fields$type[which(rtm$fields$name==tf)]
                         if(tft=="row"){
                            tfv <- rownames(rtd)

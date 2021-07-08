@@ -31,3 +31,4 @@ system(paste(
    sprintf("R CMD check --as-cran ReDaMoR_%s.tar.gz", pv),
    sep=" ; "
 ))
+install.packages(here(sprintf("../ReDaMoR_%s.tar.gz", pv)), repos=NULL)

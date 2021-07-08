@@ -551,7 +551,7 @@ confront_table_data <- function(
    }
    stopifnot(is.RelTableModel(x))
    ## Matrix model ----
-   if(is.MatrixModel(x) & is.matrix(d)){
+   if(is.MatrixModel(x)){
       vf <- x$fields %>% dplyr::filter(!.data$type %in% c("row", "column"))
       toRet <- list(
          missingFields = character(0),
