@@ -90,7 +90,8 @@ RelTableModel <- function(l){
       attr(l$fields, att) <- NULL
    }
    l$fields <- dplyr::as_tibble(l$fields) %>%
-      dplyr::select(c("name", "type", "nullable", "unique", "comment"))
+      dplyr::select(c("name", "type", "nullable", "unique", "comment")) %>%
+      dplyr::mutate("comment"=ifelse(is.na(.data$comment), "", .data$comment))
 
    ## * Primary key ----
    l$primaryKey <- sort(l$primaryKey)
