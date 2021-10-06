@@ -12,10 +12,10 @@ TYPETABLE <- list(
       "^TINYTEXT([()].*[)])?$",   "TINYTEXT",   "character",
       "^LONGTEXT([()].*[)])?$",   "LONGTEXT",   "character",
       "^MEDIUMTEXT([()].*[)])?$", "MEDIUMTEXT", "character",
-      "^BLOB([()].*[)])?$",       "BLOB",       "character",
-      "^LONGBLOB([()].*[)])?$",   "LONGBLOB",   "character",
-      "^MEDIUMBLOB([()].*[)])?$", "MEDIUMBLOB", "character",
-      "^TINYBLOB([()].*[)])?$",   "TINYBLOB",   "character",
+      "^BLOB([()].*[)])?$",       "BLOB",       "base64",
+      "^LONGBLOB([()].*[)])?$",   "LONGBLOB",   "base64",
+      "^MEDIUMBLOB([()].*[)])?$", "MEDIUMBLOB", "base64",
+      "^TINYBLOB([()].*[)])?$",   "TINYBLOB",   "base64",
       "^DATETIME([()].*[)])?$",   "DATETIME",   "POSIXct",
       "^DATE([()].*[)])?$",       "DATE",       "Date",
       "^ENUM([()].*[)])?$",       "ENUM",       "character",
@@ -27,12 +27,13 @@ TYPETABLE <- list(
       ) %>%
       dplyr::as_tibble(),
    ClickHouse=c(
-      "Int32",    "Int32",    "integer",
-      "Float64",  "Float64",  "numeric",
-      "UInt8",    "UInt8",    "logical",
-      "String",   "String",   "character",
-      "Date",     "Date",     "Date",
-      "DateTime", "DateTime", "POSIXct"
+      "Int32",           "Int32",           "integer",
+      "Float64",         "Float64",         "numeric",
+      "UInt8",           "UInt8",           "logical",
+      "String",          "String",          "character",
+      "Date",            "Date",            "Date",
+      "DateTime",        "DateTime",        "POSIXct",
+      "Array(String)",   "Array(String)",   "base64"
    ) %>%
       matrix(
          ncol=3, byrow=TRUE,
@@ -46,7 +47,9 @@ TYPETABLE <- list(
 #'
 #' @export
 #'
-SUPPTYPES <- c("integer", "numeric", "logical", "character", "Date", "POSIXct")
+SUPPTYPES <- c(
+   "integer", "numeric", "logical", "character", "Date", "POSIXct", "base64"
+)
 
 ###############################################################################@
 #' List supported types references
@@ -162,6 +165,13 @@ as_type <- function(x, type){
       "logical"=as.logical(x),
       "character"=as.character(x),
       "Date"=as.Date(x),
-      "POSIXct"=as.POSIXct(x)
+      "POSIXct"=as.POSIXct(x),
+      "base64"=unlist(lapply(x, function(y){
+         if(length(y)==0 || (length(y)==1 && is.na(y))){
+            return(NA)
+         }else{
+            paste(y, collapse="")
+         }
+      }))
    ))
 }

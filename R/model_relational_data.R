@@ -1216,7 +1216,11 @@ buildServer <- function(
                   ),
                   shiny::textAreaInput(
                      "newFieldComment", label="Comment",
-                     placeholder="Field description",
+                     placeholder=paste(
+                        'Field description.',
+                        'If base64, you should put only the file type as a',
+                        'description (e.g. "png", "html", "zip"...)'
+                     ),
                      width="100%"
                   )
                ),
@@ -1306,7 +1310,11 @@ buildServer <- function(
                      choices=if(fields$type[seli] %in% c("row", "column")){
                         c("row", "column")
                      }else{
-                        SUPPTYPES
+                        if(is.MatrixModel(mt)){
+                           setdiff(SUPPTYPES, "base64")
+                        }else{
+                           SUPPTYPES
+                        }
                      },
                      selected=fields$type[seli], multiple=FALSE
                   ),
@@ -2148,21 +2156,31 @@ buildServer <- function(
                shiny::p("Incompatible types", class="errorMessage")
             ))
          }else{
-            selFrom <- foreignKey$fromFields
-            selTo <- foreignKey$toFields
-            alreadyIn <- length(which(selFrom==from & selTo==to))>0
-            if(alreadyIn){
+            if(fft=="base64"){
                return(shiny::tagList(
                   shiny::tags$br(),
-                  shiny::p("Already in key", class="errorMessage")
+                  shiny::p(
+                     "base64 fields cannot be used in foreign keys",
+                     class="errorMessage"
+                  )
                ))
             }else{
-               return(shiny::tagList(
-                  shiny::tags$br(),
-                  shiny::actionButton(
-                     "addFkField", label="",
-                     icon=shiny::icon("plus-square", "fa-1x")
-                  ) %>% shiny::div(title="Add key field")))
+               selFrom <- foreignKey$fromFields
+               selTo <- foreignKey$toFields
+               alreadyIn <- length(which(selFrom==from & selTo==to))>0
+               if(alreadyIn){
+                  return(shiny::tagList(
+                     shiny::tags$br(),
+                     shiny::p("Already in key", class="errorMessage")
+                  ))
+               }else{
+                  return(shiny::tagList(
+                     shiny::tags$br(),
+                     shiny::actionButton(
+                        "addFkField", label="",
+                        icon=shiny::icon("plus-square", "fa-1x")
+                     ) %>% shiny::div(title="Add key field")))
+               }
             }
          }
       })

@@ -910,6 +910,7 @@ add_foreign_key <- function(
       all(fromFields %in% x[[fromTable]]$fields$name),
       all(toFields %in% x[[toTable]]$fields$name),
       all(ft == tt),
+      all(ft!="base64"),
       all(!is.na(c(fmin, fmax, tmin, tmax))),
       is.integer(fmin), is.integer(fmax), is.integer(tmin), is.integer(tmax),
       fmin > -1, tmin > -1,
@@ -1393,6 +1394,9 @@ update_field <- function(
       ## Other type ----
       if(type %in% c("row", "column")){
          stop("Cannot set this field as row or column")
+      }
+      if(is.MatrixModel(x[[tableName]]) && type=="base64"){
+         stop("A matrix cannot store base64 documents")
       }
       check_types(type)
       ## Foreign keys ----

@@ -129,6 +129,9 @@ RelTableModel <- function(l){
          ))
       }
       l$primaryKey <- rcfields$name
+      if(setdiff(l$fields$type, c("row", "column"))=="base64"){
+         stop("A matrix cannot store base64 documents")
+      }
       check_types(setdiff(l$fields$type, c("row", "column")))
    }else{
       check_types(l$fields$type)
@@ -447,7 +450,8 @@ col_types <- function(x){
                   "logical"=readr::col_logical(),
                   "character"=readr::col_character(),
                   "Date"=readr::col_date(),
-                  "POSIXct"=readr::col_datetime()
+                  "POSIXct"=readr::col_datetime(),
+                  "base64"=readr::col_character()
                )
             }
          ),
@@ -624,15 +628,17 @@ confront_table_data <- function(
       fu <- x$fields$unique[which(x$fields$name==fn)]
       toRet$fields[[fn]] <- list(success=TRUE, message=NULL)
       if(!inherits(dplyr::pull(d, !!fn), ft)){
-         toRet$fields[[fn]]$success <- FALSE
-         toRet$success <- FALSE
-         toRet$fields[[fn]]$message <- paste(c(
-            toRet$fields[[fn]]$message,
-            sprintf(
-               'Unexpected "%s"',
-               paste(class(dplyr::pull(d, !!fn)), collapse=", ")
-            )
-         ), collapse=" ")
+         if(ft!="base64" || !inherits(dplyr::pull(d, !!fn), "character")){
+            toRet$fields[[fn]]$success <- FALSE
+            toRet$success <- FALSE
+            toRet$fields[[fn]]$message <- paste(c(
+               toRet$fields[[fn]]$message,
+               sprintf(
+                  'Unexpected "%s"',
+                  paste(class(dplyr::pull(d, !!fn)), collapse=", ")
+               )
+            ), collapse=" ")
+         }
       }
       if("not nullable" %in% checks){
          mis <- sum(is.na(dplyr::pull(d, !!fn)))

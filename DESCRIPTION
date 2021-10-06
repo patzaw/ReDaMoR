@@ -1,7 +1,7 @@
 Package: ReDaMoR
 Type: Package
 Title: Relational Data Modeler
-Version: 0.5.1
+Version: 0.5.2
 Authors@R: c(
     person(
         "Patrice", "Godard",
@@ -46,7 +46,8 @@ Imports:
 Suggests:
    knitr,
    rmarkdown,
-   TKCat
+   TKCat,
+   base64enc
 License: GPL-3
 Encoding: UTF-8
 VignetteBuilder: knitr

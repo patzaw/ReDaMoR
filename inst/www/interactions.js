@@ -3,18 +3,17 @@ releaseVn=function(nodes) {
   Shiny.onInputChange('modelNet_release', Math.random());
 };
 
-// Focus on text inputs
 $(document).keydown(function(event) {
+
+  // Focus on text inputs
   if($("#newTableName")[0]){
     $("#newTableName").focus();
   }
   if($("#tableNewName")[0]){
     $("#tableNewName").focus();
   }
-});
 
-// Validate changes with keyboard
-$(document).keyup(function(event) {
+  // Validate changes with keyboard
   if($("#confirmAddTable")[0] && (event.key == "Enter")) {
     $("#confirmAddTable").click();
   }
@@ -30,64 +29,41 @@ $(document).keyup(function(event) {
   // if($("#confirmUpdateField")[0] && (event.key == "Enter")) {
   //   $("#confirmUpdateField").click();
   // }
-});
 
-// Rename table with F2 key
-$(document).keyup(function(event) {
   if(
-    (
       (document.activeElement.tagName == "BODY") ||
-      (document.activeElement.tagName == "BUTTON")
-    )&&
-    (event.keyCode == 113)
+      (document.activeElement.tagName == "BUTTON") ||
+      (document.activeElement.getAttribute("class") == "vis-network")
   ) {
-    if($("#renameTable")[0]){
-      $("#renameTable").click();
-    }else{
-      if($("#editFK")[0]){
-        $("#editFK").click();
+
+    // Rename table with F2 key
+    if(event.keyCode == 113) {
+      if($("#renameTable")[0]){
+        $("#renameTable").click();
+      }else{
+        if($("#editFK")[0]){
+          $("#editFK").click();
+        }
       }
     }
-  }
-});
 
-// Delete tables and keys with keyboard
-$(document).keyup(function(event) {
-  if(
-    (
-      (document.activeElement.tagName == "BODY") ||
-      (document.activeElement.tagName == "BUTTON")
-    )&&
-    (event.key == "Delete")
-  ) {
-    if($("#removeTables")[0]){
-      $("#removeTables").click();
-    }else{
-      $("#removeFK").click();
+    // Delete tables and keys with keyboard
+    if(event.key == "Delete") {
+      if($("#removeTables")[0]){
+        $("#removeTables").click();
+      }else{
+        $("#removeFK").click();
+      }
     }
-  }
-});
 
-// Undo - Redo
-$(document).keyup(function(event) {
-  if(
-    (
-      (document.activeElement.tagName == "BODY") ||
-      (document.activeElement.tagName == "BUTTON")
-    ) &&
-    (event.keyCode == 90 && event.ctrlKey && !event.shiftKey)
-  ) {
-     $("#undo").click();
+    // Undo - Redo
+    if(event.keyCode == 90 && event.ctrlKey && !event.shiftKey) {
+       $("#undo").click();
+    }
+    if(event.keyCode == 90 && event.ctrlKey && event.shiftKey) {
+       $("#redo").click();
+    }
+
   }
-});
-$(document).keyup(function(event) {
-  if(
-    (
-      (document.activeElement.tagName == "BODY") ||
-      (document.activeElement.tagName == "BUTTON")
-    ) &&
-    (event.keyCode == 90 && event.ctrlKey && event.shiftKey)
-  ) {
-     $("#redo").click();
-  }
+
 });
