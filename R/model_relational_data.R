@@ -1218,8 +1218,8 @@ buildServer <- function(
                      "newFieldComment", label="Comment",
                      placeholder=paste(
                         'Field description.',
-                        'If base64, you should put only the file type as a',
-                        'description (e.g. "png", "html", "zip"...)'
+                        'If base64, you should start with the extension of the',
+                        'file between {} (e.g. "{png}", "{html}", "{zip}"...)'
                      ),
                      width="100%"
                   )
