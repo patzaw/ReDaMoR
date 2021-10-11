@@ -1337,7 +1337,11 @@ buildServer <- function(
                   shiny::textAreaInput(
                      "fieldComment", label="Comment",
                      value=fields$comment[seli],
-                     placeholder="Field description",
+                     placeholder=paste(
+                        'Field description.',
+                        'If base64, you should start with the extension of the',
+                        'file between {} (e.g. "{png}", "{html}", "{zip}"...)'
+                     ),
                      width="100%"
                   ),
                   shiny::uiOutput("updateFieldError")
