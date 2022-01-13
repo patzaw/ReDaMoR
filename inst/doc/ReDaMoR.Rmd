@@ -55,7 +55,7 @@ These tables are often related to each other by some variables.
 Depending on the diversity of the concepts, it can be difficult to remember what these tables represent and how they are connected.
 Fortunately, because they are tables, a set of data frames can be directly documented using a relational data model.
 
-The [datamodelr](https://github.com/bergant/datamodelr) R package provides tools to document relational data. The generate data models are leveraged by the [dm](https://github.com/krlmlr/dm) R package to interact more easily with relational data.
+The [datamodelr](https://github.com/bergant/datamodelr) R package provides tools to document relational data. The generate data models are leveraged by the [dm](https://github.com/cynkra/dm) R package to interact more easily with relational data.
 
 Here we present the ReDaMoR package which also allows the manipulation of relational data models in R but with an approach quite different from the one implemented in datamodelr.
 It provides functions to create, import and save relational data models.

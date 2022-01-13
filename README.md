@@ -58,7 +58,7 @@ can be directly documented using a relational data model.
 
 The [datamodelr](https://github.com/bergant/datamodelr) R package
 provides tools to document relational data. The generate data models are
-leveraged by the [dm](https://github.com/krlmlr/dm) R package to
+leveraged by the [dm](https://github.com/cynkra/dm) R package to
 interact more easily with relational data.
 
 Here we present the ReDaMoR package which also allows the manipulation
