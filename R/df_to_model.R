@@ -51,14 +51,14 @@ df_to_model <- function(
    values <- lapply(list, get, envir=envir, mode="any", inherits=TRUE)
    names(values) <- list
    isdf <- lapply(
-      values, function(x){
-         is.data.frame(x) || is.matrix(x)
-      }
+      values,
+      inherits, c("data.frame", "matrix", "Matrix")
    ) %>%
       unlist()
    if(any(!isdf)){
       stop(
-         "The following objects are not data frames: ",
+         "The following objects are neither of class ",
+         "data.frame, matrix nor Matrix: ",
          paste(names(isdf)[!isdf], collapse=", ")
       )
    }
@@ -66,7 +66,7 @@ df_to_model <- function(
    toRet <- list()
    for(tn in names(values)){
       df <- values[[tn]]
-      if(is.matrix(df)){
+      if(inherits(df, c("matrix", "Matrix"))){
          toRet[[tn]] <- RelTableModel(l=list(
             "tableName"=tn,
             "fields"=dplyr::tibble(

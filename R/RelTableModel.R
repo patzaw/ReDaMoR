@@ -559,6 +559,9 @@ confront_table_data <- function(
    stopifnot(is.RelTableModel(x))
    ## Matrix model ----
    if(is.MatrixModel(x)){
+      if(!inherits(d, c("matrix", "Matrix"))){
+         stop(x$tableName, " is neither a matrix nor a Matrix")
+      }
       vf <- x$fields %>% dplyr::filter(!.data$type %in% c("row", "column"))
       toRet <- list(
          missingFields = character(0),
@@ -606,9 +609,9 @@ confront_table_data <- function(
       return(toRet)
    }
 
-   stopifnot(
-      is.data.frame(d)
-   )
+   if(!inherits(d, "data.frame")){
+      stop(x$tableName, " is not a data.frame")
+   }
    ## Available fields ----
    missingFields <- setdiff(x$fields$name, colnames(d))
    suppFields <- setdiff(colnames(d), x$fields$name)
