@@ -1601,46 +1601,58 @@ confront_data <- function(
 
    read_td <- function(tm, tn){
       if(is.MatrixModel(tm)){
-         cn <- readLines(paths[tn], n=1) %>%
-            strsplit(split=delim) %>%
-            unlist()
-         cn <- gsub("['`]", "", cn)
-         cn <- gsub('["]', "", cn)
+         r1 <- readLines(paths[tn], n=1)
 
-         vt <- tm$fields %>%
-            dplyr::filter(!.data$type %in% c("row", "column")) %>%
-            dplyr::pull("type")
-         ctypes <- do.call(
-            readr::cols,
-            structure(
-               list(
-                  readr::col_character(),
-                  .default = switch(
-                     vt,
-                     "integer"=readr::col_integer(),
-                     "numeric"=readr::col_double(),
-                     "logical"=readr::col_logical(),
-                     "character"=readr::col_character(),
-                     "Date"=readr::col_date(),
-                     "POSIXct"=readr::col_datetime()
-                  )
-               ),
-               .Names=c("___ROWNAMES___", ".default")
+         sms <- "%%MatrixMarket"
+         if(substr(r1, 1, nchar(sms))==sms){
+            td <- read_named_MM(
+               paths[tn],
+               n_max=n_max
             )
-         )
-         td <- readr::read_delim(
-            paths[tn],
-            delim=delim, n_max=n_max, skip=1,
-            col_types=ctypes,
-            col_names=c("___ROWNAMES___", cn[-1]),
-            ...
-         ) %>% as.data.frame(stringsAsFactors=FALSE)
-         stopifnot(
-            !any(duplicated(colnames(td))),
-            !any(duplicated(td[[1]]))
-         )
-         rownames(td) <- td[[1]]
-         td <- as.matrix(td[, -1, drop=FALSE])
+         }else{
+
+            cn <- r1 %>%
+               strsplit(split=delim) %>%
+               unlist()
+            cn <- gsub("['`]", "", cn)
+            cn <- gsub('["]', "", cn)
+
+            vt <- tm$fields %>%
+               dplyr::filter(!.data$type %in% c("row", "column")) %>%
+               dplyr::pull("type")
+            ctypes <- do.call(
+               readr::cols,
+               structure(
+                  list(
+                     readr::col_character(),
+                     .default = switch(
+                        vt,
+                        "integer"=readr::col_integer(),
+                        "numeric"=readr::col_double(),
+                        "logical"=readr::col_logical(),
+                        "character"=readr::col_character(),
+                        "Date"=readr::col_date(),
+                        "POSIXct"=readr::col_datetime()
+                     )
+                  ),
+                  .Names=c("___ROWNAMES___", ".default")
+               )
+            )
+            td <- readr::read_delim(
+               paths[tn],
+               delim=delim, n_max=n_max, skip=1,
+               col_types=ctypes,
+               col_names=c("___ROWNAMES___", cn[-1]),
+               ...
+            ) %>% as.data.frame(stringsAsFactors=FALSE)
+            stopifnot(
+               !any(duplicated(colnames(td))),
+               !any(duplicated(td[[1]]))
+            )
+            rownames(td) <- td[[1]]
+            td <- as.matrix(td[, -1, drop=FALSE])
+
+         }
 
       }else{
          td <- readr::read_delim(

@@ -42,7 +42,8 @@ Imports:
    igraph,
    utils,
    graphics,
-   stats
+   stats,
+   Matrix
 Suggests:
    knitr,
    rmarkdown,
