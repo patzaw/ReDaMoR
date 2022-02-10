@@ -1,4 +1,25 @@
 ###############################################################################@
+#' Identify if a file is in MatrixMarket text format
+#'
+#' @param file the file to read
+#'
+#' @return A logical. If FALSE, the first line of the file is returned as
+#' an attribute named "r1": `attr(is_MM, "r1")`
+#'
+#' @export
+#'
+is_MM <- function(file){
+   r1 <- readLines(file, n=1)
+   sms <- "%%MatrixMarket"
+   toRet <- substr(r1, 1, nchar(sms))==sms
+   if(!toRet){
+      attr(toRet, "r1") <- r1
+   }
+   return(toRet)
+}
+
+
+###############################################################################@
 #' Read the header of a named sparse matrix in MatrixMarket text format
 #'
 #' @param file the file to read

@@ -1601,16 +1601,14 @@ confront_data <- function(
 
    read_td <- function(tm, tn){
       if(is.MatrixModel(tm)){
-         r1 <- readLines(paths[tn], n=1)
-
-         sms <- "%%MatrixMarket"
-         if(substr(r1, 1, nchar(sms))==sms){
+         ismm <- is_MM(paths[tn])
+         if(ismm){
             td <- read_named_MM(
                paths[tn],
                n_max=n_max
             )
          }else{
-
+            r1 <- attr(ismm, "r1")
             cn <- r1 %>%
                strsplit(split=delim) %>%
                unlist()
