@@ -546,82 +546,67 @@ toDBM <- function(rdm){
 #' @export
 #'
 fromDBM <- function(dbm){
-   toRet <- list()
-   for(tn in dbm$tables$name){
-      tm <- list()
-      tm$tableName <- tn
-      tm$fields <- dbm$fields %>%
-         dplyr::filter(.data$table==tn) %>%
-         dplyr::select(-"table")
-      if("fieldOrder" %in% colnames(tm$fields)){
-         tm$fields <- tm$fields %>%
-            dplyr::arrange(.data$fieldOrder) %>%
-            dplyr::select(-"fieldOrder")
-      }
-      tm$primaryKey <- dbm$primaryKeys %>%
-         dplyr::filter(.data$table==tn) %>%
-         dplyr::pull("field")
-      if(length(tm$primaryKey)==0){
-         tm$primaryKey <- NULL
-         tm <- c(tm, list(primaryKey=NULL))
-      }
-      tm$foreignKeys <- dbm$foreignKeys %>%
-         dplyr::filter(.data$table==tn) %>%
-         dplyr::select(-"table")
-      if(nrow(tm$foreignKeys)>0){
-         tm$foreignKeys <- split(tm$foreignKeys, tm$foreignKeys$fki) %>%
-            lapply(function(x){
-               x %>%
-                  dplyr::select(-"fki") %>%
-                  split(x$refTable) %>%
-                  lapply(function(y){
-                     toRet <- list(
-                        refTable=unique(y$refTable),
-                        key=y %>%
-                           dplyr::select("field", "refField") %>%
-                           dplyr::rename("from"="field", "to"="refField")
-                     )
-                     cnames <- c("fmin", "fmax", "tmin", "tmax")
-                     if(
-                        all(cnames %in% colnames(y))
-                     ){
-                        toRet$cardinality=y %>%
-                           dplyr::select("fmin", "fmax", "tmin", "tmax") %>%
-                           unique() %>% unlist() %>% as.integer()
-                     }else{
-                        toRet$cardinality=c(0, -1, 1, 1) %>% as.integer()
-                     }
-                     names(toRet$cardinality) <- cnames
-                     return(toRet)
-                  }) %>%
-                  structure(.Names=NULL)
+
+   tableName <- split(dbm$tables$name, dbm$tables$name)
+
+   dbm$fields <- dplyr::arrange(dbm$fields, .data$fieldOrder)
+   fields <- split(
+      dplyr::select(dbm$fields, -"table", -"fieldOrder"), dbm$fields$table
+   )
+
+   primaryKey <- split(dbm$primaryKeys$field, dbm$primaryKeys$table)
+
+   foreignKeys <- split(
+      dplyr::select(dbm$foreignKeys, -"table"), dbm$foreignKeys$table
+   ) %>%
+      lapply(function(tfk){
+         split(dplyr::select(tfk, -"fki"), tfk$fki) %>%
+            lapply(function(fk){
+               list(
+                  refTable=fk$refTable[1],
+                  key=dplyr::select(fk, "from"="field", "to"="refField"),
+                  cardinality=c(
+                     fk$fmin[1], fk$fmax[1],
+                     fk$tmin[1], fk$tmax[1]
+                  ) %>%
+                     magrittr::set_names(c("fmin", "fmax", "tmin", "tmax"))
+               )
             }) %>%
-            structure(.Names=NULL)
-         tm$foreignKeys <- do.call(c, tm$foreignKeys)
-      }else{
-         tm$foreignKeys <- NULL
-         tm <- c(tm, list(foreignKeys=NULL))
-      }
-      tm$indexes <- dbm$indexes %>%
-         dplyr::filter(.data$table==tn) %>%
-         dplyr::select(-"table")
-      if(nrow(tm$indexes)>0){
-         tm$indexes <- split(tm$indexes, tm$indexes$idx) %>%
-            lapply(function(x){
-               list(fields=x$field, unique=unique(x$unique))
+            magrittr::set_names(NULL)
+      })
+
+   indexes <- split(dplyr::select(dbm$indexes, -"table"), dbm$indexes$table) %>%
+      lapply(function(ti){
+         split(dplyr::select(ti, -"idx"), ti$idx) %>%
+            lapply(function(idx){
+               return(list(fields=idx$field, unique=idx$unique[1]))
             }) %>%
-            structure(.Names=NULL)
-      }else{
-         tm$indexes <- NULL
-         tm <- c(tm, list(indexes=NULL))
+            magrittr::set_names(NULL)
+      })
+
+   display <- split(dplyr::select(dbm$tables, -"name"), dbm$tables$name) %>%
+      lapply(function(di){
+         di %>%
+            magrittr::set_class("list") %>%
+            `attr<-`("row.names", NULL)
+      })
+
+   toRet <- lapply(
+      tableName,
+      function(tn){
+         return(RelTableModel(list(
+            tableName=tn,
+            fields=fields[[tn]],
+            primaryKey=primaryKey[[tn]],
+            foreignKeys=foreignKeys[[tn]],
+            indexes=indexes[[tn]],
+            display=display[[tn]]
+         )))
       }
-      tm$display <- dbm$tables %>%
-         dplyr::filter(dbm$tables$name==tn) %>%
-         dplyr::select(-"name") %>%
-         as.list()
-      toRet <- c(toRet, list(RelTableModel(tm)))
-   }
-   return(RelDataModel(toRet))
+   ) %>% RelDataModel()
+
+   return(toRet)
+
 }
 
 ###############################################################################@

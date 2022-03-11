@@ -431,57 +431,10 @@ A modeled database (MDB) in TKCat gathers the following information:
     called collections.
 -   The data themselves organized according to the data model.
 
-The example below shows how to build a `file_MDB` object for the the **subset**
-of the [HPO](https://hpo.jax.org/app/)<sup>([1](#hpoRef))</sup> which
-is provided within the package.
-
-```{r, eval="TKCat" %in% rownames(installed.packages())}
-library(TKCat)
-file_hpo <- read_fileMDB(
-   path=system.file("examples/HPO-subset", package="ReDaMoR"),
-   dataModel=system.file("examples/HPO-model.json", package="ReDaMoR"),
-   dbInfo=list(
-      "name"="HPO",
-      "title"="Data extracted from the HPO database",
-      "description"=paste(
-         "This is a very small subset of the HPO!",
-         "Visit the reference URL for more information."
-      ),
-      "url"="http://human-phenotype-ontology.github.io/"
-   )
-)
-```
-
-Here are some basic operations that can be applied on these `MDB` objects.
-
-- Get MDB information
-
-```{r, eval=FALSE}
-db_info(file_hpo)
-data_model(file_hpo) %>% plot()
-```
-
-```{r, eval="TKCat" %in% rownames(installed.packages())}
-names(file_hpo)
-length(file_hpo)        # Number of tables
-lengths(file_hpo)       # Number of fields per table
-count_records(file_hpo) # Number of records per table
-data_file_size(file_hpo, hr=TRUE) # File size
-```
-
-- Get data
-
-```{r, eval=FALSE}
-data_tables(file_hpo, "HPO_diseases")[[1]]
-file_hpo[["HPO_diseases"]]
-file_hpo$"HPO_diseases"
-```
-
-```{r, eval="TKCat" %in% rownames(installed.packages())}
-file_hpo %>% pull(HPO_diseases)
-```
-
-`MDB` objects can also be subsetted, combined, filtered, joined and merged.
+`MDB` objects can be subsetted, combined, filtered, joined and merged.
+[TKCat](https://github.com/patzaw/TKCat) supports different implementations
+of `MDB` objects such as `memoMDB` (data in memory), `fileMDB` (data in files)
+and `chMDB` (data in [ClickHouse](http://clickhouse.com/) database).
 More information is provided in the
 [TKCat user guide](https://patzaw.github.io/TKCat/TKCat-User-guide.html).
 

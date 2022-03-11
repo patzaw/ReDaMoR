@@ -5,7 +5,7 @@
 #' @import visNetwork
 #' @import readr
 #' @importFrom Matrix sparseMatrix
-#' @importFrom utils packageName
+#' @importFrom utils packageName object.size
 #' @importFrom stats rbeta runif
 #' @importFrom graphics plot
 #' @importFrom markdown renderMarkdown

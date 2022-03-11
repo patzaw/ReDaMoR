@@ -86,38 +86,3 @@ ge_model <- read_json_data_model(
 )
 plot(ge_model)
 
-## ---- eval="TKCat" %in% rownames(installed.packages())------------------------
-library(TKCat)
-file_hpo <- read_fileMDB(
-   path=system.file("examples/HPO-subset", package="ReDaMoR"),
-   dataModel=system.file("examples/HPO-model.json", package="ReDaMoR"),
-   dbInfo=list(
-      "name"="HPO",
-      "title"="Data extracted from the HPO database",
-      "description"=paste(
-         "This is a very small subset of the HPO!",
-         "Visit the reference URL for more information."
-      ),
-      "url"="http://human-phenotype-ontology.github.io/"
-   )
-)
-
-## ---- eval=FALSE--------------------------------------------------------------
-#  db_info(file_hpo)
-#  data_model(file_hpo) %>% plot()
-
-## ---- eval="TKCat" %in% rownames(installed.packages())------------------------
-names(file_hpo)
-length(file_hpo)        # Number of tables
-lengths(file_hpo)       # Number of fields per table
-count_records(file_hpo) # Number of records per table
-data_file_size(file_hpo, hr=TRUE) # File size
-
-## ---- eval=FALSE--------------------------------------------------------------
-#  data_tables(file_hpo, "HPO_diseases")[[1]]
-#  file_hpo[["HPO_diseases"]]
-#  file_hpo$"HPO_diseases"
-
-## ---- eval="TKCat" %in% rownames(installed.packages())------------------------
-file_hpo %>% pull(HPO_diseases)
-

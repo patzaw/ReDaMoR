@@ -100,7 +100,7 @@ read_named_MM <- function(
    Sys.setenv(
       "VROOM_CONNECTION_SIZE"=max(
          c(
-            object.size(h$rownames), object.size(h$colnames),
+            utils::object.size(h$rownames), utils::object.size(h$colnames),
             as.numeric(ovcs)
          ),
          na.rm=TRUE
