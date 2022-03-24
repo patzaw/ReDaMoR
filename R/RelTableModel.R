@@ -659,7 +659,9 @@ confront_table_data <- function(
             }
          }
       }
-      if("unique" %in% checks && fu && any(duplicated(dplyr::pull(d, !!fn)))){
+      toTest <- dplyr::pull(d, !!fn)
+      toTest <- toTest[which(!is.na(toTest))]
+      if("unique" %in% checks && fu && any(duplicated(toTest))){
          toRet$fields[[fn]]$success <- FALSE
          toRet$success <- FALSE
          toRet$fields[[fn]]$message <- paste(c(
@@ -685,7 +687,11 @@ confront_table_data <- function(
             if(!idx$unique){
                toRet$indexes[[i]]$success <- TRUE
             }else{
-               if(any(duplicated(d[,idx$fields]))){
+               toTest <- dplyr::filter(
+                  d[,idx$fields],
+                  apply(d[,idx$fields], 1, function(x) all(!is.na(x)))
+               )
+               if(any(duplicated(toTest))){
                   toRet$indexes[[i]]$success <- FALSE
                   toRet$indexes[[i]]$message <- paste(c(
                      toRet$indexes[[i]]$message,

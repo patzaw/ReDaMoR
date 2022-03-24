@@ -5,6 +5,7 @@
 ### Improvements
 
 - faster `fromDBM()` function
+- NA values not taken into account when checking uniqueness
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
