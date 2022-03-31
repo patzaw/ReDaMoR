@@ -118,22 +118,22 @@ install.packages("ReDaMoR")
 
 The following R packages available on CRAN are required:
 
--   `r cranRef("dplyr")`
--   `r cranRef("magrittr")`
--   `r cranRef("visNetwork")`
--   `r cranRef("readr")`
--   `r cranRef("shiny")`
--   `r cranRef("shinyjs")`
--   `r cranRef("DT")`
--   `r cranRef("rintrojs")`
--   `r cranRef("colourpicker")`
--   `r cranRef("jsonlite")`
--   `r cranRef("markdown")`
--   `r cranRef("rstudioapi")`
--   `r cranRef("crayon")`
--   `r cranRef("utils")`
--   `r cranRef("graphics")`
--   `r cranRef("stats")`
+```{r, echo=FALSE, results='asis'}
+deps <- desc::desc_get_deps()
+sdeps <- filter(deps, type %in% c("Depends", "Imports") & package!="R")
+for(p in sdeps$package){
+   cat(paste("-", cranRef(p)), sep="\n")
+}
+```
+
+And those are suggested:
+
+```{r, echo=FALSE, results='asis'}
+wdeps <- filter(deps, type=="Suggests" & package!="R")
+for(p in wdeps$package){
+   cat(paste("-", cranRef(p)), sep="\n")
+}
+```
 
 ## From github
 

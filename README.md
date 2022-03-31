@@ -122,26 +122,39 @@ The following R packages available on CRAN are required:
     Framework for R
 -   [shinyjs](https://CRAN.R-project.org/package=shinyjs): Easily
     Improve the User Experience of Your Shiny Apps in Seconds
--   [DT](https://CRAN.R-project.org/package=DT): A Wrapper of the
-    JavaScript Library ‘DataTables’
--   [rintrojs](https://CRAN.R-project.org/package=rintrojs): Wrapper for
-    the ‘Intro.js’ Library
--   [colourpicker](https://CRAN.R-project.org/package=colourpicker): A
-    Colour Picker Tool for Shiny and for Selecting Colours in Plots
 -   [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Simple
     and Robust JSON Parser and Generator for R
+-   [DT](https://CRAN.R-project.org/package=DT): A Wrapper of the
+    JavaScript Library ‘DataTables’
+-   [colourpicker](https://CRAN.R-project.org/package=colourpicker): A
+    Colour Picker Tool for Shiny and for Selecting Colours in Plots
+-   [rintrojs](https://CRAN.R-project.org/package=rintrojs): Wrapper for
+    the ‘Intro.js’ Library
 -   [markdown](https://CRAN.R-project.org/package=markdown): Render
     Markdown with the C Library ‘Sundown’
 -   [rstudioapi](https://CRAN.R-project.org/package=rstudioapi): Safely
     Access the RStudio API
 -   [crayon](https://CRAN.R-project.org/package=crayon): Colored
     Terminal Output
+-   [igraph](https://CRAN.R-project.org/package=igraph): Network
+    Analysis and Visualization
 -   [utils](https://CRAN.R-project.org/package=utils): The R Utils
     Package
 -   [graphics](https://CRAN.R-project.org/package=graphics): The R
     Graphics Package
 -   [stats](https://CRAN.R-project.org/package=stats): The R Stats
     Package
+-   [Matrix](https://CRAN.R-project.org/package=Matrix): Sparse and
+    Dense Matrix Classes and Methods
+
+And those are suggested:
+
+-   [knitr](https://CRAN.R-project.org/package=knitr): A General-Purpose
+    Package for Dynamic Report Generation in R
+-   [rmarkdown](https://CRAN.R-project.org/package=rmarkdown): Dynamic
+    Documents for R
+-   [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
+    base64 encoding
 
 ## From github
 
