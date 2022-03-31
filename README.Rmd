@@ -1,8 +1,8 @@
 ---
 title: "README"
 output:
-  md_document:
-    variant: gfm
+  rmarkdown::github_document:
+    number_sections: false
     toc: true
     toc_depth: 2
 editor_options: 

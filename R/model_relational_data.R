@@ -802,7 +802,8 @@ buildServer <- function(
       })
 
       output$editTable <- shiny::renderUI({
-         mt <- model$table
+         selection$tables
+         mt <- isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          shiny::div(
@@ -883,7 +884,8 @@ buildServer <- function(
 
       ## _+ Table commment ----
       output$tableCommentUI <- shiny::renderUI({
-         mt <- model$table
+         selection$tables
+         mt <- isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          shiny::fluidRow(
@@ -966,7 +968,8 @@ buildServer <- function(
 
       ## _+ Table fields ----
       output$fields <- shiny::renderUI({
-         mt <- model$table
+         selection$tables
+         mt <- isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          list(
@@ -998,22 +1001,23 @@ buildServer <- function(
          )
       })
       output$fieldTable <- DT::renderDT({
-         mt <- model$table
+         selection$tables
+         mt <- isolate(model$table)
          # shiny::req(mt)
          # selTable <- mt$tableName
          shiny::isolate(model$fieldTable) %>%
             dplyr::select(-"comment") %>%
             DT::datatable(
-               rownames=TRUE,
+               rownames=FALSE,
                filter="top",
                selection=list(mode='single', selected=c(), target='row'),
                options=list(
                   dom="tip",
                   columnDefs = list(
-                     list(targets=c(0), visible=TRUE, width='4%'),
+                     # list(targets=c(0), visible=TRUE, width='4%'),
+                     list(targets=c(0), visible=TRUE, width='24%'),
                      list(targets=c(1), visible=TRUE, width='24%'),
-                     list(targets=c(2), visible=TRUE, width='24%'),
-                     list(targets=c(3), visible=TRUE, width='24%')
+                     list(targets=c(2), visible=TRUE, width='24%')
                   )
                )
             )
@@ -1029,7 +1033,7 @@ buildServer <- function(
          DT::replaceData(
             proxyFieldTable,
             data=model$fieldTable %>% dplyr::select(-"comment"),
-            clearSelection="all"
+            clearSelection="none", resetPaging=FALSE, rownames=FALSE
          )
       })
       # ## __- Display field comment
@@ -1154,6 +1158,8 @@ buildServer <- function(
             tableName=selTable,
             order=o
          )
+         DT::selectPage(proxyFieldTable, page=((fi-2) %/% 10)+1)
+         DT::selectRows(proxyFieldTable, selected=fi-1)
          model$new <- m
       })
       shiny::observe({
@@ -1178,6 +1184,8 @@ buildServer <- function(
             tableName=selTable,
             order=o
          )
+         DT::selectPage(proxyFieldTable, page=((fi) %/% 10)+1)
+         DT::selectRows(proxyFieldTable, selected=fi+1)
          model$new <- m
       })
       ## __- Add field ----
@@ -1446,7 +1454,8 @@ buildServer <- function(
 
       ## _+ Table primary key ----
       output$primaryKey <- shiny::renderUI({
-         mt <- model$table
+         selection$tables
+         mt <- isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          fnames <- mt$fields$name
@@ -1530,7 +1539,8 @@ buildServer <- function(
 
       ## _+ Table indexes ----
       output$indexes <- shiny::renderUI({
-         mt <- model$table
+         selection$tables
+         mt <- isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          fnames <- mt$fields$name
@@ -1556,7 +1566,8 @@ buildServer <- function(
          )
       })
       output$indexTable <- DT::renderDT({
-         mt <- model$table
+         selection$tables
+         mt <- isolate(model$table)
          # shiny::req(mt)
          # selTable <- mt$tableName
          shiny::isolate(model$indexTable) %>%

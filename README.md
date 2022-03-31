@@ -1,3 +1,16 @@
+README
+================
+
+-   [Introduction](#introduction)
+-   [Installation](#installation)
+    -   [From CRAN](#from-cran)
+    -   [Dependencies](#dependencies)
+    -   [From github](#from-github)
+-   [Documentation](#documentation)
+-   [TKCat: Tailored Knowledge
+    Catalog](#tkcat-tailored-knowledge-catalog)
+-   [Acknowledgments](#acknowledgments)
+
 <img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px"/>
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
@@ -22,7 +35,7 @@ The main features of ReDaMoR are the following:
 -   Check and auto-correct model constraints (types, keys, uniqueness,
     mandatory fields)
 -   Confront data to the model to check their compatibility
--   Support of matrices (>= 0.5.0)
+-   Support of matrices (\>= 0.5.0)
 
 The [TKCat](https://github.com/patzaw/TKCat) package relies on ReDaMoR
 to facilitate the management of data from knowledge resources which are
@@ -79,7 +92,7 @@ The main features of ReDaMoR are the following:
 -   Check and auto-correct model constraints (types, keys, uniqueness,
     mandatory fields)
 -   Confront data to the model to check their compatibility
--   Support of matrices (>= 0.5.0)
+-   Support of matrices (\>= 0.5.0)
 
 The [TKCat](https://github.com/patzaw/TKCat) package relies on ReDaMoR
 to facilitate the management of data from knowledge resources which are
