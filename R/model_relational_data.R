@@ -802,8 +802,9 @@ buildServer <- function(
       })
 
       output$editTable <- shiny::renderUI({
-         selection$tables
-         mt <- isolate(model$table)
+         selt <- selection$tables
+         shiny::req(length(selt)==1)
+         mt <- shiny::isolate(model$x[[selt]])
          shiny::req(mt)
          selTable <- mt$tableName
          shiny::div(
@@ -882,10 +883,11 @@ buildServer <- function(
          }
       })
 
-      ## _+ Table commment ----
+      ## _+ Table comment ----
       output$tableCommentUI <- shiny::renderUI({
-         selection$tables
-         mt <- isolate(model$table)
+         selt <- selection$tables
+         shiny::req(length(selt)==1)
+         mt <- shiny::isolate(model$x[[selt]])
          shiny::req(mt)
          selTable <- mt$tableName
          shiny::fluidRow(
@@ -968,8 +970,9 @@ buildServer <- function(
 
       ## _+ Table fields ----
       output$fields <- shiny::renderUI({
-         selection$tables
-         mt <- isolate(model$table)
+         selt <- selection$tables
+         shiny::req(length(selt)==1)
+         mt <- shiny::isolate(model$x[[selt]])
          shiny::req(mt)
          selTable <- mt$tableName
          list(
@@ -981,15 +984,26 @@ buildServer <- function(
                   if(is.MatrixModel(mt)){
                      NULL
                   }else{
-                     shiny::actionButton(
-                        "addField", label="",
-                        icon=shiny::icon("plus-square", "fa-1x"),
-                        class="shrunkenButton"
-                     ) %>%
-                        shiny::div(
-                           title="Add a new field",
-                           class="iblock"
-                        )
+                     shiny::tagList(
+                        shiny::actionButton(
+                           "addField", label="",
+                           icon=shiny::icon("plus-square", "fa-1x"),
+                           class="shrunkenButton"
+                        ) %>%
+                           shiny::div(
+                              title="Add a new field",
+                              class="iblock"
+                           ),
+                        shiny::actionButton(
+                           "selectAllFields", label="",
+                           icon=shiny::icon("check-double", "fa-1x"),
+                           class="shrunkenButton"
+                        ) %>%
+                           shiny::div(
+                              title="Select all fields",
+                              class="iblock"
+                           )
+                     )
                   },
                   class="rightBox"
                )
@@ -1001,8 +1015,9 @@ buildServer <- function(
          )
       })
       output$fieldTable <- DT::renderDT({
-         selection$tables
-         mt <- isolate(model$table)
+         selt <- selection$tables
+         shiny::req(length(selt)==1)
+         mt <- shiny::isolate(model$x[[selt]])
          # shiny::req(mt)
          # selTable <- mt$tableName
          shiny::isolate(model$fieldTable) %>%
@@ -1010,7 +1025,7 @@ buildServer <- function(
             DT::datatable(
                rownames=FALSE,
                filter="top",
-               selection=list(mode='single', selected=c(), target='row'),
+               selection=list(mode='multiple', selected=c(), target='row'),
                options=list(
                   dom="tip",
                   columnDefs = list(
@@ -1018,7 +1033,8 @@ buildServer <- function(
                      list(targets=c(0), visible=TRUE, width='24%'),
                      list(targets=c(1), visible=TRUE, width='24%'),
                      list(targets=c(2), visible=TRUE, width='24%')
-                  )
+                  ),
+                  ordering=FALSE
                )
             )
       })
@@ -1051,13 +1067,13 @@ buildServer <- function(
       # ## __- Modify fields ----
       output$updateFieldDiv <- shiny::renderUI({
          seli <- input$fieldTable_rows_selected
-         shiny::req(length(seli)==1)
+         shiny::req(length(seli)>=1)
          shiny::req(nrow(model$fieldTable)>0)
          mt <- shiny::isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          shiny::req(nrow(mt$fields)>0)
-         shiny::req(seli>=1 & seli <= nrow(mt$fields))
+         shiny::req(all(seli>=1 & seli <= nrow(mt$fields)))
          shiny::div(
             shiny::actionButton(
                "moveFieldUp",
@@ -1079,16 +1095,20 @@ buildServer <- function(
                   title="Move up",
                   class="iblock"
                ),
-            shiny::actionButton(
-               "updateField",
-               label="",
-               icon=shiny::icon("edit", "fa-1x"),
-               class="shrunkenButton"
-            ) %>%
-               shiny::div(
-                  title="Edit field properties",
-                  class="iblock"
-               ),
+            if(is.MatrixModel(mt) & length(seli) > 1){
+               NULL
+            }else{
+               shiny::actionButton(
+                  "updateField",
+                  label="",
+                  icon=shiny::icon("edit", "fa-1x"),
+                  class="shrunkenButton"
+               ) %>%
+                  shiny::div(
+                     title="Edit field properties",
+                     class="iblock"
+                  )
+            },
             if(is.MatrixModel(mt)){
                NULL
             }else{
@@ -1102,21 +1122,35 @@ buildServer <- function(
             class="iblock"
          )
       })
+      # ## __- Select all fields ----
+      shiny::observe({
+         shiny::req(input$selectAllFields>0)
+         seli <- shiny::isolate(input$fieldTable_rows_selected)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
+         if(length(seli) < nrow(mt$fields)){
+            DT::selectRows(proxyFieldTable, selected=1:nrow(mt$fields))
+         }else{
+            DT::selectRows(proxyFieldTable, selected=NULL)
+         }
+      })
       # ## __- Remove field ----
       shiny::observe({
          shiny::req(input$removeField>0)
          seli <- shiny::isolate(input$fieldTable_rows_selected)
-         shiny::req(length(seli)==1)
+         shiny::req(length(seli)>=1)
          mt <- shiny::isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          m <- shiny::isolate(model$x)
          shiny::req(nrow(mt$fields)>0)
          fn <- mt$fields$name[seli]
-         m <- try(m %>% remove_field(
-            tableName=selTable,
-            fieldName=fn
-         ), silent=TRUE)
+         for(i in 1:length(fn)){
+            m <- try(m %>% remove_field(
+               tableName=selTable,
+               fieldName=fn[i]
+            ), silent=TRUE)
+         }
          if(is.RelDataModel(m)){
             model$new <- m
          }else{
@@ -1139,53 +1173,45 @@ buildServer <- function(
       shiny::observe({
          shiny::req(input$moveFieldUp>0)
          seli <- shiny::isolate(input$fieldTable_rows_selected)
-         shiny::req(length(seli)==1)
+         shiny::req(length(seli)>=1)
          mt <- shiny::isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          m <- shiny::isolate(model$x)
          shiny::req(nrow(mt$fields)>0)
-         fn <- mt$fields$name[seli]
+         shiny::req(min(seli)>1)
          alli <- 1:nrow(m[[selTable]]$fields)
-         fi <- which(m[[selTable]]$fields$name==fn)
-         shiny::req(fi>1)
-         o <- c(
-            alli[which(alli < (fi-1))],
-            fi, fi-1,
-            alli[which(alli > fi)]
-         )
+         o <- rep(NA, length(alli))
+         o[seli-1] <- seli
+         o[which(is.na(o))] <- setdiff(alli, seli)
          m <- m %>% order_fields(
             tableName=selTable,
             order=o
          )
-         DT::selectPage(proxyFieldTable, page=((fi-2) %/% 10)+1)
-         DT::selectRows(proxyFieldTable, selected=fi-1)
+         DT::selectPage(proxyFieldTable, page=((min(seli)-2) %/% 10)+1)
+         DT::selectRows(proxyFieldTable, selected=seli-1)
          model$new <- m
       })
       shiny::observe({
          shiny::req(input$moveFieldDown>0)
          seli <- shiny::isolate(input$fieldTable_rows_selected)
-         shiny::req(length(seli)==1)
+         shiny::req(length(seli)>=1)
          mt <- shiny::isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          m <- shiny::isolate(model$x)
          shiny::req(nrow(mt$fields)>0)
-         fn <- mt$fields$name[seli]
          alli <- 1:nrow(m[[selTable]]$fields)
-         fi <- which(m[[selTable]]$fields$name==fn)
-         shiny::req(fi<length(alli))
-         o <- c(
-            alli[which(alli < fi)],
-            fi+1, fi,
-            alli[which(alli > (fi+1))]
-         )
+         shiny::req(max(seli)<length(alli))
+         o <- rep(NA, length(alli))
+         o[seli+1] <- seli
+         o[which(is.na(o))] <- setdiff(alli, seli)
          m <- m %>% order_fields(
             tableName=selTable,
             order=o
          )
-         DT::selectPage(proxyFieldTable, page=((fi) %/% 10)+1)
-         DT::selectRows(proxyFieldTable, selected=fi+1)
+         DT::selectPage(proxyFieldTable, page=(max(seli) %/% 10)+1)
+         DT::selectRows(proxyFieldTable, selected=seli+1)
          model$new <- m
       })
       ## __- Add field ----
@@ -1295,63 +1321,81 @@ buildServer <- function(
       ## __- Update field ----
       shiny::observeEvent(input$updateField, {
          seli <- shiny::isolate(input$fieldTable_rows_selected)
-         shiny::req(length(seli)==1)
+         shiny::req(length(seli)>=1)
          mt <- shiny::isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
          shiny::req(nrow(fields)>0)
          shiny::showModal(shiny::modalDialog(
-            title="Update field",
+            title=paste0("Update field", ifelse(length(seli)>1, "s", "")),
             shiny::fluidRow(
                shiny::column(
                   10,
-                  shiny::textInput(
-                     "fieldName", label="Field",
-                     value=fields$name[seli],
-                     placeholder="Field name",
-                     width="100%"
-                  ),
+                  if(length(seli)>1){
+                     NULL
+                  }else{
+                     shiny::textInput(
+                        "fieldName", label="Field",
+                        value=fields$name[seli],
+                        placeholder="Field name",
+                        width="100%"
+                     )
+                  },
                   shiny::uiOutput("existingField"),
                   shiny::selectInput(
                      "fieldType", label="Type",
-                     choices=if(fields$type[seli] %in% c("row", "column")){
+                     choices=if(any(fields$type[seli] %in% c("row", "column"))){
                         c("row", "column")
                      }else{
                         if(is.MatrixModel(mt)){
                            setdiff(SUPPTYPES, "base64")
                         }else{
-                           SUPPTYPES
+                           if(length(seli)==1){
+                              SUPPTYPES
+                           }else{
+                              c("", SUPPTYPES)
+                           }
                         }
                      },
-                     selected=fields$type[seli], multiple=FALSE
+                     selected=if(length(unique(fields$type[seli]))>1){
+                        NULL
+                     }else{
+                        fields$type[seli][1]
+                     },
+                     multiple=FALSE
                   ),
-                  if(fields$type[seli] %in% c("row", "column")){
+                  if(any(fields$type[seli] %in% c("row", "column"))){
                      NULL
                   }else{
                      shiny::checkboxInput(
                         "fieldNullable", label="Nullable?",
-                        value=fields$nullable[seli],
+                        value=any(fields$nullable[seli]),
                      )
                   },
-                  if(fields$type[seli] %in% c("row", "column")){
+                  if(any(fields$type[seli] %in% c("row", "column"))){
                      NULL
                   }else{
                      shiny::checkboxInput(
                         "fieldUnique", label="Unique?",
-                        value=fields$unique[seli],
+                        value=all(fields$unique[seli]),
                      )
                   },
-                  shiny::textAreaInput(
-                     "fieldComment", label="Comment",
-                     value=fields$comment[seli],
-                     placeholder=paste(
-                        'Field description.',
-                        'If base64, you should start with the extension of the',
-                        'file between {} (e.g. "{png}", "{html}", "{zip}"...)'
-                     ),
-                     width="100%"
-                  ),
+                  if(length(seli)>1){
+                     NULL
+                  }else{
+                     shiny::textAreaInput(
+                        "fieldComment", label="Comment",
+                        value=fields$comment[seli],
+                        placeholder=paste(
+                           'Field description.',
+                           'If base64, you should start',
+                           'with the extension of the file',
+                           'between {} (e.g. "{png}", "{html}", "{zip}"...)'
+                        ),
+                        width="100%"
+                     )
+                  },
                   shiny::uiOutput("updateFieldError")
                ),
                shiny::column(
@@ -1396,34 +1440,51 @@ buildServer <- function(
       updateField <- shiny::reactiveValues(error=NULL)
       shiny::observeEvent(input$confirmUpdateField, {
          seli <- shiny::isolate(input$fieldTable_rows_selected)
-         shiny::req(length(seli)==1)
+         shiny::req(length(seli)>=1)
          mt <- shiny::isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          fields <- mt$fields
-         nfn <- shiny::isolate(input$fieldName)
-         shiny::req(
-            !is.null(nfn) &&
-               nfn!="" &&
-               !nfn %in% fields$name[-seli]
-         )
          nm <- shiny::isolate(model$x)
-         if(nfn != fields$name[seli]){
-            nm <- nm %>% rename_field(
-               tableName=selTable,
-               current=fields$name[seli],
-               new=nfn
+         if(length(seli)==1){
+            nfn <- shiny::isolate(input$fieldName)
+            shiny::req(
+               !is.null(nfn) &&
+                  nfn!="" &&
+                  !nfn %in% fields$name[-seli]
             )
+            if(nfn != fields$name[seli]){
+               nm <- nm %>% rename_field(
+                  tableName=selTable,
+                  current=fields$name[seli],
+                  new=nfn
+               )
+            }
+            nm <- try(nm %>%
+               update_field(
+                  tableName=selTable,
+                  fieldName=nfn,
+                  type=shiny::isolate(input$fieldType),
+                  nullable=shiny::isolate(input$fieldNullable),
+                  unique=shiny::isolate(input$fieldUnique),
+                  comment=as.character(shiny::isolate(input$fieldComment))
+               ), silent=TRUE)
+         }else{
+            for(i in seli){
+               mtype <- shiny::isolate(input$fieldType)
+               if(mtype==""){
+                  mtype <- NULL
+               }
+               nm <- try(nm %>%
+                  update_field(
+                     tableName=selTable,
+                     fieldName=fields$name[i],
+                     type=mtype,
+                     nullable=shiny::isolate(input$fieldNullable),
+                     unique=shiny::isolate(input$fieldUnique)
+                  ), silent=TRUE)
+            }
          }
-         nm <- try(nm %>%
-            update_field(
-               tableName=selTable,
-               fieldName=nfn,
-               type=shiny::isolate(input$fieldType),
-               nullable=shiny::isolate(input$fieldNullable),
-               unique=shiny::isolate(input$fieldUnique),
-               comment=as.character(shiny::isolate(input$fieldComment))
-            ), silent=TRUE)
          if(is.RelDataModel(nm)){
             updateField$error <- NULL
             if(!identical(nm, shiny::isolate(model$x))){
@@ -1454,8 +1515,9 @@ buildServer <- function(
 
       ## _+ Table primary key ----
       output$primaryKey <- shiny::renderUI({
-         selection$tables
-         mt <- isolate(model$table)
+         selt <- selection$tables
+         shiny::req(length(selt)==1)
+         mt <- shiny::isolate(model$x[[selt]])
          shiny::req(mt)
          selTable <- mt$tableName
          fnames <- mt$fields$name
@@ -1539,8 +1601,9 @@ buildServer <- function(
 
       ## _+ Table indexes ----
       output$indexes <- shiny::renderUI({
-         selection$tables
-         mt <- isolate(model$table)
+         selt <- selection$tables
+         shiny::req(length(selt)==1)
+         mt <- shiny::isolate(model$x[[selt]])
          shiny::req(mt)
          selTable <- mt$tableName
          fnames <- mt$fields$name
@@ -1566,8 +1629,9 @@ buildServer <- function(
          )
       })
       output$indexTable <- DT::renderDT({
-         selection$tables
-         mt <- isolate(model$table)
+         selt <- selection$tables
+         shiny::req(length(selt)==1)
+         mt <- shiny::isolate(model$x[[selt]])
          # shiny::req(mt)
          # selTable <- mt$tableName
          shiny::isolate(model$indexTable) %>%
