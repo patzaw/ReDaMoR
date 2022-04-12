@@ -105,6 +105,11 @@ buildUi <- function(fromR){
                href="doc/ReDaMoR.html",
                target="_blank",
                id="about"
+            ),
+            paste0(
+               "(version ",
+               utils::packageDescription(utils::packageName())$Version,
+               ")"
             )
          )
       ),
