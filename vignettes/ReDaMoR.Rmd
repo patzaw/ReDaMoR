@@ -436,7 +436,7 @@ A modeled database (MDB) in TKCat gathers the following information:
 `MDB` objects can be subsetted, combined, filtered, joined and merged.
 [TKCat](https://github.com/patzaw/TKCat) supports different implementations
 of `MDB` objects such as `memoMDB` (data in memory), `fileMDB` (data in files)
-and `chMDB` (data in [ClickHouse](http://clickhouse.com/) database).
+and `chMDB` (data in [ClickHouse](https://clickhouse.com/) database).
 More information is provided in the
 [TKCat user guide](https://patzaw.github.io/TKCat/TKCat-User-guide.html).
 
