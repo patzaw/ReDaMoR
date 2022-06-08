@@ -136,8 +136,6 @@ The following R packages available on CRAN are required:
     Access the RStudio API
 -   [crayon](https://CRAN.R-project.org/package=crayon): Colored
     Terminal Output
--   [igraph](https://CRAN.R-project.org/package=igraph): Network
-    Analysis and Visualization
 -   [utils](https://CRAN.R-project.org/package=utils): The R Utils
     Package
 -   [graphics](https://CRAN.R-project.org/package=graphics): The R
@@ -153,6 +151,8 @@ And those are suggested:
     Package for Dynamic Report Generation in R
 -   [rmarkdown](https://CRAN.R-project.org/package=rmarkdown): Dynamic
     Documents for R
+-   [igraph](https://CRAN.R-project.org/package=igraph): Network
+    Analysis and Visualization
 -   [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
     base64 encoding
 

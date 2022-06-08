@@ -30,6 +30,8 @@ hpo_model <- read_json_data_model(
   system.file("examples/HPO-model.json", package="ReDaMoR")
 )
 plot(hpo_model)
+
+## -----------------------------------------------------------------------------
 ## Edit the model
 # m <- model_relational_data(hpo_model)
 
@@ -78,6 +80,8 @@ new_model <- df_to_model(
 new_model %>%
   auto_layout(lengthMultiplier=250) %>%
   plot()
+
+## -----------------------------------------------------------------------------
 # model_relational_data(new_model)
 
 ## -----------------------------------------------------------------------------

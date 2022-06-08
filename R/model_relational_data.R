@@ -1522,7 +1522,7 @@ buildServer <- function(
       output$primaryKey <- shiny::renderUI({
          selt <- selection$tables
          shiny::req(length(selt)==1)
-         mt <- shiny::isolate(model$x[[selt]])
+         mt <- model$x[[selt]]
          shiny::req(mt)
          selTable <- mt$tableName
          fnames <- mt$fields$name
@@ -1558,7 +1558,7 @@ buildServer <- function(
       shiny::observe({
          input$refreshPrimaryKey
          npk <- input$primaryKey
-         mt <- shiny::isolate(model$table)
+         mt <- model$table
          shiny::req(mt)
          selTable <- mt$tableName
          cpk <- mt$primaryKey
@@ -1576,7 +1576,7 @@ buildServer <- function(
       output$refreshPKH <- shiny::renderUI({
          input$refreshPrimaryKey
          npk <- input$primaryKey
-         mt <- shiny::isolate(model$table)
+         mt <- model$table
          shiny::req(mt)
          selTable <- mt$tableName
          cpk <- mt$primaryKey

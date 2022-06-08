@@ -11,8 +11,12 @@ confront_data(
   returnData = FALSE,
   verbose = TRUE,
   n_max = Inf,
-  checks = if (n_max == Inf) {     c("unique", "not nullable", "foreign keys") } else {
-        as.character() },
+  checks = if (n_max == Inf) {
+     c("unique", "not nullable", "foreign keys")
+ } else
+    {
+     as.character()
+ },
   delim = "\\t",
   ...
 )
