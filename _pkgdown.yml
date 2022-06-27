@@ -1,7 +1,11 @@
-url: ~
+url: https://patzaw.github.io/ReDaMoR/
+
 template:
   bootstrap: 5
 
 authors:
   Patrice Godard:
     href: https://github.com/patzaw
+
+deploy:
+  install_metadata: true

@@ -21,7 +21,9 @@ Description: The aim of this package is to manipulate relational
    Constraints such as types, keys, uniqueness and mandatory fields are
    automatically checked and corrected when editing a model.
    Finally, real data can be confronted to a model to check their compatibility.
-URL: https://github.com/patzaw/ReDaMoR
+URL:
+   https://patzaw.github.io/ReDaMoR/,
+   https://github.com/patzaw/ReDaMoR/
 BugReports: https://github.com/patzaw/ReDaMoR/issues
 Depends:
    R (>= 3.5),
