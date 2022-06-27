@@ -420,7 +420,7 @@ plot(ge_model)
 <!----------------------------------------------------------------------------->
 # TKCat: Tailored Knowledge Catalog
 
-The aim of [TKCat](https://github.com/patzaw/TKCat) (Tailored Knowledge Catalog)
+The aim of [TKCat](https://patzaw.github.io/TKCat/) (Tailored Knowledge Catalog)
 is to facilitate the management
 of data from knowledge resources that are frequently used alone or together in
 research environments. In TKCat, knowledge resources are manipulated as modeled
@@ -442,11 +442,11 @@ A modeled database (MDB) in TKCat gathers the following information:
 -   The data themselves organized according to the data model.
 
 `MDB` objects can be subsetted, combined, filtered, joined and merged.
-[TKCat](https://github.com/patzaw/TKCat) supports different implementations
+[TKCat](https://patzaw.github.io/TKCat/) supports different implementations
 of `MDB` objects such as `memoMDB` (data in memory), `fileMDB` (data in files)
 and `chMDB` (data in [ClickHouse](https://clickhouse.com/) database).
 More information is provided in the
-[TKCat user guide](https://patzaw.github.io/TKCat/TKCat-User-guide.html).
+[TKCat user guide](https://patzaw.github.io/TKCat/articles/TKCat-User-guide.html).
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->

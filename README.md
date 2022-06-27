@@ -16,10 +16,11 @@ README
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 [![](http://cranlogs.r-pkg.org/badges/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 
-The ReDaMoR package allows the manipulation of relational data models in
-R. It provides functions to create, import and save relational data
-models. These functions are accessible through a graphical user
-interface made with [Shiny](https://shiny.rstudio.com/).
+The [ReDaMoR](https://patzaw.github.io/TKCat/) package allows the
+manipulation of relational data models in R. It provides functions to
+create, import and save relational data models. These functions are
+accessible through a graphical user interface made with
+[Shiny](https://shiny.rstudio.com/).
 
 A public instance of the Shiny app is available
 [here](https://pgodard.shinyapps.io/ReDaMoR).
@@ -37,7 +38,7 @@ The main features of ReDaMoR are the following:
 -   Confront data to the model to check their compatibility
 -   Support of matrices (\>= 0.5.0)
 
-The [TKCat](https://github.com/patzaw/TKCat) package relies on ReDaMoR
+The [TKCat](https://patzaw.github.io/TKCat/) package relies on ReDaMoR
 to facilitate the management of data from knowledge resources which are
 manipulated as modeled database (MDB) objects.
 
@@ -50,7 +51,7 @@ m <- model_relational_data()
 ```
 
 You can also run the code documented in the [package
-vignette](https://patzaw.github.io/ReDaMoR/ReDaMoR.html).
+vignette](https://patzaw.github.io/ReDaMoR/articles/ReDaMoR.html).
 
 # Introduction
 
@@ -94,7 +95,7 @@ The main features of ReDaMoR are the following:
 -   Confront data to the model to check their compatibility
 -   Support of matrices (\>= 0.5.0)
 
-The [TKCat](https://github.com/patzaw/TKCat) package relies on ReDaMoR
+The [TKCat](https://patzaw.github.io/TKCat/) package relies on ReDaMoR
 to facilitate the management of data from knowledge resources which are
 manipulated as modeled database (MDB) objects.
 
@@ -165,11 +166,11 @@ devtools::install_github("patzaw/ReDaMoR")
 # Documentation
 
 Documentation is available in [this
-vignette](https://patzaw.github.io/ReDaMoR).
+vignette](https://patzaw.github.io/ReDaMoR/articles/ReDaMoR.html).
 
 # TKCat: Tailored Knowledge Catalog
 
-The aim of [TKCat](https://github.com/patzaw/TKCat) (Tailored Knowledge
+The aim of [TKCat](https://patzaw.github.io/TKCat/) (Tailored Knowledge
 Catalog) is to facilitate the management of data from knowledge
 resources that are frequently used alone or together in research
 environments. In TKCat, knowledge resources are manipulated as modeled

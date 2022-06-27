@@ -10,3 +10,5 @@
 ^README.html$
 ^NEWS.md$
 ^LICENSE$
+^_pkgdown\.yml$
+^pkgdown$

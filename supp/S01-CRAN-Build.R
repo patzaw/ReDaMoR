@@ -1,5 +1,6 @@
 library(here)
 
+##############################@
 ## Build and copy vignettes ----
 rmarkdown::render(here("README.Rmd"))
 devtools::build_vignettes()
@@ -15,7 +16,7 @@ for(f in list.files(here("doc"))){
    )
    if(sub("^.*[.]", "", f)=="html"){
       file.copy(
-         file.path(here("doc"), f), file.path(here("docs"), f),
+         file.path(here("doc"), f), file.path(here("pkgdown/assets"), f),
          overwrite=TRUE
       )
    }
@@ -23,6 +24,12 @@ for(f in list.files(here("doc"))){
 }
 file.remove("doc")
 
+##############################@
+## Build website ----
+unlink("docs", recursive=TRUE, force=TRUE)
+pkgdown::build_site()
+
+##############################@
 ## Build and check package ----
 pv <- desc::desc_get_version(here())
 system(paste(

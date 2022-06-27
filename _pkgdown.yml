@@ -1,0 +1,7 @@
+url: ~
+template:
+  bootstrap: 5
+
+authors:
+  Patrice Godard:
+    href: https://github.com/patzaw
