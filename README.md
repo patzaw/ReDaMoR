@@ -16,7 +16,7 @@ README
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 [![](http://cranlogs.r-pkg.org/badges/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 
-The [ReDaMoR](https://patzaw.github.io/TKCat/) package allows the
+The [ReDaMoR](https://patzaw.github.io/ReDaMoR/) package allows the
 manipulation of relational data models in R. It provides functions to
 create, import and save relational data models. These functions are
 accessible through a graphical user interface made with
