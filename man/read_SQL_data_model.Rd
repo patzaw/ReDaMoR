@@ -31,9 +31,9 @@ Database, table and field names should be surrounded by "`".
 }
 \section{Functions}{
 \itemize{
-\item \code{readSQLDataModel}: Deprecated version of read_SQL_data_model
-}}
+\item \code{readSQLDataModel()}: Deprecated version of read_SQL_data_model
 
+}}
 \examples{
 ## Read the model ----
 hpo_from_sql <- read_SQL_data_model(
