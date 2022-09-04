@@ -1634,7 +1634,7 @@ buildServer <- function(
       output$indexes <- shiny::renderUI({
          selt <- selection$tables
          shiny::req(length(selt)==1)
-         mt <- shiny::isolate(model$x[[selt]])
+         mt <- model$x[[selt]]
          shiny::req(mt)
          selTable <- mt$tableName
          fnames <- mt$fields$name
@@ -1662,9 +1662,6 @@ buildServer <- function(
       output$indexTable <- DT::renderDT({
          selt <- selection$tables
          shiny::req(length(selt)==1)
-         mt <- shiny::isolate(model$x[[selt]])
-         # shiny::req(mt)
-         # selTable <- mt$tableName
          shiny::isolate(model$indexTable) %>%
             DT::datatable(
                rownames=TRUE,
