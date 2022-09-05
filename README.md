@@ -1,15 +1,16 @@
 README
 ================
 
--   [Introduction](#introduction)
--   [Installation](#installation)
-    -   [From CRAN](#from-cran)
-    -   [Dependencies](#dependencies)
-    -   [From github](#from-github)
--   [Documentation](#documentation)
--   [TKCat: Tailored Knowledge
-    Catalog](#tkcat-tailored-knowledge-catalog)
--   [Acknowledgments](#acknowledgments)
+-   <a href="#introduction" id="toc-introduction">Introduction</a>
+-   <a href="#installation" id="toc-installation">Installation</a>
+    -   <a href="#from-cran" id="toc-from-cran">From CRAN</a>
+    -   <a href="#dependencies" id="toc-dependencies">Dependencies</a>
+    -   <a href="#from-github" id="toc-from-github">From github</a>
+-   <a href="#documentation" id="toc-documentation">Documentation</a>
+-   <a href="#tkcat-tailored-knowledge-catalog"
+    id="toc-tkcat-tailored-knowledge-catalog">TKCat: Tailored Knowledge
+    Catalog</a>
+-   <a href="#acknowledgments" id="toc-acknowledgments">Acknowledgments</a>
 
 <img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px"/>
 
