@@ -1,5 +1,5 @@
 ###############################################################################@
-#' Create a RelTableModel object from column names of data frames
+#' Create a [RelDataModel] object from column names of data frames
 #'
 #' @param ... the data frame objects, as names (unquoted) or character strings
 #' (quoted)
@@ -17,7 +17,7 @@
 #' The envir argument is an alternative way to specify an environment,
 #' but is primarily there for back compatibility.
 #'
-#' @return A RelTableModel object.
+#' @return A [RelDataModel] object.
 #'
 #' @example inst/examples/ex_from_df.R
 #'

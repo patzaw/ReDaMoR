@@ -2,7 +2,7 @@
 % Please edit documentation in R/df_to_model.R
 \name{df_to_model}
 \alias{df_to_model}
-\title{Create a RelTableModel object from column names of data frames}
+\title{Create a \link{RelDataModel} object from column names of data frames}
 \usage{
 df_to_model(..., list = character(), pos = -1, envir = as.environment(pos))
 }
@@ -19,10 +19,10 @@ See ‘details’ for other possibilities.}
 \item{envir}{the environment to use. See ‘details’.}
 }
 \value{
-A RelTableModel object.
+A \link{RelDataModel} object.
 }
 \description{
-Create a RelTableModel object from column names of data frames
+Create a \link{RelDataModel} object from column names of data frames
 }
 \details{
 The pos argument can specify the environment from which to get
