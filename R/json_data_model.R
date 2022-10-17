@@ -64,7 +64,7 @@ read_json_data_model <- function(txt){
          x$display$y <- as.numeric(x$display$y)
          x$display$color <- as.character(x$display$color)
          x$display$comment <- as.character(x$display$comment)
-         RelTableModel(x)
+         do.call(RelTableModel, x)
       }
    ) %>% RelDataModel()
 }

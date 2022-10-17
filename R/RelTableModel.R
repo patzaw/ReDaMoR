@@ -1,34 +1,36 @@
 ###############################################################################@
 #' Create a RelTableModel object
 #'
-#' @param l the list with the following elements
-#' - **tableName**: a character vector of length one
-#' - **fields**: a tibble with the follwoing columns:
-#'    + *name*: character
-#'    + *type*: character
-#'    + *nullable*: logical
-#'    + *comment*:  character
-#' - **primaryKey**: a character vector of any length. All
+#' @param l DEPRECATED. A named list with the function parameters.
+#' If `NULL` (default) the function parameters are used. If not `NULL`, the
+#' function parameters are ignored and taken from l.
+#' @param tableName a character vector of length one
+#' @param fields a tibble with the following columns:
+#'    - *name*: character
+#'    - *type*: character
+#'    - *nullable*: logical
+#'    - *comment*:  character
+#' @param primaryKey a character vector of any length. All
 #' values should be in fields$name
-#' - **foreignKeys**: a list of foreign keys. Each foreign key is defined
+#' @param foreignKeys a list of foreign keys. Each foreign key is defined
 #' as a list with the following elements:
-#'    + *refTable*: a character vector of length one (the referenced table)
-#'    + *key*: a tibble with a "from" and a "to" columns
-#'    + (*cardinality*): an optional integer vector with 4 values:
-#'       - fmin: from minimum cardinality
-#'       - fmax: from maximum cardinality
-#'       - tmin: to minimum cardinality
-#'       - tmax: to maximum cardinality
-#' - **indexes**: a list of indexes. Each index is defined by
+#'    - *refTable*: a character vector of length one (the referenced table)
+#'    - *key*: a tibble with a "from" and a "to" columns
+#'    - (*cardinality*): an optional integer vector with 4 values:
+#'       + fmin: from minimum cardinality
+#'       + fmax: from maximum cardinality
+#'       + tmin: to minimum cardinality
+#'       + tmax: to maximum cardinality
+#' @param indexes a list of indexes. Each index is defined by
 #' 3 columns:
-#'    + *field*: character (all in fields$name)
-#'    + *order*: character
-#'    + *unique*: logical
-#' - **display**: a list gathering:
-#'    + *x*: single numeric value for the x position of the table
-#'    + *y*: single numeric value for the y position of the table
-#'    + *color*: single character value corresponding to the color of the table
-#'    + *comment*: single character value with some description of the table
+#'    - *field*: character (all in fields$name)
+#'    - *order*: character
+#'    - *unique*: logical
+#' @param display a list gathering:
+#'    - *x*: single numeric value for the x position of the table
+#'    - *y*: single numeric value for the y position of the table
+#'    - *color*: single character value corresponding to the color of the table
+#'    - *comment*: single character value with some description of the table
 #'
 #' @details When defining a matrix, 3 and only 3 fields must be defined:
 #' 2 of types 'row' and 'column' and the 3rd of your choice. In this case
@@ -38,14 +40,37 @@
 #'
 #' @export
 #'
-RelTableModel <- function(l){
+RelTableModel <- function(
+      l=NULL,
+      tableName,
+      fields,
+      primaryKey=NULL,
+      foreignKeys=NULL,
+      indexes=NULL,
+      display=NULL
+
+){
+
+   ############################################################################@
+   ## Management of params ----
+   if(!is.null(l)){
+      warning("l param is deprecated and will probably removed in the future")
+   }else{
+      l <- list(
+         tableName=tableName,
+         fields=fields,
+         primaryKey=primaryKey,
+         foreignKeys=foreignKeys,
+         indexes=indexes,
+         display=display
+      )
+   }
 
    ############################################################################@
    ## Checks ----
 
    ## * Simple checks ----
    tableInfo <- c(
-      # "dbName",
       "tableName", "fields",
       "primaryKey", "foreignKeys", "indexes",
       "display"
@@ -54,10 +79,6 @@ RelTableModel <- function(l){
    stopifnot(
       all(tableInfo %in% names(l)),
       all(names(l) %in% tableInfo),
-
-      # is.character(l$dbName),
-      # length(l$dbName)==1,
-      # !is.na(l$dbName),
 
       is.character(l$tableName),
       length(l$tableName)==1,

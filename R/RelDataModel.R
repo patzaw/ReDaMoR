@@ -594,14 +594,14 @@ fromDBM <- function(dbm){
    toRet <- lapply(
       tableName,
       function(tn){
-         return(RelTableModel(list(
+         return(RelTableModel(
             tableName=tn,
             fields=fields[[tn]],
             primaryKey=primaryKey[[tn]],
             foreignKeys=foreignKeys[[tn]],
             indexes=indexes[[tn]],
             display=display[[tn]]
-         )))
+         ))
       }
    ) %>% RelDataModel()
 
@@ -652,24 +652,24 @@ add_table <- function(x, newTable){
       stopifnot(
          length(newTable)==1
       )
-      newTable <- RelTableModel(list(
-         "tableName"=newTable,
-         "fields"=dplyr::tibble(
+      newTable <- RelTableModel(
+         tableName=newTable,
+         fields=dplyr::tibble(
             name=character(),
             type=character(),
             nullable=logical(),
             unique=logical(),
             comment=character()
          ),
-         "primaryKey"=NULL,
-         "foreignKeys"=NULL,
-         "indexes"=NULL,
-         "display"=list(
+         primaryKey=NULL,
+         foreignKeys=NULL,
+         indexes=NULL,
+         display=list(
             x=as.numeric(NA), y=as.numeric(NA),
             color=as.character(NA),
             comment=as.character(NA)
          )
-      ))
+      )
    }
    stopifnot(!newTable$tableName %in% names(x))
    x <- unclass(x)

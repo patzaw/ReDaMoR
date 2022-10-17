@@ -4,22 +4,35 @@
 \alias{RelTableModel}
 \title{Create a RelTableModel object}
 \usage{
-RelTableModel(l)
+RelTableModel(
+  l = NULL,
+  tableName,
+  fields,
+  primaryKey = NULL,
+  foreignKeys = NULL,
+  indexes = NULL,
+  display = NULL
+)
 }
 \arguments{
-\item{l}{the list with the following elements
-\itemize{
-\item \strong{tableName}: a character vector of length one
-\item \strong{fields}: a tibble with the follwoing columns:
+\item{l}{DEPRECATED. A named list with the function parameters.
+If \code{NULL} (default) the function parameters are used. If not \code{NULL}, the
+function parameters are ignored and taken from l.}
+
+\item{tableName}{a character vector of length one}
+
+\item{fields}{a tibble with the following columns:
 \itemize{
 \item \emph{name}: character
 \item \emph{type}: character
 \item \emph{nullable}: logical
 \item \emph{comment}:  character
-}
-\item \strong{primaryKey}: a character vector of any length. All
-values should be in fields$name
-\item \strong{foreignKeys}: a list of foreign keys. Each foreign key is defined
+}}
+
+\item{primaryKey}{a character vector of any length. All
+values should be in fields$name}
+
+\item{foreignKeys}{a list of foreign keys. Each foreign key is defined
 as a list with the following elements:
 \itemize{
 \item \emph{refTable}: a character vector of length one (the referenced table)
@@ -31,21 +44,22 @@ as a list with the following elements:
 \item tmin: to minimum cardinality
 \item tmax: to maximum cardinality
 }
-}
-\item \strong{indexes}: a list of indexes. Each index is defined by
+}}
+
+\item{indexes}{a list of indexes. Each index is defined by
 3 columns:
 \itemize{
 \item \emph{field}: character (all in fields$name)
 \item \emph{order}: character
 \item \emph{unique}: logical
-}
-\item \strong{display}: a list gathering:
+}}
+
+\item{display}{a list gathering:
 \itemize{
 \item \emph{x}: single numeric value for the x position of the table
 \item \emph{y}: single numeric value for the y position of the table
 \item \emph{color}: single character value corresponding to the color of the table
 \item \emph{comment}: single character value with some description of the table
-}
 }}
 }
 \value{

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ReDaMoR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,21 +54,44 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">RelTableModel</span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">RelTableModel</span><span class="op">(</span></span>
+<span>  l <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">tableName</span>,</span>
+<span>  <span class="va">fields</span>,</span>
+<span>  primaryKey <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  foreignKeys <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  indexes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  display <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>l</dt>
-<dd><p>the list with the following elements</p><ul><li><p><strong>tableName</strong>: a character vector of length one</p></li>
-<li><p><strong>fields</strong>: a tibble with the follwoing columns:</p><ul><li><p><em>name</em>: character</p></li>
+<dd><p>DEPRECATED. A named list with the function parameters.
+If <code>NULL</code> (default) the function parameters are used. If not <code>NULL</code>, the
+function parameters are ignored and taken from l.</p></dd>
+
+
+<dt>tableName</dt>
+<dd><p>a character vector of length one</p></dd>
+
+
+<dt>fields</dt>
+<dd><p>a tibble with the following columns:</p><ul><li><p><em>name</em>: character</p></li>
 <li><p><em>type</em>: character</p></li>
 <li><p><em>nullable</em>: logical</p></li>
 <li><p><em>comment</em>:  character</p></li>
-</ul></li>
-<li><p><strong>primaryKey</strong>: a character vector of any length. All
-values should be in fields$name</p></li>
-<li><p><strong>foreignKeys</strong>: a list of foreign keys. Each foreign key is defined
+</ul></dd>
+
+
+<dt>primaryKey</dt>
+<dd><p>a character vector of any length. All
+values should be in fields$name</p></dd>
+
+
+<dt>foreignKeys</dt>
+<dd><p>a list of foreign keys. Each foreign key is defined
 as a list with the following elements:</p><ul><li><p><em>refTable</em>: a character vector of length one (the referenced table)</p></li>
 <li><p><em>key</em>: a tibble with a "from" and a "to" columns</p></li>
 <li><p>(<em>cardinality</em>): an optional integer vector with 4 values:</p><ul><li><p>fmin: from minimum cardinality</p></li>
@@ -76,17 +99,22 @@ as a list with the following elements:</p><ul><li><p><em>refTable</em>: a charac
 <li><p>tmin: to minimum cardinality</p></li>
 <li><p>tmax: to maximum cardinality</p></li>
 </ul></li>
-</ul></li>
-<li><p><strong>indexes</strong>: a list of indexes. Each index is defined by
+</ul></dd>
+
+
+<dt>indexes</dt>
+<dd><p>a list of indexes. Each index is defined by
 3 columns:</p><ul><li><p><em>field</em>: character (all in fields$name)</p></li>
 <li><p><em>order</em>: character</p></li>
 <li><p><em>unique</em>: logical</p></li>
-</ul></li>
-<li><p><strong>display</strong>: a list gathering:</p><ul><li><p><em>x</em>: single numeric value for the x position of the table</p></li>
+</ul></dd>
+
+
+<dt>display</dt>
+<dd><p>a list gathering:</p><ul><li><p><em>x</em>: single numeric value for the x position of the table</p></li>
 <li><p><em>y</em>: single numeric value for the y position of the table</p></li>
 <li><p><em>color</em>: single character value corresponding to the color of the table</p></li>
 <li><p><em>comment</em>: single character value with some description of the table</p></li>
-</ul></li>
 </ul></dd>
 
 </dl></div>

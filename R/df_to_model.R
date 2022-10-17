@@ -67,24 +67,24 @@ df_to_model <- function(
    for(tn in names(values)){
       df <- values[[tn]]
       if(inherits(df, c("matrix", "Matrix"))){
-         toRet[[tn]] <- RelTableModel(l=list(
-            "tableName"=tn,
-            "fields"=dplyr::tibble(
+         toRet[[tn]] <- RelTableModel(
+            tableName=tn,
+            fields=dplyr::tibble(
                name=c("row", "column", "value"),
                type=c("row", "column", class(df[1])),
                nullable=c(FALSE, FALSE, TRUE),
                unique=c(FALSE, FALSE, FALSE),
                comment=as.character(NA)
             ),
-            "primaryKey"=c("row", "column"),
-            "foreignKeys"=NULL,
-            "indexes"=NULL,
-            "display"=list(
+            primaryKey=c("row", "column"),
+            foreignKeys=NULL,
+            indexes=NULL,
+            display=list(
                x=as.numeric(NA), y=as.numeric(NA),
                color=as.character(NA),
                comment=as.character(NA)
             )
-         ))
+         )
       }else{
          types <- character()
          for(cn in colnames(df)){
@@ -99,24 +99,24 @@ df_to_model <- function(
             }
             types <- c(types, ct)
          }
-         toRet[[tn]] <- RelTableModel(l=list(
-            "tableName"=tn,
-            "fields"=dplyr::tibble(
+         toRet[[tn]] <- RelTableModel(
+            tableName=tn,
+            fields=dplyr::tibble(
                name=colnames(df),
                type=types,
                nullable=TRUE,
                unique=FALSE,
                comment=as.character(NA)
             ),
-            "primaryKey"=NULL,
-            "foreignKeys"=NULL,
-            "indexes"=NULL,
-            "display"=list(
+            primaryKey=NULL,
+            foreignKeys=NULL,
+            indexes=NULL,
+            display=list(
                x=as.numeric(NA), y=as.numeric(NA),
                color=as.character(NA),
                comment=as.character(NA)
             )
-         ))
+         )
       }
    }
    return(RelDataModel(toRet))
