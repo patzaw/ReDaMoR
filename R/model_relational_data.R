@@ -810,6 +810,11 @@ buildServer <- function(
       ## Edit table ----
       #########################################################################@
 
+      cpfields <- shiny::reactiveValues(
+         table=NULL,
+         fields=NULL
+      )
+
       shiny::observe({
          selTables <- selection$tables
          m <- model$x
@@ -1000,9 +1005,9 @@ buildServer <- function(
          selTable <- mt$tableName
          list(
             shiny::fluidRow(
-               shiny::column(6, shiny::h4("Fields")),
+               shiny::column(4, shiny::h4("Fields")),
                shiny::column(
-                  6,
+                  8,
                   shiny::uiOutput("updateFieldDiv", inline=TRUE),
                   if(is.MatrixModel(mt)){
                      NULL
@@ -1029,7 +1034,8 @@ buildServer <- function(
                            shiny::div(
                               title="Select all fields",
                               class="iblock"
-                           )
+                           ),
+                        shiny::uiOutput("pasteFieldDiv", inline=TRUE)
                      )
                   },
                   class="rightBox"
@@ -1091,6 +1097,48 @@ buildServer <- function(
          shiny::req(seli>=1 & seli <= nrow(mt$fields))
          shiny::p(mt$fields$comment[seli])
       })
+      # ## __- Paste fields ----
+      output$pasteFieldDiv <- shiny::renderUI({
+         shiny::req(cpfields$table)
+         shiny::req(cpfields$fields)
+         mt <- model$table
+         shiny::req(mt)
+         shiny::req(!is.MatrixModel(mt))
+         selTable <- mt$tableName
+         fn <- mt$fields$name
+         shiny::req(selTable != cpfields$table)
+         shiny::req(!any(cpfields$fields %in% fn))
+         shiny::div(
+            shiny::actionButton(
+               "pasteFields",
+               label="",
+               icon=shiny::icon(
+                  "paste", "fa-1x", verify_fa=FALSE
+               ),
+               class="shrunkenButton"
+            ) %>%
+               shiny::div(
+                  title="Paste fields (Ctrl+v)",
+                  class="iblock"
+               ),
+            class="iblock"
+         )
+      })
+      observe({
+         shiny::req(input$pasteFields>0)
+         from <- shiny::isolate(cpfields$table)
+         cpf <- shiny::isolate(cpfields$fields)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
+         shiny::req(!is.MatrixModel(mt))
+         to <- mt$tableName
+         fn <- mt$fields$name
+         shiny::req(to != from)
+         shiny::req(!any(cpf %in% fn))
+         m <- shiny::isolate(model$x)
+         m <- copy_fields(m, from=from, to=to, fields=cpf)
+         model$new <- m
+      })
       # ## __- Modify fields ----
       output$updateFieldDiv <- shiny::renderUI({
          seli <- input$fieldTable_rows_selected
@@ -1102,6 +1150,22 @@ buildServer <- function(
          shiny::req(nrow(mt$fields)>0)
          shiny::req(all(seli>=1 & seli <= nrow(mt$fields)))
          shiny::div(
+            if(is.MatrixModel(mt)){
+               NULL
+            }else{
+               shiny::actionButton(
+                  "copyFields",
+                  label="",
+                  icon=shiny::icon(
+                     "copy", "fa-1x", verify_fa=FALSE
+                  ),
+                  class="shrunkenButton"
+               ) %>%
+                  shiny::div(
+                     title="Copy fields (Ctrl+c)",
+                     class="iblock"
+                  )
+            },
             shiny::actionButton(
                "moveFieldUp",
                label="",
@@ -1152,6 +1216,19 @@ buildServer <- function(
             },
             class="iblock"
          )
+      })
+      # ## __- Copy fields ----
+      shiny::observe({
+         shiny::req(input$copyFields>0)
+         seli <- shiny::isolate(input$fieldTable_rows_selected)
+         shiny::req(length(seli)>=1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
+         selTable <- mt$tableName
+         shiny::req(nrow(mt$fields)>0)
+         fn <- mt$fields$name[seli]
+         cpfields$table <- selTable
+         cpfields$fields <- fn
       })
       # ## __- Select all fields ----
       shiny::observe({

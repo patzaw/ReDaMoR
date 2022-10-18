@@ -99,6 +99,10 @@
       {
          "element": "#addField",
          "intro": "Add a new field."
+      },
+      {
+         "element": "#selectAllFields",
+         "intro": "Select all fields"
       }
    ],
 
@@ -133,12 +137,24 @@
 
    "selectedField":[
       {
+         "element": "#removeField",
+         "intro": "Remove field."
+      },
+      {
          "element": "#updateField",
          "intro": "Update field definition"
       },
       {
-         "element": "#removeField",
-         "intro": "Remove field."
+         "element": "#moveFieldUp",
+         "intro": "Move fields up"
+      },
+      {
+         "element": "#moveFieldDown",
+         "intro": "Move fields down"
+      },
+      {
+         "element": "#copyFields",
+         "intro": "Copy fields (Ctrl+c)"
       }
    ],
 

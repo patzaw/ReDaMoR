@@ -64,6 +64,18 @@ $(document).keydown(function(event) {
        $("#redo").click();
     }
 
+    // Copy and paste fields
+    if(event.keyCode == 67 && event.ctrlKey) {
+      if($("#copyFields")[0]){
+        $("#copyFields").click();
+      }
+    }
+    if(event.keyCode == 86 && event.ctrlKey) {
+      if($("#pasteFields")[0]){
+        $("#pasteFields").click();
+      }
+    }
+
   }
 
 });

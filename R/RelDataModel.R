@@ -1491,6 +1491,44 @@ update_table_display <- function(
 }
 
 ###############################################################################@
+#' Copy fields from one table to another in a [RelDataModel]
+#'
+#' @param x a [RelDataModel]
+#' @param from the name of the table from which the fields are taken
+#' @param to the name of the table to which the fields are copied
+#' @param fields the names of the fields to copy
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+copy_fields <- function(x, from, to, fields){
+   stopifnot(
+      is.RelDataModel(x),
+      is.character(from) && length(from)==1 && !is.na(from) &&
+         from %in% names(x),
+      is.character(to) && length(to)==1 && !is.na(to) &&
+         to %in% names(x),
+      is.character(fields) && length(fields)>0 && !any(is.na(fields)) &&
+         all(fields %in% x[[from]]$fields$name) &&
+         !any(fields %in% x[[to]]$fields$name)
+   )
+   for(f in fields){
+      ff <- dplyr::filter(x[[from]]$fields, .data$name==f)
+      x <- add_field(
+         x,
+         tableName=to,
+         name=f,
+         type=ff$type,
+         nullable=ff$nullable,
+         unique=ff$unique,
+         comment=ff$comment
+      )
+   }
+   return(x)
+}
+
+###############################################################################@
 #' Pre-compute [RelDataModel] layout when missing any x or y table position
 #'
 #' @param x a [RelDataModel]
