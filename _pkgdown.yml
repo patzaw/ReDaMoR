@@ -2,10 +2,21 @@ url: https://patzaw.github.io/ReDaMoR/
 
 template:
   bootstrap: 5
+  includes:
+    in_header: |
+       <!-- Global site tag (gtag.js) - Google Analytics -->
+       <script async src="https://www.googletagmanager.com/gtag/js?id=G-7RG3ZVT8WZ"#' ></script>
+       <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+
+         gtag('config', 'G-7RG3ZVT8WZ');
+       </script>
 
 authors:
   Patrice Godard:
-    href: https://github.com/patzaw
+    href: https://patzaw.github.io
 
 deploy:
   install_metadata: true
