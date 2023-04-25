@@ -1,16 +1,16 @@
 README
 ================
 
--   <a href="#introduction" id="toc-introduction">Introduction</a>
--   <a href="#installation" id="toc-installation">Installation</a>
-    -   <a href="#from-cran" id="toc-from-cran">From CRAN</a>
-    -   <a href="#dependencies" id="toc-dependencies">Dependencies</a>
-    -   <a href="#from-github" id="toc-from-github">From github</a>
--   <a href="#documentation" id="toc-documentation">Documentation</a>
--   <a href="#tkcat-tailored-knowledge-catalog"
-    id="toc-tkcat-tailored-knowledge-catalog">TKCat: Tailored Knowledge
-    Catalog</a>
--   <a href="#acknowledgments" id="toc-acknowledgments">Acknowledgments</a>
+- <a href="#introduction" id="toc-introduction">Introduction</a>
+- <a href="#installation" id="toc-installation">Installation</a>
+  - <a href="#from-cran" id="toc-from-cran">From CRAN</a>
+  - <a href="#dependencies" id="toc-dependencies">Dependencies</a>
+  - <a href="#from-github" id="toc-from-github">From github</a>
+- <a href="#documentation" id="toc-documentation">Documentation</a>
+- <a href="#tkcat-tailored-knowledge-catalog"
+  id="toc-tkcat-tailored-knowledge-catalog">TKCat: Tailored Knowledge
+  Catalog</a>
+- <a href="#acknowledgments" id="toc-acknowledgments">Acknowledgments</a>
 
 <img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px"/>
 
@@ -28,16 +28,16 @@ A public instance of the Shiny app is available
 
 The main features of ReDaMoR are the following:
 
--   Create data model from scratch with a graphical user interface
--   Save data model in a json format
--   Import SQL data model generated with [MySQL
-    Workbench](https://www.mysql.com/products/workbench/)
--   Document data types as R types (character, numeric, logical, …)
--   Add comments to tables and fields to improve model documentation
--   Check and auto-correct model constraints (types, keys, uniqueness,
-    mandatory fields)
--   Confront data to the model to check their compatibility
--   Support of matrices (\>= 0.5.0)
+- Create data model from scratch with a graphical user interface
+- Save data model in a json format
+- Import SQL data model generated with [MySQL
+  Workbench](https://www.mysql.com/products/workbench/)
+- Document data types as R types (character, numeric, logical, …)
+- Add comments to tables and fields to improve model documentation
+- Check and auto-correct model constraints (types, keys, uniqueness,
+  mandatory fields)
+- Confront data to the model to check their compatibility
+- Support of matrices (\>= 0.5.0)
 
 The [TKCat](https://patzaw.github.io/TKCat/) package relies on ReDaMoR
 to facilitate the management of data from knowledge resources which are
@@ -85,16 +85,16 @@ through a graphical user interface made with
 
 The main features of ReDaMoR are the following:
 
--   Create data model from scratch with a graphical user interface
--   Save data model in a json format
--   Import SQL data model generated with [MySQL
-    Workbench](https://www.mysql.com/products/workbench/)
--   Document data types as R types (character, numeric, logical, …)
--   Add comments to tables and fields to improve model documentation
--   Check and auto-correct model constraints (types, keys, uniqueness,
-    mandatory fields)
--   Confront data to the model to check their compatibility
--   Support of matrices (\>= 0.5.0)
+- Create data model from scratch with a graphical user interface
+- Save data model in a json format
+- Import SQL data model generated with [MySQL
+  Workbench](https://www.mysql.com/products/workbench/)
+- Document data types as R types (character, numeric, logical, …)
+- Add comments to tables and fields to improve model documentation
+- Check and auto-correct model constraints (types, keys, uniqueness,
+  mandatory fields)
+- Confront data to the model to check their compatibility
+- Support of matrices (\>= 0.5.0)
 
 The [TKCat](https://patzaw.github.io/TKCat/) package relies on ReDaMoR
 to facilitate the management of data from knowledge resources which are
@@ -112,51 +112,49 @@ install.packages("ReDaMoR")
 
 The following R packages available on CRAN are required:
 
--   [dplyr](https://CRAN.R-project.org/package=dplyr): A Grammar of Data
-    Manipulation
--   [magrittr](https://CRAN.R-project.org/package=magrittr): A
-    Forward-Pipe Operator for R
--   [visNetwork](https://CRAN.R-project.org/package=visNetwork): Network
-    Visualization using ‘vis.js’ Library
--   [readr](https://CRAN.R-project.org/package=readr): Read Rectangular
-    Text Data
--   [shiny](https://CRAN.R-project.org/package=shiny): Web Application
-    Framework for R
--   [shinyjs](https://CRAN.R-project.org/package=shinyjs): Easily
-    Improve the User Experience of Your Shiny Apps in Seconds
--   [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Simple
-    and Robust JSON Parser and Generator for R
--   [DT](https://CRAN.R-project.org/package=DT): A Wrapper of the
-    JavaScript Library ‘DataTables’
--   [colourpicker](https://CRAN.R-project.org/package=colourpicker): A
-    Colour Picker Tool for Shiny and for Selecting Colours in Plots
--   [rintrojs](https://CRAN.R-project.org/package=rintrojs): Wrapper for
-    the ‘Intro.js’ Library
--   [markdown](https://CRAN.R-project.org/package=markdown): Render
-    Markdown with the C Library ‘Sundown’
--   [rstudioapi](https://CRAN.R-project.org/package=rstudioapi): Safely
-    Access the RStudio API
--   [crayon](https://CRAN.R-project.org/package=crayon): Colored
-    Terminal Output
--   [utils](https://CRAN.R-project.org/package=utils): The R Utils
-    Package
--   [graphics](https://CRAN.R-project.org/package=graphics): The R
-    Graphics Package
--   [stats](https://CRAN.R-project.org/package=stats): The R Stats
-    Package
--   [Matrix](https://CRAN.R-project.org/package=Matrix): Sparse and
-    Dense Matrix Classes and Methods
+- [dplyr](https://CRAN.R-project.org/package=dplyr): A Grammar of Data
+  Manipulation
+- [magrittr](https://CRAN.R-project.org/package=magrittr): A
+  Forward-Pipe Operator for R
+- [visNetwork](https://CRAN.R-project.org/package=visNetwork): Network
+  Visualization using ‘vis.js’ Library
+- [readr](https://CRAN.R-project.org/package=readr): Read Rectangular
+  Text Data
+- [shiny](https://CRAN.R-project.org/package=shiny): Web Application
+  Framework for R
+- [shinyjs](https://CRAN.R-project.org/package=shinyjs): Easily Improve
+  the User Experience of Your Shiny Apps in Seconds
+- [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Simple and
+  Robust JSON Parser and Generator for R
+- [DT](https://CRAN.R-project.org/package=DT): A Wrapper of the
+  JavaScript Library ‘DataTables’
+- [colourpicker](https://CRAN.R-project.org/package=colourpicker): A
+  Colour Picker Tool for Shiny and for Selecting Colours in Plots
+- [rintrojs](https://CRAN.R-project.org/package=rintrojs): Wrapper for
+  the ‘Intro.js’ Library
+- [markdown](https://CRAN.R-project.org/package=markdown): Render
+  Markdown with ‘commonmark’
+- [rstudioapi](https://CRAN.R-project.org/package=rstudioapi): Safely
+  Access the RStudio API
+- [crayon](https://CRAN.R-project.org/package=crayon): Colored Terminal
+  Output
+- [utils](https://CRAN.R-project.org/package=utils): The R Utils Package
+- [graphics](https://CRAN.R-project.org/package=graphics): The R
+  Graphics Package
+- [stats](https://CRAN.R-project.org/package=stats): The R Stats Package
+- [Matrix](https://CRAN.R-project.org/package=Matrix): Sparse and Dense
+  Matrix Classes and Methods
 
 And those are suggested:
 
--   [knitr](https://CRAN.R-project.org/package=knitr): A General-Purpose
-    Package for Dynamic Report Generation in R
--   [rmarkdown](https://CRAN.R-project.org/package=rmarkdown): Dynamic
-    Documents for R
--   [igraph](https://CRAN.R-project.org/package=igraph): Network
-    Analysis and Visualization
--   [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
-    base64 encoding
+- [knitr](https://CRAN.R-project.org/package=knitr): A General-Purpose
+  Package for Dynamic Report Generation in R
+- [rmarkdown](https://CRAN.R-project.org/package=rmarkdown): Dynamic
+  Documents for R
+- [igraph](https://CRAN.R-project.org/package=igraph): Network Analysis
+  and Visualization
+- [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
+  base64 encoding
 
 ## From github
 

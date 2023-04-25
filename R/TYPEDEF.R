@@ -166,12 +166,16 @@ as_type <- function(x, type){
       "character"=as.character(x),
       "Date"=as.Date(x),
       "POSIXct"=as.POSIXct(x),
-      "base64"=unlist(lapply(x, function(y){
-         if(length(y)==0 || (length(y)==1 && is.na(y))){
-            return(NA)
-         }else{
-            paste(y, collapse="")
-         }
-      }))
+      "base64"=if(length(x)==0){
+         character(0)
+      }else{
+         unlist(lapply(x, function(y){
+            if(length(y)==0 || (length(y)==1 && is.na(y))){
+               return(NA)
+            }else{
+               paste(y, collapse="")
+            }
+         }))
+      }
    ))
 }
