@@ -60,7 +60,7 @@ The [datamodelr](https://github.com/bergant/datamodelr) R package provides tools
 
 Here we present the ReDaMoR package which also allows the manipulation of relational data models in R but with an approach quite different from the one implemented in datamodelr.
 It provides functions to create, import and save relational data models.
-These functions are accessible through a graphical user interface made with [Shiny](https://shiny.rstudio.com/).
+These functions are accessible through a graphical user interface made with [Shiny](https://shiny.posit.co/).
 
 The main features of ReDaMoR are the following:
 

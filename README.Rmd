@@ -29,7 +29,7 @@ The [ReDaMoR](https://patzaw.github.io/ReDaMoR/) package allows the manipulation
 of relational data models in R. It
 provides functions to create, import and save relational data models. These
 functions are accessible through a graphical user interface made with
-[Shiny](https://shiny.rstudio.com/).
+[Shiny](https://shiny.posit.co/).
 
 A public instance of the Shiny app is available
 [here](https://pgodard.shinyapps.io/ReDaMoR).
@@ -88,7 +88,7 @@ Here we present the ReDaMoR package which also allows the manipulation of
 relational data models in R but with an approach quite different from the one
 implemented in datamodelr. It provides functions to create, import and save
 relational data models. These functions are accessible through a graphical user
-interface made with [Shiny](https://shiny.rstudio.com/).
+interface made with [Shiny](https://shiny.posit.co/).
 
 The main features of ReDaMoR are the following:
 
