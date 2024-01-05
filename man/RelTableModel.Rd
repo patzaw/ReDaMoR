@@ -25,8 +25,9 @@ function parameters are ignored and taken from l.}
 \itemize{
 \item \emph{name}: character
 \item \emph{type}: character
-\item \emph{nullable}: logical
-\item \emph{comment}:  character
+\item \emph{nullable}: logical (optional, defaults to TRUE)
+\item \emph{unique}: logical (optional, defaults = FALSE)
+\item \emph{comment}:  character (optional, defaults to NA_character_)
 }}
 
 \item{primaryKey}{a character vector of any length. All
