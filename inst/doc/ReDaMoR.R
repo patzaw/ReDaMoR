@@ -12,17 +12,17 @@ cranRef <- function(x){
   )
 }
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  install.packages("ReDaMoR")
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  devtools::install_github("patzaw/ReDaMoR")
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  library(ReDaMoR)
 #  m <- model_relational_data()
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  m <- model_relational_data(recover_RelDataModel())
 
 ## -----------------------------------------------------------------------------
@@ -35,7 +35,7 @@ plot(hpo_model)
 ## Edit the model
 # m <- model_relational_data(hpo_model)
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  library(ReDaMoR)
 #  model_relational_data()
 
@@ -49,7 +49,7 @@ confrontation_report <- confront_data(
   returnData=TRUE
 )
 
-## ---- results='asis'----------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 # view_confrontation_report(confrontation_report) # Use RStudio viewer
 format_confrontation_report_md(
   confrontation_report,
@@ -61,7 +61,7 @@ format_confrontation_report_md(
 ## -----------------------------------------------------------------------------
 hpo_tables <- confrontation_report$data
 
-## ---- results='asis'----------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 hpo_tables$HPO_diseases <- hpo_tables$HPO_diseases %>% slice(1:100)
 hpo_tables$HPO_synonyms[1:10, "synonym"] <- NA
 hpo_tables$HPO_hp <- hpo_tables$HPO_hp %>% mutate(level=as.character(level))
