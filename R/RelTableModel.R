@@ -48,7 +48,11 @@ RelTableModel <- function(
       primaryKey=NULL,
       foreignKeys=NULL,
       indexes=NULL,
-      display=NULL
+      display=list(
+         x=as.numeric(NA), y=as.numeric(NA),
+         color=as.character(NA),
+         comment=as.character(NA)
+      )
 
 ){
 
@@ -262,19 +266,24 @@ RelTableModel <- function(
    }
 
    ## * Display ----
-   if(!is.null(l$display)){
-      stopifnot(is.list(l$display))
-      dn <- c("x", "y", "color", "comment")
-      stopifnot(
-         all(names(l$display) %in% dn),
-         all(dn %in% names(l$display)),
-         is.numeric(l$display$x),
-         is.numeric(l$display$y),
-         is.character(l$display$color),
-         is.character(l$display$comment),
-         all(unlist(lapply(l$display, length))==1)
+   if(is.null(l$display)){
+      l$display <- list(
+         x=as.numeric(NA), y=as.numeric(NA),
+         color=as.character(NA),
+         comment=as.character(NA)
       )
    }
+   stopifnot(is.list(l$display))
+   dn <- c("x", "y", "color", "comment")
+   stopifnot(
+      all(names(l$display) %in% dn),
+      all(dn %in% names(l$display)),
+      is.numeric(l$display$x),
+      is.numeric(l$display$y),
+      is.character(l$display$color),
+      is.character(l$display$comment),
+      all(unlist(lapply(l$display, length))==1)
+   )
 
    ############################################################################@
    ## Creating the object ----

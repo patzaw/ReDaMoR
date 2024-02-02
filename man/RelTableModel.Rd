@@ -11,7 +11,8 @@ RelTableModel(
   primaryKey = NULL,
   foreignKeys = NULL,
   indexes = NULL,
-  display = NULL
+  display = list(x = as.numeric(NA), y = as.numeric(NA), color = as.character(NA),
+    comment = as.character(NA))
 )
 }
 \arguments{
