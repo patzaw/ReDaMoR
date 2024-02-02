@@ -1,6 +1,10 @@
 library(here)
 
 ##############################@
+## Build documentation ----
+devtools::document(pkg=here::here(), roclets = c('rd', 'collate', 'namespace'))
+
+##############################@
 ## Build and copy vignettes ----
 rmarkdown::render(here("README.Rmd"))
 devtools::build_vignettes()
