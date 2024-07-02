@@ -732,9 +732,9 @@ confront_table_data <- function(
             }else{
                toTest <- dplyr::filter(
                   d[,idx$fields],
-                  apply(d[,idx$fields], 1, function(x) all(!is.na(x)))
+                  stats::complete.cases(d[,idx$fields])
                )
-               if(any(duplicated(toTest))){
+               if(nrow(dplyr::distinct(toTest)) != nrow(toTest)){
                   toRet$indexes[[i]]$success <- FALSE
                   toRet$indexes[[i]]$message <- paste(c(
                      toRet$indexes[[i]]$message,
