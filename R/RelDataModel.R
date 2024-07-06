@@ -1597,7 +1597,7 @@ auto_layout <- function(
 #' else ==> none)
 #' @param delim single character used to separate fields within a record
 #' (default: "\\t")
-#' @param ... supplementary parameters for the [read_delim] function.
+#' @param ... supplementary parameters for the [readr::read_delim] function.
 #'
 #' @return A report as a list
 #'

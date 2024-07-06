@@ -47,7 +47,7 @@ else ==> none)}
 \item{delim}{single character used to separate fields within a record
 (default: "\\t")}
 
-\item{...}{supplementary parameters for the \link{read_delim} function.}
+\item{...}{supplementary parameters for the \link[readr:read_delim]{readr::read_delim} function.}
 }
 \value{
 A report as a list
