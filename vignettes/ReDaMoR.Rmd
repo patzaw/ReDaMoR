@@ -150,7 +150,7 @@ m <- model_relational_data(recover_RelDataModel())
 <!------------------------------------------------->
 
 A data model example is provided within the package.
-It represents data extracted from the [Human Phenotype Ontology (HPO)](https://hpo.jax.org/app/)<sup>([1](#hpoRef))</sup> and for which a subset is also provided within the ReDaMoR package (more details provided in the [Confronting data section](#confronting-data)).
+It represents data extracted from the [Human Phenotype Ontology (HPO)](https://hpo.jax.org/)<sup>([1](#hpoRef))</sup> and for which a subset is also provided within the ReDaMoR package (more details provided in the [Confronting data section](#confronting-data)).
 
 This example can be imported from the Shiny app when clicking on the ***Import*** button and then on the ***Try an example*** link.
 It can be also be loaded and displayed (and edited) using the following commands:
@@ -314,7 +314,7 @@ During this process the following checks are performed:
   - There is no duplicated value in **unique indexes**.
 - **Foreign keys** are tested according to their cardinality: all values in on table should be available in the other table if the corresponding minimum cardinality is greater than 0. 
 
-A **subset** (500 phenotypes among more than 14&nbsp;000 in the original resource) of the [HPO](https://hpo.jax.org/app/)<sup>([1](#hpoRef))</sup> is provided within the package and can be directly confronted to the data model.
+A **subset** (500 phenotypes among more than 14&nbsp;000 in the original resource) of the [HPO](https://hpo.jax.org/)<sup>([1](#hpoRef))</sup> is provided within the package and can be directly confronted to the data model.
 The function prints a report with messages about the global success of the data model confrontation and additional failure or warning messages for relevant tables.
 
 ```{r}
@@ -446,7 +446,7 @@ A modeled database (MDB) in TKCat gathers the following information:
 of `MDB` objects such as `memoMDB` (data in memory), `fileMDB` (data in files)
 and `chMDB` (data in [ClickHouse](https://clickhouse.com/) database).
 More information is provided in the
-[TKCat user guide](https://patzaw.github.io/TKCat/articles/TKCat-User-guide.html).
+[TKCat user guide](https://patzaw.github.io/TKCat/articles/TKCat.html).
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->

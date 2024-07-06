@@ -1,9 +1,9 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   ReDaMoR: ReDaMoR.html
-last_built: 2024-02-02T11:11Z
+last_built: 2024-07-06T04:55Z
 urls:
   reference: https://patzaw.github.io/ReDaMoR/reference
   article: https://patzaw.github.io/ReDaMoR/articles

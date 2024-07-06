@@ -6,7 +6,7 @@
 #' @import readr
 #' @importFrom Matrix sparseMatrix
 #' @importFrom utils packageName object.size
-#' @importFrom stats rbeta runif
+#' @importFrom stats rbeta runif complete.cases
 #' @importFrom graphics plot
 #' @importFrom markdown renderMarkdown
 #' @importFrom rstudioapi viewer
