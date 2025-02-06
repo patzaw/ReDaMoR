@@ -1187,7 +1187,7 @@ buildServer <- function(
                class="shrunkenButton"
             ) %>%
                shiny::div(
-                  title="Move up",
+                  title="Move down",
                   class="iblock"
                ),
             if(is.MatrixModel(mt) & length(seli) > 1){

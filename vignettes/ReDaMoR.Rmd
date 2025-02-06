@@ -178,8 +178,8 @@ The header of the box corresponds to the name of the table and the following lin
 
 - The **type** of the field is given between curly brackets
 - A star indicates that the field is **unique**
-- Field surrounded by brackets are **optional**
-- Field in bold are involved in the **primary key**
+- Fields surrounded by parentheses are **optional**
+- Fields in bold are involved in the **primary key**
 - **Indexes** are also indicated between the curly brackets when they exist:
   - idx. correspond to regular indexes
   - uidx. correspond to unique indexes
@@ -191,8 +191,8 @@ When the cursor is over a box, table and field **comments** are displayed.
 
 Each arrow represent a foreign key:
 
-- The start of the arrow correspond to the **origin** table
-- The end of the arrow correspond to the **target** table
+- The start of the arrow corresponds to the table with the **foreign key**.
+- The end of the arrow corresponds to the **referenced table**.
 - When the mouse is over the arrow, the **fields** involved in the foreign key are displayed along with the minimum and maximum **cardinalities** of the key on both sides (between brackets below the table name).
 
 <!---->
