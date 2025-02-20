@@ -1,216 +1,75 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/404.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/ReDaMoR.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/articles/ReDaMoR.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/RelDataModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/RelTableModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/SUPPTYPES.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/add_field.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/add_foreign_key.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/add_index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/add_table.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/as_type.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/auto_layout.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/c.RelDataModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/check_foreign_keys.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/check_types.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/clean_autosaved_RelDataModels.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/col_types.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/confront_data.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/confront_table_data.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/conv_type_ref.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/copy_fields.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/correct_constraints.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/df_to_model.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/format.RelTableModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/format_confrontation_report.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/format_confrontation_report_md.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/fromDBM.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/get_foreign_keys.RelDataModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/get_foreign_keys.RelTableModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/get_foreign_keys.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/identical_RelDataModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/identical_RelTableModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/index_table.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/is.MatrixModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/is.RelDataModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/is.RelTableModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/is_MM.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/lengths.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/list_autosaved_RelDataModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/list_type_ref.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/modelToVn.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/model_relational_data.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/norm_type_ref.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/order_fields.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/plot.RelDataModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/read_SQL_data_model.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/read_json_data_model.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/read_named_MM.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/read_named_MM_header.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/recover_RelDataModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/remove_field.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/remove_foreign_key.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/remove_index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/remove_table.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/rename_field.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/rename_table.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/set_primary_key.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/set_unique_index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/sub-.RelDataModel.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/toDBM.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/update_field.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/update_foreign_key.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/update_table_display.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/view_confrontation_report.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/ReDaMoR/reference/write_json_data_model.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://patzaw.github.io/ReDaMoR/404.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/LICENSE-text.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/ReDaMoR.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/articles/ReDaMoR.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/articles/index.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/authors.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/index.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/news/index.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/RelDataModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/RelTableModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/SUPPTYPES.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/add_field.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/add_foreign_key.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/add_index.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/add_table.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/as_type.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/auto_layout.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/c.RelDataModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/check_foreign_keys.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/check_types.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/clean_autosaved_RelDataModels.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/col_types.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/confront_data.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/confront_table_data.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/conv_type_ref.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/copy_fields.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/correct_constraints.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/df_to_model.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/format.RelTableModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/format_confrontation_report.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/format_confrontation_report_md.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/fromDBM.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/get_foreign_keys.RelDataModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/get_foreign_keys.RelTableModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/get_foreign_keys.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/guess_constraints.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/identical_RelDataModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/identical_RelTableModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/index.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/index_table.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/is.MatrixModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/is.RelDataModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/is.RelTableModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/is_MM.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/lengths.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/list_autosaved_RelDataModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/list_type_ref.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/modelToVn.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/model_relational_data.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/norm_type_ref.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/order_fields.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/plot.RelDataModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/read_SQL_data_model.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/read_json_data_model.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/read_named_MM.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/read_named_MM_header.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/recover_RelDataModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/remove_field.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/remove_foreign_key.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/remove_index.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/remove_table.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/rename_field.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/rename_table.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/set_primary_key.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/set_unique_index.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/sub-.RelDataModel.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/toDBM.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/update_field.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/update_foreign_key.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/update_table_display.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/view_confrontation_report.html</loc></url>
+<url><loc>https://patzaw.github.io/ReDaMoR/reference/write_json_data_model.html</loc></url>
 </urlset>
+

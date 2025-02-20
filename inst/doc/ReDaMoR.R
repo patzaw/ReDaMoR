@@ -13,17 +13,17 @@ cranRef <- function(x){
 }
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  install.packages("ReDaMoR")
+# install.packages("ReDaMoR")
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  devtools::install_github("patzaw/ReDaMoR")
+# devtools::install_github("patzaw/ReDaMoR")
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  library(ReDaMoR)
-#  m <- model_relational_data()
+# library(ReDaMoR)
+# m <- model_relational_data()
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  m <- model_relational_data(recover_RelDataModel())
+# m <- model_relational_data(recover_RelDataModel())
 
 ## -----------------------------------------------------------------------------
 hpo_model <- read_json_data_model(
@@ -36,8 +36,8 @@ plot(hpo_model)
 # m <- model_relational_data(hpo_model)
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  library(ReDaMoR)
-#  model_relational_data()
+# library(ReDaMoR)
+# model_relational_data()
 
 ## -----------------------------------------------------------------------------
 confrontation_report <- confront_data(
@@ -74,12 +74,18 @@ confront_data(hpo_model, hpo_tables, verbose=FALSE) %>%
 
 ## -----------------------------------------------------------------------------
 hpo_tables <- confrontation_report$data
+
+## Build the model from a list of data frames ----
 new_model <- df_to_model(
-  list=names(hpo_tables), envir=as.environment(hpo_tables)
+   list=names(hpo_tables), envir=as.environment(hpo_tables)
 )
+## Guess constraints and auto layout ----
+new_model <- guess_constraints(new_model, data = hpo_tables) %>%
+   auto_layout(lengthMultiplier=250)
+
+## Plot the model ----
 new_model %>%
-  auto_layout(lengthMultiplier=250) %>%
-  plot()
+   plot()
 
 ## -----------------------------------------------------------------------------
 # model_relational_data(new_model)

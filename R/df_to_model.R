@@ -121,3 +121,112 @@ df_to_model <- function(
    }
    return(RelDataModel(toRet))
 }
+
+###############################################################################@
+#' Guess [RelDataModel] constraints based on the provided or existing tables
+#'
+#' @param x a [RelDataModel]
+#' @param data a named list of tables. All names of x should exist in data. If
+#' NULL, the data are taken from env.
+#' @param env the R environment in which to find the tables
+#' @param constraints the type of constraints to guess
+#'
+#' @return A [RelDataModel]
+#'
+#' @details
+#' The guessed constraints should be carefully review, especially the foreign
+#' keys.
+#'
+#' Complex foreign keys involving multiple fields are not guessed.
+#'
+#' @example inst/examples/ex_from_df.R
+#'
+#' @export
+#'
+guess_constraints <- function(
+      x,
+      data = NULL,
+      env = parent.frame(n=1),
+      constraints = c("unique", "not nullable", "foreign keys")
+){
+   dml <- unclass(x)
+   if(is.null(data)){
+      data <- lapply(names(x), get, envir = env) %>%
+         stats::setNames(names(x))
+   }
+   stopifnot(all(names(x) %in% names(data)))
+   stopifnot(all(unlist(
+      lapply(data, inherits, what = c("matrix", "Matrix", "data.frame"))
+   )))
+   for(n in names(dml)){
+      d <- data[[n]]
+      if(is.data.frame(d)){
+         if("not nullable" %in% constraints){
+            nullable <- lapply(
+               d,
+               function(x) any(is.na(x))
+            ) %>%
+               unlist()
+            dml[[n]]$fields$nullable <- nullable
+         }
+         if("unique" %in% constraints){
+            uni <- lapply(
+               d,
+               function(x) !is.numeric(x) && !any(duplicated(x))
+            ) %>%
+               unlist()
+            dml[[n]]$fields$unique <- uni
+         }
+      }else{
+         if("not nullable" %in% constraints){
+            nullable <- any(is.na(d))
+            dml[[n]]$fields$nullable[which(
+               ! dml[[n]]$fields$type %in% c("row", "column")
+            )] <- nullable
+         }
+      }
+   }
+   dm <- RelDataModel(dml)
+   if("foreign keys" %in% constraints){
+      dbm <- toDBM(dm)
+      pfk <- dplyr::inner_join(
+         dbm$fields %>%
+            dplyr::filter(!.data$nullable & .data$unique) %>%
+            select(-"nullable", -"unique", -"comment", -"fieldOrder"),
+         dbm$fields %>%
+            select(-"comment", -"fieldOrder"),
+         by = c("name", "type"),
+         suffix = c(".p", ".f"),
+         relationship = "many-to-many"
+      ) %>%
+         dplyr::filter(.data$table.p != .data$table.f)
+      if(nrow(pfk) > 0){
+         drows <- lapply(data, nrow) %>% unlist()
+         pfk <- pfk %>%
+            dplyr::mutate(
+               nrow.p = drows[.data$table.p],
+               nrow.f = drows[.data$table.f]
+            ) %>%
+            dplyr::filter(
+               !.data$unique | .data$nrow.f <= .data$nrow.p
+            )
+         if(nrow(pfk) > 0){
+            for(i in 1:nrow(pfk)){
+               if(all(
+                  setdiff(data[[pfk$table.f[i]]][[pfk$name[i]]], NA) %in%
+                  data[[pfk$table.p[i]]][[pfk$name[i]]]
+               ))
+                  dm <- add_foreign_key(
+                     dm,
+                     fromTable = pfk$table.f[i],
+                     fromFields = pfk$name[i],
+                     toTable = pfk$table.p[i],
+                     toFields = pfk$name[i],
+                     tmin = ifelse(pfk$nullable[i], 0L, 1L)
+                  )
+            }
+         }
+      }
+   }
+   return(dm)
+}

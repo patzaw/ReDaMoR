@@ -178,8 +178,8 @@ The header of the box corresponds to the name of the table and the following lin
 
 - The **type** of the field is given between curly brackets
 - A star indicates that the field is **unique**
-- Field surrounded by brackets are **optional**
-- Field in bold are involved in the **primary key**
+- Fields surrounded by parentheses are **optional**
+- Fields in bold are involved in the **primary key**
 - **Indexes** are also indicated between the curly brackets when they exist:
   - idx. correspond to regular indexes
   - uidx. correspond to unique indexes
@@ -191,8 +191,8 @@ When the cursor is over a box, table and field **comments** are displayed.
 
 Each arrow represent a foreign key:
 
-- The start of the arrow correspond to the **origin** table
-- The end of the arrow correspond to the **target** table
+- The start of the arrow corresponds to the table with the **foreign key**.
+- The end of the arrow corresponds to the **referenced table**.
 - When the mouse is over the arrow, the **fields** involved in the foreign key are displayed along with the minimum and maximum **cardinalities** of the key on both sides (between brackets below the table name).
 
 <!---->
@@ -375,18 +375,24 @@ confront_data(hpo_model, hpo_tables, verbose=FALSE) %>%
 
 Beside confronting a model to data, a model can also be drafted from a set of tables.
 Only column names and types are documented during this process.
-Uniqueness, mandatory and key constraints still need to be documented by the user to complete the model.
-It can easily be done with `model_relational_data()`.
+Uniqueness, mandatory and key constraints still need to be documented by the user to complete the model. From version 0.8.0, the function `guess_constraints()` guesses unique and non-nullable fields, along with potential foreign keys, based on the provided or existing tables.
+The guessed constraints should be carefully reviewed, especially the foreign keys. This can be easily done with `model_relational_data()`.
 
 
 ```{r}
 hpo_tables <- confrontation_report$data
+
+## Build the model from a list of data frames ----
 new_model <- df_to_model(
-  list=names(hpo_tables), envir=as.environment(hpo_tables)
+   list=names(hpo_tables), envir=as.environment(hpo_tables)
 )
+## Guess constraints and auto layout ----
+new_model <- guess_constraints(new_model, data = hpo_tables) %>%
+   auto_layout(lengthMultiplier=250)
+
+## Plot the model ----
 new_model %>%
-  auto_layout(lengthMultiplier=250) %>%
-  plot()
+   plot()
 ```
 
 

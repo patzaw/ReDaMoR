@@ -11,7 +11,10 @@ for(f in to_read){
 new_model <- df_to_model(
    list=names(hpo_tables), envir=as.environment(hpo_tables)
 )
+## Guess constraints and auto layout ----
+new_model <- guess_constraints(new_model, data = hpo_tables) %>%
+   auto_layout(lengthMultiplier=250)
+
 ## Plot the model ----
 new_model %>%
-   auto_layout(lengthMultiplier=250) %>%
    plot()
