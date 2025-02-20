@@ -1,6 +1,6 @@
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
-## Version 0.8.0
+## Version 0.8.1
 
 - New function `guess_constraints()` guesses constraints of a data model
 according to provided data.

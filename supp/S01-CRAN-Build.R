@@ -31,7 +31,7 @@ file.remove("doc")
 ##############################@
 ## Build website ----
 unlink("docs", recursive=TRUE, force=TRUE)
-pkgdown::build_site()
+pkgdown::build_site(preview = FALSE)
 
 ##############################@
 ## Build and check package ----

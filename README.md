@@ -1,16 +1,7 @@
 README
 ================
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-  - [From CRAN](#from-cran)
-  - [Dependencies](#dependencies)
-  - [From github](#from-github)
-- [Documentation](#documentation)
-- [TKCat: Tailored Knowledge Catalog](#tkcat-tailored-knowledge-catalog)
-- [Acknowledgments](#acknowledgments)
-
-<img src="https://github.com/patzaw/ReDaMoR/raw/master/supp/logo/ReDaMoR.png" width="100px"/>
+# Relational Data Modeler <img src="man/figures/ReDaMoR.png" align="right" alt="logo" width="120" />
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
 [![](https://cranlogs.r-pkg.org/badges/ReDaMoR)](https://cran.r-project.org/package=ReDaMoR)
@@ -177,8 +168,3 @@ generated with ReDaMoR documenting the tables, their fields and their
 relationships. These MDB are then gathered in catalogs that can be
 easily explored an shared. TKCat provides tools to easily subset, filter
 and combine MDBs and create new catalogs suited for specific needs.
-
-# Acknowledgments
-
-This work was entirely supported by [UCB Pharma](https://www.ucb.com/)
-(Early Solutions department).

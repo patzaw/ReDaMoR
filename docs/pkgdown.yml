@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   ReDaMoR: ReDaMoR.html
-last_built: 2025-02-20T12:46Z
+last_built: 2025-02-20T14:26Z
 urls:
   reference: https://patzaw.github.io/ReDaMoR/reference
   article: https://patzaw.github.io/ReDaMoR/articles

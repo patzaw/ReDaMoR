@@ -40,7 +40,7 @@ cranRef <- function(x){
 ```
 
 <div style="width:200px;">
-![](img/ReDaMoR.png)
+![logo](img/ReDaMoR.png)
 </div>
 
 <!----------------------------------------------------------------------------->
@@ -200,14 +200,14 @@ Each arrow represent a foreign key:
 <!---------------->
 
 <div style="width:100%;">
-![](img/model_relational_data-Overview-Divided.png)
+![shiny app](img/model_relational_data-Overview-Divided.png)
 </div>
 
 The app is divided in three main parts:
 
-- ![](img/ica.png){width=30px} The **main menu** at the top of the page to execute general actions on the model
-- ![](img/icb.png){width=30px} The **model view** on the left of the page to interact with the model
-- ![](img/icc.png){width=30px} The **edition view** on the right of the page to execute contextual edition of the model
+- ![a part](img/ica.png){width=30px} The **main menu** at the top of the page to execute general actions on the model
+- ![b part](img/icb.png){width=30px} The **model view** on the left of the page to interact with the model
+- ![c part](img/icc.png){width=30px} The **edition view** on the right of the page to execute contextual edition of the model
 
 ### The main menu
 <!-------------->
@@ -243,7 +243,7 @@ In the edition view the user can:
 ### Contextual help tour
 <!--------------------->
 
-An help tour can be launched when clicking on the ![](img/bhelp.png){width=40px} button in the main menu.
+An help tour can be launched when clicking on the ![help icon](img/bhelp.png){width=40px} button in the main menu.
 This help tour is contextual: its content depends on the state of the app.
   
 ### keyboard shortcuts
@@ -276,13 +276,13 @@ you can create a foreign key by clicking on the “Key”  button
 (See in the figure below surrounded in blue).
 
 <div style="width:100%;">
-![](img/Add-key-button.png)
+![foreign key icon](img/Add-key-button.png)
 </div>
 
 The following interface should appear:
 
 <div style="width:100%;">
-![](img/Add-key-interface.png)
+![foreign key interface](img/Add-key-interface.png)
 </div>
 
 For each table you can select the fields participating to the relationship
