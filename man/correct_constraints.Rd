@@ -4,10 +4,13 @@
 \alias{correct_constraints}
 \title{Correct the constraints of a table to make them consistent}
 \usage{
-correct_constraints(x)
+correct_constraints(x, createPKIndex = FALSE)
 }
 \arguments{
 \item{x}{a \link{RelTableModel} object}
+
+\item{createPKIndex}{should an index be create for the primary key
+(default: FALSE)}
 }
 \description{
 Correct the constraints of a table to make them consistent

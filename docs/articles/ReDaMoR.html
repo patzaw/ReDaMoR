@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Modeling Relational Data in R with ReDaMoR • ReDaMoR</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -33,7 +32,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ReDaMoR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,18 +59,18 @@
 
 
 
-<link href="ReDaMoR_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<link href="ReDaMoR_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
 <script src="ReDaMoR_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="ReDaMoR_files/vis-9.1.0/vis-network.min.css" rel="stylesheet">
-<script src="ReDaMoR_files/vis-9.1.0/vis-network.min.js"></script><script src="ReDaMoR_files/visNetwork-binding-2.1.2/visNetwork.js"></script><div class="row">
+<script src="ReDaMoR_files/vis-9.1.0/vis-network.min.js"></script><script src="ReDaMoR_files/visNetwork-binding-2.1.4/visNetwork.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Modeling Relational Data in R with ReDaMoR</h1>
             <h3 data-toc-skip class="subtitle">ReDaMoR version:
-0.8.2</h3>
+1.0.0</h3>
                         <h4 data-toc-skip class="author"><a href="mailto:patrice.godard@gmail.com?Subject=ReDaMoR">Patrice
 Godard</a></h4>
             
-            <h4 data-toc-skip class="date">February 21 2025</h4>
+            <h4 data-toc-skip class="date">April 20 2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/patzaw/ReDaMoR/blob/HEAD/vignettes/ReDaMoR.Rmd" class="external-link"><code>vignettes/ReDaMoR.Rmd</code></a></small>
       <div class="d-none name"><code>ReDaMoR.Rmd</code></div>
@@ -81,7 +80,7 @@ Godard</a></h4>
     
 <div style="width:200px;">
 <div class="float">
-<img src="img%2FReDaMoR.png" alt="logo"><div class="figcaption">logo</div>
+<img src="img/ReDaMoR.png" alt="logo"><div class="figcaption">logo</div>
 </div>
 </div>
 <!----------------------------------------------------------------------------->
@@ -197,7 +196,7 @@ Colored Terminal Output
 </h3>
 <!----------->
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"patzaw/ReDaMoR"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"patzaw/ReDaMoR"</span><span class="op">)</span></span></code></pre></div>
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 </div>
@@ -308,20 +307,20 @@ brackets below the table name).</li>
 <!---------------->
 <div style="width:100%;">
 <div class="float">
-<img src="img%2Fmodel_relational_data-Overview-Divided.png" alt="shiny app"><div class="figcaption">shiny app</div>
+<img src="img/model_relational_data-Overview-Divided.png" alt="shiny app"><div class="figcaption">shiny app</div>
 </div>
 </div>
 <p>The app is divided in three main parts:</p>
 <ul>
 <li>
-<img src="img%2Fica.png" width="30" alt="a part"> The <strong>main
+<img src="img/ica.png" width="30" alt="a part"> The <strong>main
 menu</strong> at the top of the page to execute general actions on the
 model</li>
 <li>
-<img src="img%2Ficb.png" width="30" alt="b part"> The <strong>model
+<img src="img/icb.png" width="30" alt="b part"> The <strong>model
 view</strong> on the left of the page to interact with the model</li>
 <li>
-<img src="img%2Ficc.png" width="30" alt="c part"> The
+<img src="img/icc.png" width="30" alt="c part"> The
 <strong>edition view</strong> on the right of the page to execute
 contextual edition of the model</li>
 </ul>
@@ -372,7 +371,7 @@ capabilities are also provided in this area.</p>
 <h4 id="contextual-help-tour">Contextual help tour<a class="anchor" aria-label="anchor" href="#contextual-help-tour"></a>
 </h4>
 <!--------------------->
-<p>An help tour can be launched when clicking on the <img src="img%2Fbhelp.png" width="40" alt="help icon"> button in the main
+<p>An help tour can be launched when clicking on the <img src="img/bhelp.png" width="40" alt="help icon"> button in the main
 menu. This help tour is contextual: its content depends on the state of
 the app.</p>
 </div>
@@ -415,13 +414,13 @@ ctrl key) you can create a foreign key by clicking on the “Key” button
 (See in the figure below surrounded in blue).</p>
 <div style="width:100%;">
 <div class="float">
-<img src="img%2FAdd-key-button.png" alt="foreign key icon"><div class="figcaption">foreign key icon</div>
+<img src="img/Add-key-button.png" alt="foreign key icon"><div class="figcaption">foreign key icon</div>
 </div>
 </div>
 <p>The following interface should appear:</p>
 <div style="width:100%;">
 <div class="float">
-<img src="img%2FAdd-key-interface.png" alt="foreign key interface"><div class="figcaption">foreign key interface</div>
+<img src="img/Add-key-interface.png" alt="foreign key interface"><div class="figcaption">foreign key interface</div>
 </div>
 </div>
 <p>For each table you can select the fields participating to the
@@ -677,7 +676,7 @@ reviewed, especially the foreign keys. This can be easily done with
 <span><span class="va">new_model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="visNetwork html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"nodes":{"tableName":["HPO_hp","HPO_altId","HPO_sourceFiles","HPO_diseases","HPO_diseaseHP","HPO_diseaseSynonyms","HPO_parents","HPO_descendants","HPO_synonyms"],"label":["<b>HPO_hp<\/b>\n    - *id {character - uidx.1}\n    - *name {character}\n    - (description {character})\n    - level {integer}","<b>HPO_altId<\/b>\n    - id {character}\n    - *alt {character}","<b>HPO_sourceFiles<\/b>\n    - *url {character}\n    - *current {Date}","<b>HPO_diseases<\/b>\n    - db {character}\n    - id {character}\n    - label {character}","<b>HPO_diseaseHP<\/b>\n    - db {character}\n    - id {character}\n    - hp {character}","<b>HPO_diseaseSynonyms<\/b>\n    - db {character}\n    - id {character}\n    - synonym {character}\n    - preferred {logical}","<b>HPO_parents<\/b>\n    - *id {character}\n    - parent {character}","<b>HPO_descendants<\/b>\n    - id {character}\n    - descendant {character}","<b>HPO_synonyms<\/b>\n    - id {character}\n    - *synonym {character}\n    - type {character}"],"title":["<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_hp<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>name<\/strong><\/li> <li><strong>description<\/strong><\/li> <li><strong>level<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_altId<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>alt<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_sourceFiles<\/strong><\/p> <ul> <li><strong>url<\/strong><\/li> <li><strong>current<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_diseases<\/strong><\/p> <ul> <li><strong>db<\/strong><\/li> <li><strong>id<\/strong><\/li> <li><strong>label<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_diseaseHP<\/strong><\/p> <ul> <li><strong>db<\/strong><\/li> <li><strong>id<\/strong><\/li> <li><strong>hp<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_diseaseSynonyms<\/strong><\/p> <ul> <li><strong>db<\/strong><\/li> <li><strong>id<\/strong><\/li> <li><strong>synonym<\/strong><\/li> <li><strong>preferred<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_parents<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>parent<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_descendants<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>descendant<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_synonyms<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>synonym<\/strong><\/li> <li><strong>type<\/strong><\/li> <\/ul><\/div>"],"shape":["box","box","box","box","box","box","box","box","box"],"font.multi":[true,true,true,true,true,true,true,true,true],"font.align":["left","left","left","left","left","left","left","left","left"],"x":[126.0993620122523,-3.98356247291734,-193.5347511006192,10.06871977284352,-250,-125.12908590596,172.5169726793759,250,100.1674727377426],"y":[-47.25630341178241,-13.78021102686056,146.6778538708465,250,-62.14641085615577,-250,83.89296628786414,-79.14134592029809,-183.6774150384272],"color.background":["lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey"],"color.border":["black","black","black","black","black","black","black","black","black"],"color.highlight.border":["orange","orange","orange","orange","orange","orange","orange","orange","orange"],"color.highlight.background":["lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey"],"id":["HPO_hp","HPO_altId","HPO_sourceFiles","HPO_diseases","HPO_diseaseHP","HPO_diseaseSynonyms","HPO_parents","HPO_descendants","HPO_synonyms"]},"edges":{"id":["HPO_altId->HPO_hp: id->id","HPO_parents->HPO_hp: id->id","HPO_descendants->HPO_hp: id->id","HPO_synonyms->HPO_hp: id->id"],"to":["HPO_hp","HPO_hp","HPO_hp","HPO_hp"],"title":["<table style=\"border: 1px solid black; padding:1px;\"><tr style=\"border: 1px solid black; padding:1px;\"><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_altId<br>(0..n)<\/th><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_hp<br>(1..1)<\/th><\/tr><tr style=\"border: 1px solid black; padding:1px;\"><td style=\"border: 1px solid black; padding:1px;\">id<\/td><td style=\"border: 1px solid black; padding:1px;\">id<\/td><\/tr><\/table>","<table style=\"border: 1px solid black; padding:1px;\"><tr style=\"border: 1px solid black; padding:1px;\"><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_parents<br>(0..n)<\/th><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_hp<br>(1..1)<\/th><\/tr><tr style=\"border: 1px solid black; padding:1px;\"><td style=\"border: 1px solid black; padding:1px;\">id<\/td><td style=\"border: 1px solid black; padding:1px;\">id<\/td><\/tr><\/table>","<table style=\"border: 1px solid black; padding:1px;\"><tr style=\"border: 1px solid black; padding:1px;\"><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_descendants<br>(0..n)<\/th><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_hp<br>(1..1)<\/th><\/tr><tr style=\"border: 1px solid black; padding:1px;\"><td style=\"border: 1px solid black; padding:1px;\">id<\/td><td style=\"border: 1px solid black; padding:1px;\">id<\/td><\/tr><\/table>","<table style=\"border: 1px solid black; padding:1px;\"><tr style=\"border: 1px solid black; padding:1px;\"><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_synonyms<br>(0..n)<\/th><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_hp<br>(1..1)<\/th><\/tr><tr style=\"border: 1px solid black; padding:1px;\"><td style=\"border: 1px solid black; padding:1px;\">id<\/td><td style=\"border: 1px solid black; padding:1px;\">id<\/td><\/tr><\/table>"],"ff":["id","id","id","id"],"tf":["id","id","id","id"],"from":["HPO_altId","HPO_parents","HPO_descendants","HPO_synonyms"],"arrows":["to","to","to","to"],"font.align":["bottom","bottom","bottom","bottom"],"smooth.type":["curvedCCW","curvedCCW","curvedCCW","curvedCCW"],"smooth.roundness":[-0,0,-0,0],"selfReferenceSize":[30,30,30,30],"uef":["HPO_altId","HPO_hp","HPO_descendants","HPO_hp"],"uet":["HPO_hp","HPO_parents","HPO_hp","HPO_synonyms"],"ue":["HPO_altId<->HPO_hp","HPO_hp<->HPO_parents","HPO_descendants<->HPO_hp","HPO_hp<->HPO_synonyms"],"color.color":["black","black","black","black"],"color.highlight":["orange","orange","orange","orange"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","borderWidth":2,"labelHighlightBold":false},"manipulation":{"enabled":false},"edges":{"width":2,"selectionWidth":2},"interaction":{"multiselect":true,"zoomSpeed":1},"layout":{"randomSeed":2},"physics":{"enabled":false}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"nodes":{"tableName":["HPO_hp","HPO_altId","HPO_sourceFiles","HPO_diseases","HPO_diseaseHP","HPO_diseaseSynonyms","HPO_parents","HPO_descendants","HPO_synonyms"],"label":["<b>HPO_hp<\/b>\n    - *id {character}\n    - *name {character}\n    - (description {character})\n    - level {integer}","<b>HPO_altId<\/b>\n    - id {character}\n    - *alt {character}","<b>HPO_sourceFiles<\/b>\n    - *url {character}\n    - *current {Date}","<b>HPO_diseases<\/b>\n    - db {character}\n    - id {character}\n    - label {character}","<b>HPO_diseaseHP<\/b>\n    - db {character}\n    - id {character}\n    - hp {character}","<b>HPO_diseaseSynonyms<\/b>\n    - db {character}\n    - id {character}\n    - synonym {character}\n    - preferred {logical}","<b>HPO_parents<\/b>\n    - *id {character}\n    - parent {character}","<b>HPO_descendants<\/b>\n    - id {character}\n    - descendant {character}","<b>HPO_synonyms<\/b>\n    - id {character}\n    - *synonym {character}\n    - type {character}"],"title":["<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_hp<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>name<\/strong><\/li> <li><strong>description<\/strong><\/li> <li><strong>level<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_altId<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>alt<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_sourceFiles<\/strong><\/p> <ul> <li><strong>url<\/strong><\/li> <li><strong>current<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_diseases<\/strong><\/p> <ul> <li><strong>db<\/strong><\/li> <li><strong>id<\/strong><\/li> <li><strong>label<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_diseaseHP<\/strong><\/p> <ul> <li><strong>db<\/strong><\/li> <li><strong>id<\/strong><\/li> <li><strong>hp<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_diseaseSynonyms<\/strong><\/p> <ul> <li><strong>db<\/strong><\/li> <li><strong>id<\/strong><\/li> <li><strong>synonym<\/strong><\/li> <li><strong>preferred<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_parents<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>parent<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_descendants<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>descendant<\/strong><\/li> <\/ul><\/div>","<div style=\"max-width:400px; max-height:300px;overflow:scroll;\"><p><strong style=\"text-decoration:underline;\">HPO_synonyms<\/strong><\/p> <ul> <li><strong>id<\/strong><\/li> <li><strong>synonym<\/strong><\/li> <li><strong>type<\/strong><\/li> <\/ul><\/div>"],"shape":["box","box","box","box","box","box","box","box","box"],"font.multi":[true,true,true,true,true,true,true,true,true],"font.align":["left","left","left","left","left","left","left","left","left"],"x":[0.0002622956930542486,-0.0001197007265807404,104.411870284886,250,-104.4124146943533,-250,133.7854591001135,0.0006953292384093146,-133.784836354753],"y":[-118.6846943832288,19.18288919924321,250,75.93446542325466,249.9997142475782,75.93358152685397,-129.5401082168297,-250,-129.5409348736009],"color.background":["lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey"],"color.border":["black","black","black","black","black","black","black","black","black"],"color.highlight.border":["orange","orange","orange","orange","orange","orange","orange","orange","orange"],"color.highlight.background":["lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey","lightgrey"],"id":["HPO_hp","HPO_altId","HPO_sourceFiles","HPO_diseases","HPO_diseaseHP","HPO_diseaseSynonyms","HPO_parents","HPO_descendants","HPO_synonyms"]},"edges":{"id":["HPO_altId->HPO_hp: id->id","HPO_parents->HPO_hp: id->id","HPO_descendants->HPO_hp: id->id","HPO_synonyms->HPO_hp: id->id"],"to":["HPO_hp","HPO_hp","HPO_hp","HPO_hp"],"title":["<table style=\"border: 1px solid black; padding:1px;\"><tr style=\"border: 1px solid black; padding:1px;\"><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_altId<br>(0..n)<\/th><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_hp<br>(1..1)<\/th><\/tr><tr style=\"border: 1px solid black; padding:1px;\"><td style=\"border: 1px solid black; padding:1px;\">id<\/td><td style=\"border: 1px solid black; padding:1px;\">id<\/td><\/tr><\/table>","<table style=\"border: 1px solid black; padding:1px;\"><tr style=\"border: 1px solid black; padding:1px;\"><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_parents<br>(0..n)<\/th><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_hp<br>(1..1)<\/th><\/tr><tr style=\"border: 1px solid black; padding:1px;\"><td style=\"border: 1px solid black; padding:1px;\">id<\/td><td style=\"border: 1px solid black; padding:1px;\">id<\/td><\/tr><\/table>","<table style=\"border: 1px solid black; padding:1px;\"><tr style=\"border: 1px solid black; padding:1px;\"><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_descendants<br>(0..n)<\/th><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_hp<br>(1..1)<\/th><\/tr><tr style=\"border: 1px solid black; padding:1px;\"><td style=\"border: 1px solid black; padding:1px;\">id<\/td><td style=\"border: 1px solid black; padding:1px;\">id<\/td><\/tr><\/table>","<table style=\"border: 1px solid black; padding:1px;\"><tr style=\"border: 1px solid black; padding:1px;\"><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_synonyms<br>(0..n)<\/th><th style=\"border: 1px solid black; padding:1px;text-align:center;\">HPO_hp<br>(1..1)<\/th><\/tr><tr style=\"border: 1px solid black; padding:1px;\"><td style=\"border: 1px solid black; padding:1px;\">id<\/td><td style=\"border: 1px solid black; padding:1px;\">id<\/td><\/tr><\/table>"],"ff":["id","id","id","id"],"tf":["id","id","id","id"],"from":["HPO_altId","HPO_parents","HPO_descendants","HPO_synonyms"],"arrows":["to","to","to","to"],"font.align":["bottom","bottom","bottom","bottom"],"smooth.type":["curvedCCW","curvedCCW","curvedCCW","curvedCCW"],"smooth.roundness":[-0,0,-0,0],"selfReferenceSize":[30,30,30,30],"uef":["HPO_altId","HPO_hp","HPO_descendants","HPO_hp"],"uet":["HPO_hp","HPO_parents","HPO_hp","HPO_synonyms"],"ue":["HPO_altId<->HPO_hp","HPO_hp<->HPO_parents","HPO_descendants<->HPO_hp","HPO_hp<->HPO_synonyms"],"color.color":["black","black","black","black"],"color.highlight":["orange","orange","orange","orange"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","borderWidth":2,"labelHighlightBold":false},"manipulation":{"enabled":false},"edges":{"width":2,"selectionWidth":2},"interaction":{"multiselect":true,"zoomSpeed":1},"layout":{"randomSeed":2},"physics":{"enabled":false}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># model_relational_data(new_model)</span></span></code></pre></div>
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
@@ -770,7 +769,7 @@ doi: 10.1093/nar/gky1105</a>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

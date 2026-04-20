@@ -4,13 +4,16 @@
 \alias{RelDataModel}
 \title{Create a RelDataModel object}
 \usage{
-RelDataModel(l, checkFK = TRUE)
+RelDataModel(l, checkFK = TRUE, createFKIndex = FALSE)
 }
 \arguments{
 \item{l}{the list of table models (\link{RelTableModel} objects)}
 
 \item{checkFK}{a logical indicating if foreign keys should be checked
 (default: TRUE)}
+
+\item{createFKIndex}{should an index be create for the foreign keys
+(default: FALSE)}
 }
 \value{
 A RelDataModel object.

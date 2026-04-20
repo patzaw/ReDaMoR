@@ -1,0 +1,38 @@
+# Get a foreign key table from an object
+
+Get a foreign key table from an object
+
+## Usage
+
+``` r
+get_foreign_keys(x)
+```
+
+## Arguments
+
+- x:
+
+  a
+  [RelTableModel](https://patzaw.github.io/ReDaMoR/reference/RelTableModel.md)
+  or a
+  [RelDataModel](https://patzaw.github.io/ReDaMoR/reference/RelDataModel.md)
+
+## Value
+
+A tibble with the following fields:
+
+- from: the origin of the key
+
+- ff: the key fields in from
+
+- to: the target of the key
+
+- tf: the key fields in to
+
+- fmin: minimum cardinality of from
+
+- fmax: maximum cardinality of from
+
+- tmin: minimum cardinality of to
+
+- tmax: maximum cardinality of to

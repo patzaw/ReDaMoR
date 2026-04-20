@@ -5,12 +5,10 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-cranRef <- function(x) {
+cranRef <- function(x){
   sprintf(
     "[%s](https://CRAN.R-project.org/package=%s): %s",
-    x,
-    x,
-    packageDescription(x)$Title
+    x, x, packageDescription(x)$Title
   )
 }
 
@@ -29,7 +27,7 @@ cranRef <- function(x) {
 
 ## -----------------------------------------------------------------------------
 hpo_model <- read_json_data_model(
-  system.file("examples/HPO-model.json", package = "ReDaMoR")
+  system.file("examples/HPO-model.json", package="ReDaMoR")
 )
 plot(hpo_model)
 
@@ -44,20 +42,19 @@ plot(hpo_model)
 ## -----------------------------------------------------------------------------
 confrontation_report <- confront_data(
   hpo_model,
-  path = list.files(
-    system.file("examples/HPO-subset", package = "ReDaMoR"),
-    full.names = TRUE
+  path=list.files(
+    system.file("examples/HPO-subset", package="ReDaMoR"),
+    full.names=TRUE
   ),
-  returnData = TRUE
+  returnData=TRUE
 )
 
 ## ----results='asis'-----------------------------------------------------------
 # view_confrontation_report(confrontation_report) # Use RStudio viewer
 format_confrontation_report_md(
   confrontation_report,
-  title = "Example: Confrontation with original data",
-  level = 1,
-  numbered = FALSE
+  title="Example: Confrontation with original data",
+  level=1, numbered=FALSE
 ) %>%
   cat()
 
@@ -67,36 +64,35 @@ hpo_tables <- confrontation_report$data
 ## ----results='asis'-----------------------------------------------------------
 hpo_tables$HPO_diseases <- hpo_tables$HPO_diseases %>% slice(1:100)
 hpo_tables$HPO_synonyms[1:10, "synonym"] <- NA
-hpo_tables$HPO_hp <- hpo_tables$HPO_hp %>% mutate(level = as.character(level))
-confront_data(hpo_model, hpo_tables, verbose = FALSE) %>%
+hpo_tables$HPO_hp <- hpo_tables$HPO_hp %>% mutate(level=as.character(level))
+confront_data(hpo_model, hpo_tables, verbose=FALSE) %>%
   format_confrontation_report_md(
-    title = "Example: Confrontation with altered data",
-    level = 1,
-    numbered = FALSE
+    title="Example: Confrontation with altered data",
+    level=1, numbered=FALSE
   ) %>%
-  cat()
+    cat()
 
 ## -----------------------------------------------------------------------------
 hpo_tables <- confrontation_report$data
 
 ## Build the model from a list of data frames ----
 new_model <- df_to_model(
-  list = names(hpo_tables),
-  envir = as.environment(hpo_tables)
+   list=names(hpo_tables), envir=as.environment(hpo_tables)
 )
 ## Guess constraints and auto layout ----
 new_model <- guess_constraints(new_model, data = hpo_tables) %>%
-  auto_layout(lengthMultiplier = 250)
+   auto_layout(lengthMultiplier=250)
 
 ## Plot the model ----
 new_model %>%
-  plot()
+   plot()
 
 ## -----------------------------------------------------------------------------
 # model_relational_data(new_model)
 
 ## -----------------------------------------------------------------------------
 ge_model <- read_json_data_model(
-  system.file("examples/GE-model.json", package = "ReDaMoR")
+  system.file("examples/GE-model.json", package="ReDaMoR")
 )
 plot(ge_model)
+

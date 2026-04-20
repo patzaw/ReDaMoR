@@ -143,7 +143,7 @@ And those are suggested:
 - [igraph](https://CRAN.R-project.org/package=igraph): Network Analysis
   and Visualization
 - [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
-  base64 encoding
+  ‘base64’ Encoding
 
 ## From github
 
