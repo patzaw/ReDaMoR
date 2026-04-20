@@ -587,7 +587,7 @@ buildServer <- function(
          )
       })
 
-      ## _+ Import preview ----
+      ### Import preview ----
       output$impModel <- shiny::renderUI({
          mi <- model$toImport
          shiny::req(!is.null(mi))
@@ -636,7 +636,7 @@ buildServer <- function(
          }
       })
 
-      ## _+ From model ----
+      ### From model ----
       shiny::observe({
          fi <- input$impModel
          shiny::req(fi)
@@ -666,7 +666,7 @@ buildServer <- function(
          }
       })
 
-      ## _+ From example ----
+      ### From example ----
       output$exampleModel <- shiny::renderUI({
          shiny::req(file.exists(example))
          m <- try(read_json_data_model(example), silent=TRUE)
@@ -686,7 +686,7 @@ buildServer <- function(
          model$toImport <-  auto_layout(mi, lengthMultiplier=45*length(mi))
       })
 
-      ## _+ Validate import ----
+      ### Validate import ----
       shiny::observe({
          shiny::req(input$importValidate)
          mm <- shiny::isolate(model$merged)
@@ -855,7 +855,7 @@ buildServer <- function(
          )
       })
 
-      ## _+ Rename table ----
+      ### Rename table ----
       shiny::observeEvent(input$renameTable, {
          shiny::showModal(shiny::modalDialog(
             title="Rename table",
@@ -911,7 +911,7 @@ buildServer <- function(
          }
       })
 
-      ## _+ Table comment ----
+      ### Table comment ----
       output$tableCommentUI <- shiny::renderUI({
          selt <- selection$tables
          shiny::req(length(selt)==1)
@@ -996,7 +996,7 @@ buildServer <- function(
          }
       })
 
-      ## _+ Table fields ----
+      ### Table fields ----
       output$fields <- shiny::renderUI({
          selt <- selection$tables
          shiny::req(length(selt)==1)
@@ -1085,7 +1085,7 @@ buildServer <- function(
             clearSelection="none", resetPaging=FALSE, rownames=FALSE
          )
       })
-      # ## __- Display field comment
+      #### Display field comment
       output$fieldCommentDisplay <- shiny::renderUI({
          seli <- input$fieldTable_rows_selected
          shiny::req(length(seli)==1)
@@ -1097,7 +1097,7 @@ buildServer <- function(
          shiny::req(seli>=1 & seli <= nrow(mt$fields))
          shiny::p(mt$fields$comment[seli])
       })
-      # ## __- Paste fields ----
+      #### Paste fields ----
       output$pasteFieldDiv <- shiny::renderUI({
          shiny::req(cpfields$table)
          shiny::req(cpfields$fields)
@@ -1139,7 +1139,7 @@ buildServer <- function(
          m <- copy_fields(m, from=from, to=to, fields=cpf)
          model$new <- m
       })
-      # ## __- Modify fields ----
+      #### Modify fields ----
       output$updateFieldDiv <- shiny::renderUI({
          seli <- input$fieldTable_rows_selected
          shiny::req(length(seli)>=1)
@@ -1217,7 +1217,7 @@ buildServer <- function(
             class="iblock"
          )
       })
-      # ## __- Copy fields ----
+      #### Copy fields ----
       shiny::observe({
          shiny::req(input$copyFields>0)
          seli <- shiny::isolate(input$fieldTable_rows_selected)
@@ -1230,7 +1230,7 @@ buildServer <- function(
          cpfields$table <- selTable
          cpfields$fields <- fn
       })
-      # ## __- Select all fields ----
+      #### Select all fields ----
       shiny::observe({
          shiny::req(input$selectAllFields>0)
          seli <- shiny::isolate(input$fieldTable_rows_selected)
@@ -1242,7 +1242,7 @@ buildServer <- function(
             DT::selectRows(proxyFieldTable, selected=NULL)
          }
       })
-      # ## __- Remove field ----
+      #### Remove field ----
       shiny::observe({
          shiny::req(input$removeField>0)
          seli <- shiny::isolate(input$fieldTable_rows_selected)
@@ -1277,7 +1277,7 @@ buildServer <- function(
             ))
          }
       })
-      # ## __- Move field ----
+      #### Move field ----
       shiny::observe({
          shiny::req(input$moveFieldUp>0)
          seli <- shiny::isolate(input$fieldTable_rows_selected)
@@ -1322,7 +1322,7 @@ buildServer <- function(
          DT::selectRows(proxyFieldTable, selected=seli+1)
          model$new <- m
       })
-      ## __- Add field ----
+      #### Add field ----
       shiny::observeEvent(input$addField, {
          mt <- shiny::isolate(model$table)
          shiny::req(mt)
@@ -1426,7 +1426,7 @@ buildServer <- function(
          shiny::removeModal()
       })
 
-      ## __- Update field ----
+      #### Update field ----
       shiny::observeEvent(input$updateField, {
          seli <- shiny::isolate(input$fieldTable_rows_selected)
          shiny::req(length(seli)>=1)
@@ -1621,7 +1621,7 @@ buildServer <- function(
       })
 
 
-      ## _+ Table primary key ----
+      ### Table primary key ----
       output$primaryKey <- shiny::renderUI({
          selt <- selection$tables
          shiny::req(length(selt)==1)
@@ -1684,7 +1684,7 @@ buildServer <- function(
          selTable <- mt$tableName
          cpk <- mt$primaryKey
          shiny::req(
-            length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk)),
+            length(cpk)!=length(npk) || any(sort(cpk)!=sort(npk))
          )
          shiny::icon("arrow-right", "fa-1x", verify_fa=FALSE)
       })
@@ -1707,7 +1707,7 @@ buildServer <- function(
          }
       })
 
-      ## _+ Table indexes ----
+      ### Table indexes ----
       output$indexes <- shiny::renderUI({
          selt <- selection$tables
          shiny::req(length(selt)==1)
@@ -1743,7 +1743,7 @@ buildServer <- function(
             DT::datatable(
                rownames=TRUE,
                filter="top",
-               selection=list(mode='single', selected=c(), target='row'),
+               selection=list(mode='multiple', selected=c(), target='row'),
                options=list(
                   dom="tip",
                   columnDefs = list(
@@ -1782,40 +1782,116 @@ buildServer <- function(
             clearSelection="all"
          )
       })
-      ## __- Update index ----
+     
       output$updateIndexDiv <- shiny::renderUI({
          seli <- input$indexTable_rows_selected
-         shiny::req(length(seli)==1)
+         shiny::req(length(seli)>=1)
          shiny::req(nrow(model$indexTable)>0)
          mt <- shiny::isolate(model$table)
          shiny::req(mt)
          selTable <- mt$tableName
          shiny::req(length(mt$indexes)>0)
-         shiny::req(seli>=1 & seli <= length(mt$indexes))
-         ui <- mt$indexes[[seli]]$unique
-         list(
+         shiny::req(all(seli>=1 & seli <= length(mt$indexes)))
+         # ui <- mt$indexes[[seli]]$unique
+         list(            
             shiny::actionButton(
-               "updateIndex",
+               "moveIndexdUp",
                label="",
-               icon=shiny::icon("edit", "fa-1x", verify_fa=FALSE),
+               icon=shiny::icon(
+                  "arrow-alt-circle-up", "fa-1x", verify_fa=FALSE
+               ),
                class="shrunkenButton"
             ) %>%
                shiny::div(
-                  title="Update index properties",
+                  title="Move up",
                   class="iblock"
                ),
             shiny::actionButton(
-               "removeIndex",
+               "moveIndexDown",
                label="",
-               icon=shiny::icon("minus-square", "fa-1x", verify_fa=FALSE),
+               icon=shiny::icon(
+                  "arrow-alt-circle-down", "fa-1x", verify_fa=FALSE
+               ),
                class="shrunkenButton"
             ) %>%
                shiny::div(
-                  title="Remove index",
+                  title="Move down",
                   class="iblock"
-               )
+               ),
+            if(length(seli) == 1){
+               shiny::actionButton(
+                  "updateIndex",
+                  label="",
+                  icon=shiny::icon("edit", "fa-1x", verify_fa=FALSE),
+                  class="shrunkenButton"
+               ) %>%
+                  shiny::div(
+                     title="Update index properties",
+                     class="iblock"
+                  )
+            },
+            if(length(seli) == 1){
+               shiny::actionButton(
+                  "removeIndex",
+                  label="",
+                  icon=shiny::icon("minus-square", "fa-1x", verify_fa=FALSE),
+                  class="shrunkenButton"
+               ) %>%
+                  shiny::div(
+                     title="Remove index",
+                     class="iblock"
+                  )
+            }
          )
       })
+     
+      #### Move Index ----
+      shiny::observe({
+         shiny::req(input$moveIndexdUp>0)
+         seli <- shiny::isolate(input$indexTable_rows_selected)
+         shiny::req(length(seli)>=1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
+         selTable <- mt$tableName
+         m <- shiny::isolate(model$x)
+         shiny::req(length(mt$indexes)>0)
+         shiny::req(min(seli)>1)
+         alli <- 1:length(m[[selTable]]$indexes)
+         o <- rep(NA, length(alli))
+         o[seli-1] <- seli
+         o[which(is.na(o))] <- setdiff(alli, seli)
+         m <- m %>% order_indexes(
+            tableName=selTable,
+            order=o
+         )
+         DT::selectPage(proxyIndexTable, page=((min(seli)-2) %/% 10)+1)
+         DT::selectRows(proxyIndexTable, selected=seli-1)
+         model$new <- m
+      })
+      shiny::observe({
+         shiny::req(input$moveIndexDown>0)
+         seli <- shiny::isolate(input$indexTable_rows_selected)
+         shiny::req(length(seli)>=1)
+         mt <- shiny::isolate(model$table)
+         shiny::req(mt)
+         selTable <- mt$tableName
+         m <- shiny::isolate(model$x)
+         shiny::req(length(mt$indexes)>0)
+         alli <- 1:length(m[[selTable]]$indexes)
+         shiny::req(max(seli)<length(alli))
+         o <- rep(NA, length(alli))
+         o[seli+1] <- seli
+         o[which(is.na(o))] <- setdiff(alli, seli)
+         m <- m %>% order_indexes(
+            tableName=selTable,
+            order=o
+         )
+         DT::selectPage(proxyIndexTable, page=(max(seli) %/% 10)+1)
+         DT::selectRows(proxyIndexTable, selected=seli+1)
+         model$new <- m
+      })
+
+      #### Update index ----
       shiny::observeEvent(input$updateIndex,{
          seli <- shiny::isolate(input$indexTable_rows_selected)
          shiny::req(length(seli)==1)
@@ -1860,7 +1936,7 @@ buildServer <- function(
             shiny::removeModal()
          }
       })
-      ## __- Remove index ----
+      #### Remove index ----
       shiny::observe({
          shiny::req(input$removeIndex>0)
          seli <- shiny::isolate(input$indexTable_rows_selected)
@@ -1884,7 +1960,7 @@ buildServer <- function(
             ))
          }
       })
-      ## __- Add index ----
+      #### Add index ----
       shiny::observeEvent(input$addIndex, {
          mt <- shiny::isolate(model$table)
          shiny::req(mt)
@@ -2500,7 +2576,7 @@ buildServer <- function(
          }
       })
 
-      ## _+ Cardinality ----
+      ### Cardinality ----
       output$ilcard <- shiny::renderUI({
          ft <- foreignKey$fromTable
          tt <- foreignKey$toTable
@@ -2995,7 +3071,7 @@ buildServer <- function(
          )
       })
 
-      ## _+ JSON ----
+      ### JSON ----
       output$exportJson <- shiny::downloadHandler(
          filename = function() {
             paste0("Data-model", ".json")
@@ -3007,7 +3083,7 @@ buildServer <- function(
          }
       )
 
-      ## _+ HTML ----
+      ### HTML ----
       output$exportHtml <- shiny::downloadHandler(
          filename = function() {
             paste0("Data-model", ".html")
@@ -3025,17 +3101,17 @@ buildServer <- function(
       #########################################################################@
 
       if(fromR){
-         ## _+ Autosaved object ----
+         ### Autosaved object ----
          shiny::observe({
             assign(bcko, model$x, envir=modelEnv)
          })
-         ## _+ Done button ----
+         ### Done button ----
          shiny::observeEvent(input$done, {
             shiny::stopApp(invisible(model$x))
          })
       }
 
-   }
+            }
 
 }
 

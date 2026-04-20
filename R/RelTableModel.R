@@ -259,7 +259,7 @@ RelTableModel <- function(
                length(ind$unique)==1,
                all(ind$fields %in% l$fields$name)
             )
-            ind$fields <- sort(unique(ind$fields))
+            ind$fields <- unique(ind$fields)
             return(ind)
          }
       )
@@ -507,10 +507,12 @@ col_types <- function(x){
 #' Correct the constraints of a table to make them consistent
 #'
 #' @param x a [RelTableModel] object
+#' @param createPKIndex should an index be create for the primary key
+#' (default: FALSE)
 #'
 #' @export
 #'
-correct_constraints <- function(x){
+correct_constraints <- function(x, createPKIndex = FALSE){
    stopifnot(is.RelTableModel(x))
    ## Primary key uniqueness
    if(length(x$primaryKey)==1){
@@ -529,15 +531,17 @@ correct_constraints <- function(x){
          which()
       if(length(ei)>1) stop("Check this part of code")
       if(length(ei)==0){
-         x$indexes <- unique(c(
-            x$indexes,
-            list(
+         if(createPKIndex){
+            x$indexes <- unique(c(
+               x$indexes,
                list(
-                  fields=sort(x$primaryKey),
-                  unique=TRUE
+                  list(
+                     fields=sort(x$primaryKey),
+                     unique=TRUE
+                  )
                )
-            )
-         ))
+            ))
+         }
       }else{
          x$indexes[[ei]]$unique <- TRUE
       }
@@ -815,24 +819,24 @@ identical_RelTableModel <- function(x, y, includeDisplay=TRUE){
    ## Indexes ----
    toRet <- toRet && length(x$indexes)==length(y$indexes)
    if(toRet && length(x$indexes)>0){
-      xidx <- lapply(
-         x$indexes,
-         function(z){
-            z$fields <- sort(z$fields)
-            return(z)
-         }
-      )
+      # xidx <- lapply(
+      #    x$indexes,
+      #    function(z){
+      #       z$fields <- sort(z$fields)
+      #       return(z)
+      #    }
+      # )
       xidx <- xidx[order(unlist(lapply(
          xidx,
          function(z) paste(z$fields, collapse=", ")
       )))]
-      yidx <- lapply(
-         y$indexes,
-         function(z){
-            z$fields <- sort(z$fields)
-            return(z)
-         }
-      )
+      # yidx <- lapply(
+      #    y$indexes,
+      #    function(z){
+      #       z$fields <- sort(z$fields)
+      #       return(z)
+      #    }
+      # )
       yidx <- yidx[order(unlist(lapply(
          yidx,
          function(z) paste(z$fields, collapse=", ")

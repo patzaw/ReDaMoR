@@ -1,5 +1,13 @@
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+## Version 1.0.0
+
+- Decouple primary keys and foreign keys from index creation
+- Allow ordering of indexes
+- Order of fields in index is conserved (not sorted by alphabetic order aymore)
+
+<!----------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
 ## Version 0.8.2
 
 - New function `guess_constraints()` guesses constraints of a data model

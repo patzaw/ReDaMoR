@@ -4,12 +4,14 @@
 #' @param l the list of table models ([RelTableModel] objects)
 #' @param checkFK a logical indicating if foreign keys should be checked
 #' (default: TRUE)
+#' @param createFKIndex should an index be create for the foreign keys
+#' (default: FALSE)
 #'
 #' @return A RelDataModel object.
 #'
 #' @export
 #'
-RelDataModel <- function(l, checkFK=TRUE){
+RelDataModel <- function(l, checkFK=TRUE, createFKIndex = FALSE){
 
    ## Checks ----
    stopifnot(
@@ -58,6 +60,20 @@ RelDataModel <- function(l, checkFK=TRUE){
          }
 
          if(fk$cardinality["fmax"]==1){
+
+           if(nrow(fk$key)==1){
+            if(
+               toRet[[ft]]$fields[
+                  which(toRet[[ft]]$fields$name==fk$key$from), "type"
+               ] %in% c("row", "column")
+            ){
+               stop("Matrix row and column cannot be unique individually")
+            }
+            toRet[[ft]]$fields[
+               which(toRet[[ft]]$fields$name==fk$key$from), "unique"
+               ] <- TRUE
+            }
+           
             ei <- lapply(
                toRet[[ft]]$indexes,
                function(y){
@@ -69,21 +85,37 @@ RelDataModel <- function(l, checkFK=TRUE){
                which()
             if(length(ei)>1) stop("Check this part of code")
             if(length(ei)==0){
-               toRet[[ft]]$indexes <- unique(c(
-                  toRet[[ft]]$indexes,
-                  list(
+               if(createFKIndex){
+                  toRet[[ft]]$indexes <- unique(c(
+                     toRet[[ft]]$indexes,
                      list(
-                        fields=sort(fk$key$from),
-                        unique=TRUE
+                        list(
+                           fields=sort(fk$key$from),
+                           unique=TRUE
+                        )
                      )
-                  )
-               ))
+                  ))
+               }
             }else{
                toRet[[ft]]$indexes[[ei]]$unique <- TRUE
             }
          }
 
          if(fk$cardinality["tmax"]==1 && fk$refTable %in% names(toRet)){
+
+           if(nrow(fk$key)==1){
+            if(
+               toRet[[fk$refTable]]$fields[
+                  which(toRet[[fk$refTable]]$fields$name==fk$key$to), "type"
+               ] %in% c("row", "column")
+            ){
+               stop("Matrix row and column cannot be unique individually")
+            }
+            toRet[[fk$refTable]]$fields[
+               which(toRet[[fk$refTable]]$fields$name==fk$key$to), "unique"
+               ] <- TRUE
+            }
+           
             ei <- lapply(
                toRet[[fk$refTable]]$indexes,
                function(y){
@@ -95,15 +127,17 @@ RelDataModel <- function(l, checkFK=TRUE){
                which()
             if(length(ei)>1) stop("Check this part of code")
             if(length(ei)==0){
-               toRet[[fk$refTable]]$indexes <- unique(c(
-                  toRet[[fk$refTable]]$indexes,
-                  list(
+               if(createFKIndex){
+                  toRet[[fk$refTable]]$indexes <- unique(c(
+                     toRet[[fk$refTable]]$indexes,
                      list(
-                        fields=sort(fk$key$to),
-                        unique=TRUE
+                        list(
+                           fields=sort(fk$key$to),
+                           unique=TRUE
+                        )
                      )
-                  )
-               ))
+                  ))
+               }
             }else{
                toRet[[fk$refTable]]$indexes[[ei]]$unique <- TRUE
             }
@@ -1200,13 +1234,13 @@ add_index <- function(x, tableName, fieldNames, unique){
       as.logical() %>%
       any()
    if(ei){
-      warning("The index already exists ==> no change")
+      warning("An index with the same fields already exists ==> no change")
       return(x)
    }
    x <- unclass(x)
    x[[tableName]]$indexes <- c(
       x[[tableName]]$indexes,
-      list(list(fields=sort(fieldNames), unique=unique))
+      list(list(fields=fieldNames, unique=unique))
    )
    return(RelDataModel(x))
 }
@@ -1245,6 +1279,35 @@ remove_index <- function(x, tableName, fieldNames){
    }
    x <- unclass(x)
    x[[tableName]]$indexes <- x[[tableName]]$indexes[-ei]
+   return(RelDataModel(x))
+}
+
+##############################################################################@
+#' Order index in a table in a [RelDataModel]
+#'
+#' @param x a [RelDataModel]
+#' @param tableName the name of the table to modify (a single character)
+#' @param order a vector of integers all in (1:number_of_indexes)
+#'
+#' @return A [RelDataModel]
+#'
+#' @export
+#'
+order_indexes <- function(
+   x,
+   tableName,
+   order
+){
+   stopifnot(is.RelDataModel(x))
+   stopifnot(
+      is.character(tableName), length(tableName)==1,
+      tableName %in% names(x),
+      is.numeric(order),
+      length(order)==length(x[[tableName]]$indexes),
+      all(order %in% 1:length(x[[tableName]]$indexes))
+   )
+   x <- unclass(x)
+   x[[tableName]]$indexes <- x[[tableName]]$indexes[order]
    return(RelDataModel(x))
 }
 
