@@ -15,8 +15,8 @@
 #'
 #' @export
 #'
-get_foreign_keys <- function(x){
-   UseMethod("get_foreign_keys", x)
+get_foreign_keys <- function(x) {
+  UseMethod("get_foreign_keys", x)
 }
 
 
@@ -35,11 +35,10 @@ get_foreign_keys <- function(x){
 #' @seealso [base::lengths()]
 #'
 #' @export
-lengths <- function(x, use.names=TRUE){
-   UseMethod("lengths", x)
+lengths <- function(x, use.names = TRUE) {
+  UseMethod("lengths", x)
 }
 #' @export
-lengths.default <- function(x, use.names=TRUE){
-   base::lengths(unclass(x), use.names=use.names)
+lengths.default <- function(x, use.names = TRUE) {
+  base::lengths(unclass(x), use.names = use.names)
 }
-

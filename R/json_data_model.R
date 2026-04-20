@@ -7,66 +7,67 @@
 #'
 #' @export
 #'
-read_json_data_model <- function(txt){
-   mfj <- jsonlite::fromJSON(txt, simplifyVector=FALSE)
-   lapply(
-      mfj,
-      function(x){
-         ## table name ----
-         x$tableName <- unlist(x$tableName)
-         ## fields ----
-         if(length(x$fields)>0){
-            x$fields <- do.call(rbind, lapply(x$fields, dplyr::as_tibble)) %>%
-               dplyr::mutate(
-                  name=as.character(.data$name),
-                  type=as.character(.data$type),
-                  nullable=as.logical(.data$nullable),
-                  unique=as.logical(.data$unique),
-                  comment=as.character(.data$comment)
-               )
-         }else{
-            x$fields <- dplyr::tibble(
-               name=character(),
-               type=character(),
-               nullable=logical(),
-               unique=logical(),
-               comment=character()
-            )
-         }
-         ## primary key ----
-         x$primaryKey <- as.character(x$primaryKey)
-         ## foreign keys ----
-         x$foreignKeys <- lapply(
-            x$foreignKeys,
-            function(y){
-               y$refTable <- unlist(y$refTable)
-               y$key <- do.call(rbind, lapply(y$key, dplyr::as_tibble))
-               y$cardinality <- as.integer(unlist(y$cardinality))
-               names(y$cardinality) <- c("fmin", "fmax", "tmin", "tmax")
-               return(y)
-            }
-         )
-         ## indexes ----
-         x$indexes <- lapply(
-            x$indexes,
-            function(y){
-               y$fields <- unlist(y$fields)
-               y$unique <- unlist(y$unique)
-               return(y)
-            }
-         )
-         ## display ----
-         x$display <- lapply(x$display, function(y){
-            y <- unlist(y)
-            ifelse(y=="NA", NA, y)
-         })
-         x$display$x <- as.numeric(x$display$x)
-         x$display$y <- as.numeric(x$display$y)
-         x$display$color <- as.character(x$display$color)
-         x$display$comment <- as.character(x$display$comment)
-         do.call(RelTableModel, x)
+read_json_data_model <- function(txt) {
+  mfj <- jsonlite::fromJSON(txt, simplifyVector = FALSE)
+  lapply(
+    mfj,
+    function(x) {
+      ## table name ----
+      x$tableName <- unlist(x$tableName)
+      ## fields ----
+      if (length(x$fields) > 0) {
+        x$fields <- do.call(rbind, lapply(x$fields, dplyr::as_tibble)) %>%
+          dplyr::mutate(
+            name = as.character(.data$name),
+            type = as.character(.data$type),
+            nullable = as.logical(.data$nullable),
+            unique = as.logical(.data$unique),
+            comment = as.character(.data$comment)
+          )
+      } else {
+        x$fields <- dplyr::tibble(
+          name = character(),
+          type = character(),
+          nullable = logical(),
+          unique = logical(),
+          comment = character()
+        )
       }
-   ) %>% RelDataModel()
+      ## primary key ----
+      x$primaryKey <- as.character(x$primaryKey)
+      ## foreign keys ----
+      x$foreignKeys <- lapply(
+        x$foreignKeys,
+        function(y) {
+          y$refTable <- unlist(y$refTable)
+          y$key <- do.call(rbind, lapply(y$key, dplyr::as_tibble))
+          y$cardinality <- as.integer(unlist(y$cardinality))
+          names(y$cardinality) <- c("fmin", "fmax", "tmin", "tmax")
+          return(y)
+        }
+      )
+      ## indexes ----
+      x$indexes <- lapply(
+        x$indexes,
+        function(y) {
+          y$fields <- unlist(y$fields)
+          y$unique <- unlist(y$unique)
+          return(y)
+        }
+      )
+      ## display ----
+      x$display <- lapply(x$display, function(y) {
+        y <- unlist(y)
+        ifelse(y == "NA", NA, y)
+      })
+      x$display$x <- as.numeric(x$display$x)
+      x$display$y <- as.numeric(x$display$y)
+      x$display$color <- as.character(x$display$color)
+      x$display$comment <- as.character(x$display$comment)
+      do.call(RelTableModel, x)
+    }
+  ) %>%
+    RelDataModel()
 }
 
 ###############################################################################@
@@ -77,6 +78,6 @@ read_json_data_model <- function(txt){
 #'
 #' @export
 #'
-write_json_data_model <- function(x, path){
-   jsonlite::write_json(x, path=path, na="string", pretty=TRUE)
+write_json_data_model <- function(x, path) {
+  jsonlite::write_json(x, path = path, na = "string", pretty = TRUE)
 }
