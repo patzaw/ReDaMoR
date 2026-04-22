@@ -869,23 +869,25 @@ identical_RelTableModel <- function(x, y, includeDisplay = TRUE) {
   toRet <- toRet && length(x$indexes) == length(y$indexes)
   if (toRet && length(x$indexes) > 0) {
     # xidx <- lapply(
-    #    x$indexes,
-    #    function(z){
-    #       z$fields <- sort(z$fields)
-    #       return(z)
-    #    }
+    #   x$indexes,
+    #   function(z) {
+    #     z$fields <- sort(z$fields)
+    #     return(z)
+    #   }
     # )
+    xidx <- x$indexes
     xidx <- xidx[order(unlist(lapply(
       xidx,
       function(z) paste(z$fields, collapse = ", ")
     )))]
     # yidx <- lapply(
-    #    y$indexes,
-    #    function(z){
-    #       z$fields <- sort(z$fields)
-    #       return(z)
-    #    }
+    #   y$indexes,
+    #   function(z) {
+    #     z$fields <- sort(z$fields)
+    #     return(z)
+    #   }
     # )
+    yidx <- y$indexes
     yidx <- yidx[order(unlist(lapply(
       yidx,
       function(z) paste(z$fields, collapse = ", ")
