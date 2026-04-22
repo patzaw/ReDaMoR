@@ -105,10 +105,13 @@ modelToVn <- function(
             f$type,
             ifelse(
               f$name %in% ind,
-              ifelse(
-                f$name %in% uind,
-                paste0(" - uidx.", f$i),
-                paste0(" - idx.", f$i)
+              sprintf(
+                "<b> - %s</b>",
+                ifelse(
+                  f$name %in% uind,
+                  paste0("uidx.", f$i),
+                  paste0("idx.", f$i)
+                )
               ),
               ""
             ),
@@ -125,12 +128,20 @@ modelToVn <- function(
           flab,
           sep = "\n"
         )
+        fcomment <- gsub(
+          "\\{([^}]*)\\}", "<b>{\\1}</b>",
+          f$comment
+        )
         ftit <- paste(
           sprintf(
             '<li><strong>%s</strong>%s%s</li>',
             f$name,
             ifelse(is.na(f$comment) | f$comment == "", "", ": "),
-            ifelse(is.na(f$comment) | f$comment == "", "", f$comment)
+            ifelse(
+              is.na(f$comment) | f$comment == "",
+              "",
+              fcomment
+            )
           ),
           collapse = " "
         )
@@ -157,7 +168,8 @@ modelToVn <- function(
             '<div ',
             'style="',
             'max-width:400px; max-height:300px;',
-            'overflow:scroll;',
+            'overflow-y:auto; overflow-wrap:break-word;',
+            'word-break:break-word; white-space:normal;',
             '">%s</div>'
           ),
           title
