@@ -132,6 +132,10 @@ modelToVn <- function(
           "\\{([^}]*)\\}", "<b>{\\1}</b>",
           f$comment
         )
+        tcomment <- gsub(
+          "\\{([^}]*)\\}", "<b>{\\1}</b>",
+          m$display$comment
+        )
         ftit <- paste(
           sprintf(
             '<li><strong>%s</strong>%s%s</li>',
@@ -155,7 +159,7 @@ modelToVn <- function(
             ifelse(
               is.na(m$display$comment),
               "",
-              sprintf(" (%s)", m$display$comment)
+              sprintf(" (%s)", tcomment)
             )
           ),
           "<ul>",

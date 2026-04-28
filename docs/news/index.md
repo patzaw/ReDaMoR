@@ -6,6 +6,7 @@
 - Allow ordering of indexes
 - Order of fields in index is conserved (not sorted by alphabetic order
   aymore)
+- Improved display of fields and comments in data model plot
 
 ## Version 0.8.2
 
