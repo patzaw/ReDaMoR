@@ -40,7 +40,7 @@ cranRef <- function(x){
 ```
 
 <div style="width:200px;">
-![logo](img/ReDaMoR.png)
+![](img/ReDaMoR.png){alt="logo"}
 </div>
 
 <!----------------------------------------------------------------------------->

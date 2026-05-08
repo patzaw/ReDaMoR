@@ -7,7 +7,3 @@ Supported R types
 ``` r
 SUPPTYPES
 ```
-
-## Format
-
-An object of class `character` of length 7.

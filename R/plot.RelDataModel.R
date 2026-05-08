@@ -78,8 +78,22 @@ modelToVn <- function(
         it <- index_table(m)
         ind <- NULL
         # uq <- NULL
-        if (!is.null(it)) {
-          it <- it %>% dplyr::filter(.data$index != 0)
+        if (!is.null(it) && any(it$index > 0)) {
+          it <- it %>%
+            dplyr::filter(.data$index != 0) %>%
+            dplyr::group_by(.data$index) %>%
+            dplyr::mutate(
+              n = dplyr::n(),
+              nn = 1:dplyr::n()
+            ) %>%
+            dplyr::ungroup() %>%
+            dplyr::mutate(
+              index = ifelse(
+                .data$n > 1,
+                paste(.data$index, .data$nn, sep = "-"),
+                as.character(.data$index)
+              )
+            )
           ind <- unique(it$field)
           uind <- it %>%
             dplyr::filter(.data$uniqueIndex) %>%
@@ -129,11 +143,13 @@ modelToVn <- function(
           sep = "\n"
         )
         fcomment <- gsub(
-          "\\{([^}]*)\\}", "<b>{\\1}</b>",
+          "\\{([^}]*)\\}",
+          "<b>{\\1}</b>",
           f$comment
         )
         tcomment <- gsub(
-          "\\{([^}]*)\\}", "<b>{\\1}</b>",
+          "\\{([^}]*)\\}",
+          "<b>{\\1}</b>",
           m$display$comment
         )
         ftit <- paste(

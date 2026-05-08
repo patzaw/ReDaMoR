@@ -2,8 +2,6 @@
 
 ![logo](img/ReDaMoR.png)
 
-logo
-
 ## Introduction
 
 In R, data are often stored in data frames which are tables in which
