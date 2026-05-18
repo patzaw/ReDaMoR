@@ -128,8 +128,8 @@ RelTableModel <- function(
   )) {
     attr(l$fields, att) <- NULL
   }
-  l$fields <- dplyr::as_tibble(l$fields) %>%
-    dplyr::select(c("name", "type", "nullable", "unique", "comment")) %>%
+  l$fields <- dplyr::as_tibble(l$fields) |>
+    dplyr::select(c("name", "type", "nullable", "unique", "comment")) |>
     dplyr::mutate(
       "comment" = as.character(
         ifelse(is.na(.data$comment), "", .data$comment)
@@ -158,7 +158,7 @@ RelTableModel <- function(
         "A matrix model should have 3 fields":"2 of types 'row' and 'column' and the 3rd of your choice"
       ))
     }
-    rcfields <- l$fields %>% dplyr::filter(.data$type %in% c("row", "column"))
+    rcfields <- l$fields |> dplyr::filter(.data$type %in% c("row", "column"))
     if (any(rcfields$nullable)) {
       stop("Matrix row and column cannot be nullable")
     }
@@ -340,7 +340,7 @@ format.RelTableModel <- function(x, ...) {
   ind <- NULL
   # uq <- NULL
   if (!is.null(it)) {
-    it <- it %>% dplyr::filter(.data$index != 0)
+    it <- it |> dplyr::filter(.data$index != 0)
     ind <- unique(it$field)
     # uq <- unique(it$field[which(it$unique)])
   }
@@ -531,9 +531,9 @@ correct_constraints <- function(x, createPKIndex = FALSE) {
       function(y) {
         identical(sort(y$fields), sort(x$primaryKey))
       }
-    ) %>%
-      unlist() %>%
-      as.logical() %>%
+    ) |>
+      unlist() |>
+      as.logical() |>
       which()
     if (length(ei) > 1) {
       stop("Check this part of code")
@@ -575,8 +575,8 @@ correct_constraints <- function(x, createPKIndex = FALSE) {
     }
   }
   ## Field uniqueness
-  uniqueFields <- x$fields %>%
-    dplyr::filter(.data$unique) %>%
+  uniqueFields <- x$fields |>
+    dplyr::filter(.data$unique) |>
     dplyr::pull("name")
   if (length(x$indexes) > 0 && length(uniqueFields) > 0) {
     for (i in 1:length(x$indexes)) {
@@ -620,7 +620,7 @@ confront_table_data <- function(
     if (!inherits(d, c("matrix", "Matrix"))) {
       stop(x$tableName, " is neither a matrix nor a Matrix")
     }
-    vf <- x$fields %>% dplyr::filter(!.data$type %in% c("row", "column"))
+    vf <- x$fields |> dplyr::filter(!.data$type %in% c("row", "column"))
     toRet <- list(
       missingFields = character(0),
       suppFields = character(0),
@@ -798,14 +798,14 @@ confront_table_data <- function(
       toRet$indexes <- list()
     }
     i <- length(toRet$indexes) + 1
-    rf <- x$fields %>%
-      dplyr::filter(.data$type == "row") %>%
+    rf <- x$fields |>
+      dplyr::filter(.data$type == "row") |>
       dplyr::pull("name")
-    cf <- x$fields %>%
-      dplyr::filter(.data$type == "column") %>%
+    cf <- x$fields |>
+      dplyr::filter(.data$type == "column") |>
       dplyr::pull("name")
-    fe <- x$fields %>%
-      dplyr::filter(!.data$type %in% c("row", "column")) %>%
+    fe <- x$fields |>
+      dplyr::filter(!.data$type %in% c("row", "column")) |>
       dplyr::pull("nullable")
     ncells <- length(unique(d[, rf])) * length(unique(d[, cf]))
     mis <- ncells - nrow(d)
@@ -856,8 +856,8 @@ identical_RelTableModel <- function(x, y, includeDisplay = TRUE) {
   ## Fields ----
   toRet <- toRet &&
     identical(
-      x$fields %>% dplyr::arrange(.data$name),
-      y$fields %>% dplyr::arrange(.data$name)
+      x$fields |> dplyr::arrange(.data$name),
+      y$fields |> dplyr::arrange(.data$name)
     )
 
   ## Primary key ----
@@ -901,7 +901,7 @@ identical_RelTableModel <- function(x, y, includeDisplay = TRUE) {
     xfk <- lapply(
       x$foreignKeys,
       function(z) {
-        z$key <- z$key %>% dplyr::arrange(.data$from, .data$to)
+        z$key <- z$key |> dplyr::arrange(.data$from, .data$to)
         return(z)
       }
     )
@@ -922,7 +922,7 @@ identical_RelTableModel <- function(x, y, includeDisplay = TRUE) {
     yfk <- lapply(
       y$foreignKeys,
       function(z) {
-        z$key <- z$key %>% dplyr::arrange(.data$from, .data$to)
+        z$key <- z$key |> dplyr::arrange(.data$from, .data$to)
         return(z)
       }
     )
@@ -985,21 +985,20 @@ get_foreign_keys.RelTableModel <- function(x) {
       fk,
       function(k) {
         to <- k$refTable
-        kt <- k$key %>% dplyr::arrange(.data$from, .data$to)
+        kt <- k$key |> dplyr::arrange(.data$from, .data$to)
         dplyr::tibble(
           to = to,
           ff = list(kt$from),
           tf = list(kt$to)
-        ) %>%
-          dplyr::bind_cols(dplyr::as_tibble(t(k$cardinality))) %>%
-          return()
+        ) |>
+          dplyr::bind_cols(dplyr::as_tibble(t(k$cardinality)))
       }
     )
   )
-  toRet %>%
+  toRet <- toRet |>
     dplyr::mutate(
       from = tn
-    ) %>%
+    ) |>
     dplyr::select(
       "from",
       "ff",
@@ -1009,6 +1008,6 @@ get_foreign_keys.RelTableModel <- function(x) {
       "fmax",
       "tmin",
       "tmax"
-    ) %>%
-    return()
+    )
+  return(toRet)
 }

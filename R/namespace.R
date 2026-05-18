@@ -1,4 +1,3 @@
-#' @import magrittr
 #' @import dplyr
 #' @import shiny
 #' @import rintrojs

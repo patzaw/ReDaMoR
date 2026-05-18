@@ -16,7 +16,7 @@ read_json_data_model <- function(txt) {
       x$tableName <- unlist(x$tableName)
       ## fields ----
       if (length(x$fields) > 0) {
-        x$fields <- do.call(rbind, lapply(x$fields, dplyr::as_tibble)) %>%
+        x$fields <- do.call(rbind, lapply(x$fields, dplyr::as_tibble)) |>
           dplyr::mutate(
             name = as.character(.data$name),
             type = as.character(.data$type),
@@ -66,7 +66,7 @@ read_json_data_model <- function(txt) {
       x$display$comment <- as.character(x$display$comment)
       do.call(RelTableModel, x)
     }
-  ) %>%
+  ) |>
     RelDataModel()
 }
 

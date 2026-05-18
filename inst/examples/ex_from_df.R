@@ -13,9 +13,9 @@ new_model <- df_to_model(
   envir = as.environment(hpo_tables)
 )
 ## Guess constraints and auto layout ----
-new_model <- guess_constraints(new_model, data = hpo_tables) %>%
+new_model <- guess_constraints(new_model, data = hpo_tables) |>
   auto_layout(lengthMultiplier = 250)
 
 ## Plot the model ----
-new_model %>%
+new_model |>
   plot()

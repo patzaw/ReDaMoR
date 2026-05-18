@@ -31,9 +31,9 @@ read_SQL_data_model <- function(f, typeRef = "MySQLWB", mysqlcomments = TRUE) {
     posBrack <- dplyr::tibble(
       pos = c(oBrackPos, cBrackPos),
       brack = c(rep("(", length(oBrackPos)), rep(")", length(cBrackPos)))
-    ) %>%
-      dplyr::arrange(.data$pos) %>%
-      dplyr::mutate(oc = ifelse(.data$brack == "(", 1, -1)) %>%
+    ) |>
+      dplyr::arrange(.data$pos) |>
+      dplyr::mutate(oc = ifelse(.data$brack == "(", 1, -1)) |>
       dplyr::mutate(ib = cumsum(.data$oc))
     e <- which(posBrack$ib == 0)
     s <- c(1, e[-length(e)] + 1)
@@ -111,8 +111,8 @@ read_SQL_data_model <- function(f, typeRef = "MySQLWB", mysqlcomments = TRUE) {
     ## Table ----
     header <- sub("[[:space:]]*[(].*", "", cs)
     p <- gregexpr('(`[^`]*`[.])?`[^`]*`', header)[[1]]
-    tableFullName <- substr(header, p, p + attr(p, "match.length") - 1) %>%
-      strsplit(split = "[.]") %>%
+    tableFullName <- substr(header, p, p + attr(p, "match.length") - 1) |>
+      strsplit(split = "[.]") |>
       unlist()
     tableFullName <- gsub("`", "", tableFullName)
     if (length(tableFullName) == 1) {
@@ -190,8 +190,8 @@ read_SQL_data_model <- function(f, typeRef = "MySQLWB", mysqlcomments = TRUE) {
             ref,
             p,
             p + attr(p, "match.length") - 1
-          ) %>%
-            strsplit(split = "[.]") %>%
+          ) |>
+            strsplit(split = "[.]") |>
             unlist()
           refTableFullName <- gsub("`", "", refTableFullName)
           if (length(refTableFullName) == 1) {
@@ -290,7 +290,7 @@ read_SQL_data_model <- function(f, typeRef = "MySQLWB", mysqlcomments = TRUE) {
         return(toRet)
       }
     ))
-    fields <- fields %>%
+    fields <- fields |>
       dplyr::mutate(unique = ifelse(.data$name %in% uindexes, TRUE, FALSE))
 
     toRet <- list(list(
@@ -315,19 +315,19 @@ read_SQL_data_model <- function(f, typeRef = "MySQLWB", mysqlcomments = TRUE) {
   ## Main ----
 
   typeRef <- match.arg(typeRef, list_type_ref())
-  txt <- readLines(f) %>%
+  txt <- readLines(f) |>
     paste(collapse = "\n")
-  txt <- gsub("/\\*((?!\\*/)(.|\n))*\\**/", "", txt, perl = T) %>%
-    strsplit(split = "\n") %>%
+  txt <- gsub("/\\*((?!\\*/)(.|\n))*\\**/", "", txt, perl = T) |>
+    strsplit(split = "\n") |>
     unlist()
   txt <- sub("--.*$", "", txt)
   if (mysqlcomments) {
     txt <- sub("#.*$", "", txt)
   }
   txt <- sub("^[[:space:]]*", "", txt)
-  txt <- txt[which(txt != "")] %>%
-    paste(collapse = " ") %>%
-    strsplit(split = ";") %>%
+  txt <- txt[which(txt != "")] |>
+    paste(collapse = " ") |>
+    strsplit(split = ";") |>
     unlist()
   txt <- sub("^[[:space:]]*", "", txt)
   txt <- sub("[[:space:]]*$", "", txt)
@@ -342,7 +342,7 @@ read_SQL_data_model <- function(f, typeRef = "MySQLWB", mysqlcomments = TRUE) {
         ifelse(length(unsupported) > 1, "s", ""),
         ifelse(length(unsupported) > 1, "are", "is")
       ),
-      paste("   -", unsupported) %>% paste(collapse = "\n")
+      paste("   -", unsupported) |> paste(collapse = "\n")
     )
   }
   toRet <- do.call(

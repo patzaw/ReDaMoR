@@ -2,6 +2,9 @@
 <!----------------------------------------------------------------------------->
 ## Version 1.0.0
 
+- Replaced `magrittr` pipe `%>%` with the native R pipe `|>` throughout the package
+- Removed dependency on the `magrittr` package
+- Minimum R version raised to 4.1
 - Decouple primary keys and foreign keys from index creation
 - Allow ordering of indexes
 - Order of fields in index is conserved (not sorted by alphabetic order aymore)

@@ -58,7 +58,7 @@ buildUi <- function(fromR) {
                 shiny::icon("check", "fa-2x", verify_fa = FALSE),
                 "Done"
               )
-            ) %>%
+            ) |>
               shiny::div(title = "Return the model in R session")
           } else {
             shiny::img(src = 'www/ReDaMoR.png', id = "mainLogo")
@@ -111,7 +111,7 @@ buildUi <- function(fromR) {
             "doc",
             "",
             icon = shiny::icon("question-circle", "fa-2x", verify_fa = FALSE)
-          ) %>%
+          ) |>
             shiny::div(title = "Help tour")
         )
       ),
@@ -164,7 +164,7 @@ buildUi <- function(fromR) {
                   verify_fa = FALSE
                 ),
                 class = "shrunkenButton"
-              ) %>%
+              ) |>
                 shiny::div(title = "Select all tables")
             ),
             shiny::div(
@@ -178,7 +178,7 @@ buildUi <- function(fromR) {
                   verify_fa = FALSE
                 ),
                 class = "shrunkenButton"
-              ) %>%
+              ) |>
                 shiny::div(title = "Auto layout the model")
             ),
             shiny::div(
@@ -192,7 +192,7 @@ buildUi <- function(fromR) {
                   verify_fa = FALSE
                 ),
                 class = "shrunkenButton"
-              ) %>%
+              ) |>
                 shiny::div(title = "Fit model")
             )
           )
@@ -259,13 +259,13 @@ buildServer <- function(
   rintrosteps <- jsonlite::fromJSON(system.file(
     "Documentation/rintrojs-steps.json",
     package = utils::packageName()
-  )) %>%
+  )) |>
     lapply(
       function(x) {
-        toRet <- dplyr::as_tibble(x) %>%
+        toRet <- dplyr::as_tibble(x) |>
           dplyr::select("element", "intro")
         if (!fromR) {
-          toRet <- toRet %>%
+          toRet <- toRet |>
             dplyr::filter(is.na(.data$element) | .data$element != "#done")
         }
         return(toRet)
@@ -338,8 +338,8 @@ buildServer <- function(
     shiny::observe({
       settings$availableColors <- unique(c(
         settings$defaultColor,
-        lapply(model$x, function(x) x$display$color) %>%
-          unlist() %>%
+        lapply(model$x, function(x) x$display$color) |>
+          unlist() |>
           setdiff(NA),
         shiny::isolate(settings$availableColors)
       ))
@@ -452,10 +452,10 @@ buildServer <- function(
       selTables <- sort(input$findTable)
       shiny::req(!identical(selTables, shiny::isolate(selection$tables)))
       mn <- shiny::isolate(model$vn)
-      selFK <- mn$edges %>%
+      selFK <- mn$edges |>
         dplyr::filter(
           .data$from %in% selTables | .data$to %in% selTables
-        ) %>%
+        ) |>
         dplyr::pull("id")
       selection$fromVN <- FALSE
       if (length(selTables) == 0) {
@@ -483,7 +483,7 @@ buildServer <- function(
       mn <- model$vn
       nt <- length(m)
       nfk <- nrow(mn$edges)
-      np <- lapply(m, function(x) nrow(x$fields)) %>% unlist() %>% sum()
+      np <- lapply(m, function(x) nrow(x$fields)) |> unlist() |> sum()
       shiny::tagList(
         shiny::tags$strong("Tables:"),
         nt,
@@ -508,7 +508,7 @@ buildServer <- function(
       plot(
         shiny::isolate(model$x),
         color = shiny::isolate(settings$defaultColor)
-      ) %>%
+      ) |>
         visNetwork::visEvents(release = "releaseVn")
     })
 
@@ -518,11 +518,11 @@ buildServer <- function(
     })
     shiny::observe({
       selection$release
-      visNetwork::visNetworkProxy("modelNet") %>%
+      visNetwork::visNetworkProxy("modelNet") |>
         visNetwork::visGetSelectedNodes()
-      visNetwork::visNetworkProxy("modelNet") %>%
+      visNetwork::visNetworkProxy("modelNet") |>
         visNetwork::visGetSelectedEdges()
-      visNetwork::visNetworkProxy("modelNet") %>%
+      visNetwork::visNetworkProxy("modelNet") |>
         visNetwork::visGetNodes()
     })
 
@@ -533,7 +533,7 @@ buildServer <- function(
       selTables <- intersect(
         modelNet_selectedNodes(),
         names(model$x)
-      ) %>%
+      ) |>
         sort()
       selection$fromVN <- TRUE
       if (length(selTables) == 0) {
@@ -550,7 +550,7 @@ buildServer <- function(
       selFK <- intersect(
         modelNet_selectedEdges(),
         model$vn$edges$id
-      ) %>%
+      ) |>
         sort()
       selection$fromVN <- TRUE
       if (length(selFK) == 0) {
@@ -561,7 +561,7 @@ buildServer <- function(
     })
 
     shiny::observeEvent(input$fitNet, {
-      visNetwork::visNetworkProxy("modelNet") %>% visNetwork::visFit()
+      visNetwork::visNetworkProxy("modelNet") |> visNetwork::visFit()
     })
 
     #########################################################################@
@@ -681,7 +681,7 @@ buildServer <- function(
         fi$name,
         fiext,
         fiext + attr(fiext, "match.length") - 1
-      ) %>%
+      ) |>
         tolower()
       mi <- NULL
       if (fiext %in% c(".sql", ".sql.gz")) {
@@ -841,7 +841,7 @@ buildServer <- function(
         m <- add_table(m, newTable = tn)
         pr <- stats::rbeta(1, 9, 1)
         pa <- stats::runif(1, 0, 2 * pi)
-        m <- m %>%
+        m <- m |>
           update_table_display(
             tn,
             px = xs * pr * cos(pa),
@@ -887,7 +887,7 @@ buildServer <- function(
           shiny::column(
             4,
             class = "rightBox",
-            shiny::actionButton("renameTable", "Rename") %>%
+            shiny::actionButton("renameTable", "Rename") |>
               shiny::div(title = "Rename the table")
           )
         ),
@@ -989,7 +989,7 @@ buildServer <- function(
             label = NULL,
             icon = shiny::icon("check", "fa-1x", verify_fa = FALSE),
             class = "disabled"
-          ) %>%
+          ) |>
             shiny::div(title = "Update table comment", class = "iblock"),
           class = "rightBox"
         )
@@ -1040,7 +1040,7 @@ buildServer <- function(
         xor(is.na(nc), is.na(cc)) ||
           (!is.na(nc) && !is.na(cc) && nc != cc)
       ) {
-        model$new <- m %>%
+        model$new <- m |>
           update_table_display(
             tableName = selTable,
             comment = nc
@@ -1074,7 +1074,7 @@ buildServer <- function(
                     verify_fa = FALSE
                   ),
                   class = "shrunkenButton"
-                ) %>%
+                ) |>
                   shiny::div(
                     title = "Add a new field",
                     class = "iblock"
@@ -1088,7 +1088,7 @@ buildServer <- function(
                     verify_fa = FALSE
                   ),
                   class = "shrunkenButton"
-                ) %>%
+                ) |>
                   shiny::div(
                     title = "Select all fields",
                     class = "iblock"
@@ -1111,8 +1111,8 @@ buildServer <- function(
       mt <- shiny::isolate(model$x[[selt]])
       # shiny::req(mt)
       # selTable <- mt$tableName
-      shiny::isolate(model$fieldTable) %>%
-        dplyr::select(-"comment") %>%
+      shiny::isolate(model$fieldTable) |>
+        dplyr::select(-"comment") |>
         DT::datatable(
           rownames = FALSE,
           filter = "top",
@@ -1139,7 +1139,7 @@ buildServer <- function(
     shiny::observe({
       DT::replaceData(
         proxyFieldTable,
-        data = model$fieldTable %>% dplyr::select(-"comment"),
+        data = model$fieldTable |> dplyr::select(-"comment"),
         clearSelection = "none",
         resetPaging = FALSE,
         rownames = FALSE
@@ -1178,7 +1178,7 @@ buildServer <- function(
             verify_fa = FALSE
           ),
           class = "shrunkenButton"
-        ) %>%
+        ) |>
           shiny::div(
             title = "Paste fields (Ctrl+v)",
             class = "iblock"
@@ -1224,7 +1224,7 @@ buildServer <- function(
               verify_fa = FALSE
             ),
             class = "shrunkenButton"
-          ) %>%
+          ) |>
             shiny::div(
               title = "Copy fields (Ctrl+c)",
               class = "iblock"
@@ -1239,7 +1239,7 @@ buildServer <- function(
             verify_fa = FALSE
           ),
           class = "shrunkenButton"
-        ) %>%
+        ) |>
           shiny::div(
             title = "Move up",
             class = "iblock"
@@ -1253,7 +1253,7 @@ buildServer <- function(
             verify_fa = FALSE
           ),
           class = "shrunkenButton"
-        ) %>%
+        ) |>
           shiny::div(
             title = "Move down",
             class = "iblock"
@@ -1266,7 +1266,7 @@ buildServer <- function(
             label = "",
             icon = shiny::icon("edit", "fa-1x", verify_fa = FALSE),
             class = "shrunkenButton"
-          ) %>%
+          ) |>
             shiny::div(
               title = "Edit field properties",
               class = "iblock"
@@ -1280,7 +1280,7 @@ buildServer <- function(
             label = "",
             icon = shiny::icon("minus-square", "fa-1x", verify_fa = FALSE),
             class = "shrunkenButton"
-          ) %>%
+          ) |>
             shiny::div(title = "Remove field", class = "iblock")
         },
         class = "iblock"
@@ -1324,7 +1324,7 @@ buildServer <- function(
       fn <- mt$fields$name[seli]
       for (i in 1:length(fn)) {
         m <- try(
-          m %>%
+          m |>
             remove_field(
               tableName = selTable,
               fieldName = fn[i]
@@ -1365,7 +1365,7 @@ buildServer <- function(
       o <- rep(NA, length(alli))
       o[seli - 1] <- seli
       o[which(is.na(o))] <- setdiff(alli, seli)
-      m <- m %>%
+      m <- m |>
         order_fields(
           tableName = selTable,
           order = o
@@ -1388,7 +1388,7 @@ buildServer <- function(
       o <- rep(NA, length(alli))
       o[seli + 1] <- seli
       o[which(is.na(o))] <- setdiff(alli, seli)
-      m <- m %>%
+      m <- m |>
         order_fields(
           tableName = selTable,
           order = o
@@ -1492,7 +1492,7 @@ buildServer <- function(
           nfn != "" &&
           !nfn %in% fields$name
       )
-      nm <- shiny::isolate(model$x) %>%
+      nm <- shiny::isolate(model$x) |>
         add_field(
           tableName = selTable,
           name = nfn,
@@ -1648,7 +1648,7 @@ buildServer <- function(
             !nfn %in% fields$name[-seli]
         )
         if (nfn != fields$name[seli]) {
-          nm <- nm %>%
+          nm <- nm |>
             rename_field(
               tableName = selTable,
               current = fields$name[seli],
@@ -1656,7 +1656,7 @@ buildServer <- function(
             )
         }
         nm <- try(
-          nm %>%
+          nm |>
             update_field(
               tableName = selTable,
               fieldName = nfn,
@@ -1674,7 +1674,7 @@ buildServer <- function(
             mtype <- NULL
           }
           nm <- try(
-            nm %>%
+            nm |>
               update_field(
                 tableName = selTable,
                 fieldName = fields$name[i],
@@ -1743,7 +1743,7 @@ buildServer <- function(
             label = NULL,
             icon = shiny::icon("check", "fa-1x", verify_fa = FALSE),
             class = "disabled"
-          ) %>%
+          ) |>
             shiny::div(
               title = "Update table primary key",
               class = "iblock"
@@ -1792,7 +1792,7 @@ buildServer <- function(
       m <- shiny::isolate(model$x)
       cpk <- mt$primaryKey
       if (length(cpk) != length(npk) || any(sort(cpk) != sort(npk))) {
-        model$new <- m %>%
+        model$new <- m |>
           set_primary_key(tableName = selTable, fieldNames = npk)
         sendWarning(paste(
           "Some indexes, uniqueness and mandatory constraints",
@@ -1821,7 +1821,7 @@ buildServer <- function(
               label = "",
               icon = shiny::icon("plus-square", "fa-1x", verify_fa = FALSE),
               class = "shrunkenButton"
-            ) %>%
+            ) |>
               shiny::div(title = "Add an index", class = "iblock"),
             class = "rightBox"
           )
@@ -1834,7 +1834,7 @@ buildServer <- function(
     output$indexTable <- DT::renderDT({
       selt <- selection$tables
       shiny::req(length(selt) == 1)
-      shiny::isolate(model$indexTable) %>%
+      shiny::isolate(model$indexTable) |>
         DT::datatable(
           rownames = TRUE,
           filter = "top",
@@ -1855,7 +1855,7 @@ buildServer <- function(
       shiny::req(mt)
       selTable <- mt$tableName
       if (length(mt$indexes) > 0) {
-        indexTable <- mt$indexes %>%
+        indexTable <- mt$indexes |>
           lapply(function(x) {
             dplyr::tibble(
               Fields = sprintf("[%s]", paste(x$fields, collapse = "], [")),
@@ -1898,7 +1898,7 @@ buildServer <- function(
             verify_fa = FALSE
           ),
           class = "shrunkenButton"
-        ) %>%
+        ) |>
           shiny::div(
             title = "Move up",
             class = "iblock"
@@ -1912,7 +1912,7 @@ buildServer <- function(
             verify_fa = FALSE
           ),
           class = "shrunkenButton"
-        ) %>%
+        ) |>
           shiny::div(
             title = "Move down",
             class = "iblock"
@@ -1923,7 +1923,7 @@ buildServer <- function(
             label = "",
             icon = shiny::icon("edit", "fa-1x", verify_fa = FALSE),
             class = "shrunkenButton"
-          ) %>%
+          ) |>
             shiny::div(
               title = "Update index properties",
               class = "iblock"
@@ -1935,7 +1935,7 @@ buildServer <- function(
             label = "",
             icon = shiny::icon("minus-square", "fa-1x", verify_fa = FALSE),
             class = "shrunkenButton"
-          ) %>%
+          ) |>
             shiny::div(
               title = "Remove index",
               class = "iblock"
@@ -1959,7 +1959,7 @@ buildServer <- function(
       o <- rep(NA, length(alli))
       o[seli - 1] <- seli
       o[which(is.na(o))] <- setdiff(alli, seli)
-      m <- m %>%
+      m <- m |>
         order_indexes(
           tableName = selTable,
           order = o
@@ -1982,7 +1982,7 @@ buildServer <- function(
       o <- rep(NA, length(alli))
       o[seli + 1] <- seli
       o[which(is.na(o))] <- setdiff(alli, seli)
-      m <- m %>%
+      m <- m |>
         order_indexes(
           tableName = selTable,
           order = o
@@ -2021,7 +2021,7 @@ buildServer <- function(
       shiny::req(length(mt$indexes) > 0)
       m <- shiny::isolate(model$x)
       if (mt$indexes[[seli]]$unique != ui) {
-        m <- m %>%
+        m <- m |>
           set_unique_index(
             tableName = selTable,
             fieldNames = mt$indexes[[seli]]$fields,
@@ -2048,7 +2048,7 @@ buildServer <- function(
       selTable <- mt$tableName
       shiny::req(length(mt$indexes) > 0)
       m <- shiny::isolate(model$x)
-      nm <- m %>%
+      nm <- m |>
         remove_index(
           tableName = selTable,
           fieldNames = mt$indexes[[seli]]$fields
@@ -2112,7 +2112,7 @@ buildServer <- function(
       shiny::req(mt)
       selTable <- mt$tableName
       shiny::req(length(input$newIndexFields) > 0)
-      nm <- shiny::isolate(model$x) %>%
+      nm <- shiny::isolate(model$x) |>
         add_index(
           tableName = selTable,
           fieldNames = input$newIndexFields,
@@ -2142,7 +2142,7 @@ buildServer <- function(
         icon = shiny::icon("plus", "fa-2x", verify_fa = FALSE),
         # icon=shiny::icon("external-link-alt", "fa-2x", verify_fa=FALSE),
         class = "shrunkenButton"
-      ) %>%
+      ) |>
         shiny::div(
           title = "Add a foreign key"
         )
@@ -2157,7 +2157,7 @@ buildServer <- function(
           'keys'
         )),
         class = "shrunkenButton"
-      ) %>%
+      ) |>
         shiny::div(
           title = "Edit cardinalities of the selected foreign key (F2)"
         )
@@ -2172,7 +2172,7 @@ buildServer <- function(
           'keys'
         )),
         class = "shrunkenButton"
-      ) %>%
+      ) |>
         shiny::div(
           title = "Remove selected foreign keys (del)"
         )
@@ -2187,7 +2187,7 @@ buildServer <- function(
           'tables'
         )),
         class = "shrunkenButton"
-      ) %>%
+      ) |>
         shiny::div(
           title = "Remove selected tables (del)"
         )
@@ -2202,7 +2202,7 @@ buildServer <- function(
           'tables'
         )),
         class = "shrunkenButton"
-      ) %>%
+      ) |>
         shiny::div(
           title = "Duplicate selected tables"
         )
@@ -2218,9 +2218,9 @@ buildServer <- function(
       tval <- lapply(
         shiny::isolate(model$x),
         function(x) x$display$color
-      ) %>%
+      ) |>
         unlist()
-      tval <- tval[selTables] %>% unique()
+      tval <- tval[selTables] |> unique()
       if (length(tval) > 1 || is.na(tval)) {
         tval = ""
       }
@@ -2235,7 +2235,7 @@ buildServer <- function(
           shiny::isolate(settings$availableColors)
         ),
         allowTransparent = TRUE
-      ) %>%
+      ) |>
         shiny::div(
           id = "tabColPick",
           title = "Select table color"
@@ -2250,12 +2250,12 @@ buildServer <- function(
       tval <- lapply(
         m,
         function(x) x$display$color
-      ) %>%
+      ) |>
         unlist()
-      tval <- tval[selTables] %>% unique()
+      tval <- tval[selTables] |> unique()
       if (length(tval) > 1 || is.na(tval) || tval != newCol) {
         for (tn in selTables) {
-          m <- m %>%
+          m <- m |>
             update_table_display(
               tableName = tn,
               color = newCol
@@ -2409,7 +2409,7 @@ buildServer <- function(
                   "fa-2x",
                   verify_fa = FALSE
                 )
-              ) %>%
+              ) |>
                 shiny::div(title = "Change foreign key direction"),
               class = "centerBox"
             )
@@ -2587,7 +2587,7 @@ buildServer <- function(
                   "fa-1x",
                   verify_fa = FALSE
                 )
-              ) %>%
+              ) |>
                 shiny::div(title = "Add key field")
             ))
           }
@@ -2644,8 +2644,8 @@ buildServer <- function(
             list(targets = c(1), visible = TRUE, width = '50%')
           )
         )
-      ) %>%
-        DT::formatStyle(1, "text-align" = "left") %>%
+      ) |>
+        DT::formatStyle(1, "text-align" = "left") |>
         DT::formatStyle(2, "text-align" = "right")
     })
     output$rmFkField <- shiny::renderUI({
@@ -2656,7 +2656,7 @@ buildServer <- function(
           "confirmRmFkField",
           label = "",
           icon = shiny::icon("minus-square", "fa-1x", verify_fa = FALSE)
-        ) %>%
+        ) |>
           shiny::div(title = "Remove key field")
       )
     })
@@ -2674,7 +2674,7 @@ buildServer <- function(
       suppressWarnings(
         nm <- try(
           {
-            m %>%
+            m |>
               add_foreign_key(
                 fromTable = shiny::isolate(foreignKey$fromTable),
                 toTable = shiny::isolate(foreignKey$toTable),
@@ -2940,7 +2940,7 @@ buildServer <- function(
 
     shiny::observe({
       shiny::req(input$confirmUpdateFK > 0)
-      model$new <- shiny::isolate(model$x) %>%
+      model$new <- shiny::isolate(model$x) |>
         update_foreign_key(
           fromTable = shiny::isolate(foreignKey$fromTable),
           toTable = shiny::isolate(foreignKey$toTable),
@@ -2975,7 +2975,7 @@ buildServer <- function(
       if (length(fks) > 0 && all(fks != "") && all(fks %in% mne$id)) {
         for (fk in fks) {
           i <- which(mne$id == fk)
-          m <- m %>%
+          m <- m |>
             remove_foreign_key(
               fromTable = mne$from[i],
               fromFields = mne$ff[[i]],
@@ -3049,16 +3049,16 @@ buildServer <- function(
           )
           edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
           if (length(edgeToDel) > 0) {
-            visNetwork::visNetworkProxy("modelNet") %>%
+            visNetwork::visNetworkProxy("modelNet") |>
               visNetwork::visRemoveEdges(edgeToDel)
           }
           nodeToDel <- setdiff(names(dm), names(tdm))
           if (length(nodeToDel) > 0) {
-            visNetwork::visNetworkProxy("modelNet") %>%
+            visNetwork::visNetworkProxy("modelNet") |>
               visNetwork::visRemoveNodes(nodeToDel)
           }
-          visNetwork::visNetworkProxy("modelNet") %>%
-            visNetwork::visUpdateNodes(ntdm$nodes) %>%
+          visNetwork::visNetworkProxy("modelNet") |>
+            visNetwork::visUpdateNodes(ntdm$nodes) |>
             visNetwork::visUpdateEdges(ntdm$edges)
         }
       }
@@ -3081,7 +3081,7 @@ buildServer <- function(
     shiny::observe({
       selTables <- selection$tables
       shiny::req(!shiny::isolate(selection$fromVN))
-      visNetwork::visNetworkProxy("modelNet") %>%
+      visNetwork::visNetworkProxy("modelNet") |>
         visNetwork::visSelectNodes(selTables)
     })
 
@@ -3090,7 +3090,7 @@ buildServer <- function(
       selTables <- intersect(names(model$x), selection$tables)
       shiny::req(!shiny::isolate(selection$fromVN))
       if (length(selTables) == 0) {
-        visNetwork::visNetworkProxy("modelNet") %>%
+        visNetwork::visNetworkProxy("modelNet") |>
           visNetwork::visSelectEdges(selFK)
       }
     })
@@ -3133,16 +3133,16 @@ buildServer <- function(
       ntdm <- modelToVn(tdm, color = shiny::isolate(settings$defaultColor))
       edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
       if (length(edgeToDel) > 0) {
-        visNetwork::visNetworkProxy("modelNet") %>%
+        visNetwork::visNetworkProxy("modelNet") |>
           visNetwork::visRemoveEdges(edgeToDel)
       }
       nodeToDel <- setdiff(names(dm), names(tdm))
       if (length(nodeToDel) > 0) {
-        visNetwork::visNetworkProxy("modelNet") %>%
+        visNetwork::visNetworkProxy("modelNet") |>
           visNetwork::visRemoveNodes(nodeToDel)
       }
-      visNetwork::visNetworkProxy("modelNet") %>%
-        visNetwork::visUpdateNodes(ntdm$nodes) %>%
+      visNetwork::visNetworkProxy("modelNet") |>
+        visNetwork::visUpdateNodes(ntdm$nodes) |>
         visNetwork::visUpdateEdges(ntdm$edges)
       model$x <- tdm
       model$current <- cm
@@ -3169,16 +3169,16 @@ buildServer <- function(
       ntdm <- modelToVn(tdm, color = shiny::isolate(settings$defaultColor))
       edgeToDel <- setdiff(ndm$edges$id, ntdm$edges$id)
       if (length(edgeToDel) > 0) {
-        visNetwork::visNetworkProxy("modelNet") %>%
+        visNetwork::visNetworkProxy("modelNet") |>
           visNetwork::visRemoveEdges(edgeToDel)
       }
       nodeToDel <- setdiff(names(dm), names(tdm))
       if (length(nodeToDel) > 0) {
-        visNetwork::visNetworkProxy("modelNet") %>%
+        visNetwork::visNetworkProxy("modelNet") |>
           visNetwork::visRemoveNodes(nodeToDel)
       }
-      visNetwork::visNetworkProxy("modelNet") %>%
-        visNetwork::visUpdateNodes(ntdm$nodes) %>%
+      visNetwork::visNetworkProxy("modelNet") |>
+        visNetwork::visUpdateNodes(ntdm$nodes) |>
         visNetwork::visUpdateEdges(ntdm$edges)
       model$x <- tdm
       model$current <- cm
@@ -3259,7 +3259,7 @@ buildServer <- function(
       content = function(file) {
         m <- shiny::isolate(model$x)
         shiny::req(m)
-        plot(m, color = shiny::isolate(settings$defaultColor)) %>%
+        plot(m, color = shiny::isolate(settings$defaultColor)) |>
           visNetwork::visSave(file)
       }
     )

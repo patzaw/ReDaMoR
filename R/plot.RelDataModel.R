@@ -19,11 +19,11 @@ plot.RelDataModel <- function(
 ) {
   toPlot <- modelToVn(x, ...)
 
-  visNetwork::visNetwork(nodes = toPlot$nodes, edges = toPlot$edges) %>%
+  visNetwork::visNetwork(nodes = toPlot$nodes, edges = toPlot$edges) |>
     visNetwork::visNodes(
       labelHighlightBold = FALSE,
       borderWidth = 2
-    ) %>%
+    ) |>
     visNetwork::visEdges(
       # color=list(
       #    color=border,
@@ -31,8 +31,8 @@ plot.RelDataModel <- function(
       # ),
       width = 2,
       selectionWidth = 2
-    ) %>%
-    visNetwork::visInteraction(multiselect = TRUE) %>%
+    ) |>
+    visNetwork::visInteraction(multiselect = TRUE) |>
     ################################################@
     ## The code below is useless when edge smooth is
     ## define by edge
@@ -45,9 +45,9 @@ plot.RelDataModel <- function(
     #       damping=1,
     #       avoidOverlap=1
     #    )
-    # ) %>%
+    # ) |>
     ################################################@
-    visNetwork::visLayout(randomSeed = 2) %>%
+    visNetwork::visLayout(randomSeed = 2) |>
     visNetwork::visPhysics(enabled = FALSE)
 }
 
@@ -79,14 +79,14 @@ modelToVn <- function(
         ind <- NULL
         # uq <- NULL
         if (!is.null(it) && any(it$index > 0)) {
-          it <- it %>%
-            dplyr::filter(.data$index != 0) %>%
-            dplyr::group_by(.data$index) %>%
+          it <- it |>
+            dplyr::filter(.data$index != 0) |>
+            dplyr::group_by(.data$index) |>
             dplyr::mutate(
               n = dplyr::n(),
               nn = 1:dplyr::n()
-            ) %>%
-            dplyr::ungroup() %>%
+            ) |>
+            dplyr::ungroup() |>
             dplyr::mutate(
               index = ifelse(
                 .data$n > 1,
@@ -95,9 +95,9 @@ modelToVn <- function(
               )
             )
           ind <- unique(it$field)
-          uind <- it %>%
-            dplyr::filter(.data$uniqueIndex) %>%
-            dplyr::pull("field") %>%
+          uind <- it |>
+            dplyr::filter(.data$uniqueIndex) |>
+            dplyr::pull("field") |>
             unique()
           # uq <- unique(it$field[which(it$unique)])
         }
@@ -209,7 +209,7 @@ modelToVn <- function(
     )
   )
   if (!is.null(nodes) && nrow(nodes) > 0) {
-    nodes <- nodes %>%
+    nodes <- nodes |>
       dplyr::mutate(
         color.border = !!border,
         color.highlight.border = !!highlightBorder,
@@ -218,7 +218,7 @@ modelToVn <- function(
           !!color,
           .data$color.background
         )
-      ) %>%
+      ) |>
       dplyr::mutate(
         color.highlight.background = .data$color.background
       )
@@ -241,7 +241,7 @@ modelToVn <- function(
             fk,
             function(k) {
               to <- k$refTable
-              kt <- k$key %>% dplyr::arrange(.data$from, .data$to)
+              kt <- k$key |> dplyr::arrange(.data$from, .data$to)
               kcard <- ifelse(k$cardinality == -1, "n", k$cardinality)
               fcard <- paste(kcard["fmin"], kcard["fmax"], sep = "..")
               tcard <- paste(kcard["tmin"], kcard["tmax"], sep = "..")
@@ -319,15 +319,18 @@ modelToVn <- function(
     edges$selfReferenceSize <- 30
     edges <- dplyr::bind_cols(
       edges,
-      edges %>%
-        dplyr::select("from", "to") %>%
-        apply(1, function(x) c(sort(x), paste(sort(x), collapse = "<->"))) %>%
-        t() %>%
-        magrittr::set_colnames(c("uef", "uet", "ue")) %>%
+      edges |>
+        dplyr::select("from", "to") |>
+        apply(1, function(x) c(sort(x), paste(sort(x), collapse = "<->"))) |>
+        t() |>
+        (function(x) {
+          colnames(x) <- c("uef", "uet", "ue")
+          x
+        })() |>
         dplyr::as_tibble()
     )
-    edges <- edges %>%
-      dplyr::group_by(.data$ue) %>%
+    edges <- edges |>
+      dplyr::group_by(.data$ue) |>
       dplyr::mutate(
         smooth.roundness = {
           mr <- min(1, 0.2 * (length(.data$ue) %/% 2))
@@ -336,15 +339,15 @@ modelToVn <- function(
         selfReferenceSize = {
           seq(30, 50, length.out = length(.data$ue))
         }
-      ) %>%
-      dplyr::ungroup() %>%
+      ) |>
+      dplyr::ungroup() |>
       dplyr::mutate(
         smooth.roundness = ifelse(
           .data$uef == .data$from,
           .data$smooth.roundness,
           -.data$smooth.roundness
         )
-      ) %>%
+      ) |>
       dplyr::mutate(
         color.color = border,
         color.highlight = highlightBorder

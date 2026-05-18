@@ -104,8 +104,6 @@ The following R packages available on CRAN are required:
 
 - [dplyr](https://CRAN.R-project.org/package=dplyr): A Grammar of Data
   Manipulation
-- [magrittr](https://CRAN.R-project.org/package=magrittr): A
-  Forward-Pipe Operator for R
 - [visNetwork](https://CRAN.R-project.org/package=visNetwork): Network
   Visualization using ‘vis.js’ Library
 - [readr](https://CRAN.R-project.org/package=readr): Read Rectangular

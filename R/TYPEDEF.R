@@ -60,12 +60,12 @@ TYPETABLE <- list(
     "^SET([()].*[)])?$",
     "SET",
     "character"
-  ) %>%
+  ) |>
     matrix(
       ncol = 3,
       byrow = TRUE,
       dimnames = list(NULL, c("match", "inst", "R"))
-    ) %>%
+    ) |>
     dplyr::as_tibble(),
   ClickHouse = c(
     "Int32",
@@ -89,12 +89,12 @@ TYPETABLE <- list(
     "Array(String)",
     "Array(String)",
     "base64"
-  ) %>%
+  ) |>
     matrix(
       ncol = 3,
       byrow = TRUE,
       dimnames = list(NULL, c("match", "inst", "R"))
-    ) %>%
+    ) |>
     dplyr::as_tibble()
 )
 
@@ -135,7 +135,7 @@ list_type_ref <- function() {
 norm_type_ref <- function(x, typeRef, ignore.case = TRUE) {
   stopifnot(is.character(x))
   typeRef <- match.arg(typeRef, list_type_ref())
-  ntypes <- unique(TYPETABLE[[typeRef]] %>% dplyr::pull("match"))
+  ntypes <- unique(TYPETABLE[[typeRef]] |> dplyr::pull("match"))
   toRet <- x
   for (nt in ntypes) {
     toRet <- sub(
@@ -174,20 +174,20 @@ conv_type_ref <- function(x, from = NULL, to = NULL, ignore.case = TRUE) {
     r <- match.arg(from, list_type_ref())
     ct <- TYPETABLE[[r]]
     x <- norm_type_ref(x, from, ignore.case = ignore.case)
-    notSupported <- setdiff(x, ct %>% dplyr::pull("match"))
+    notSupported <- setdiff(x, ct |> dplyr::pull("match"))
     if (length(notSupported) > 0) {
       stop(paste(
         sprintf("The following types are not supported %s types:", r),
         paste(notSupported, collapse = ", ")
       ))
     }
-    toRet <- ct %>% dplyr::slice(match(x, .data$match)) %>% dplyr::pull("R")
+    toRet <- ct |> dplyr::slice(match(x, .data$match)) |> dplyr::pull("R")
   }
   if (!is.null(to)) {
     r <- match.arg(to, list_type_ref())
     ct <- TYPETABLE[[r]]
     check_types(x)
-    toRet <- ct %>% dplyr::slice(match(x, .data$R)) %>% dplyr::pull("inst")
+    toRet <- ct |> dplyr::slice(match(x, .data$R)) |> dplyr::pull("inst")
   }
   return(toRet)
 }

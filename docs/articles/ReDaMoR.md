@@ -62,8 +62,6 @@ The following R packages available on CRAN are required:
 
 - [dplyr](https://CRAN.R-project.org/package=dplyr): A Grammar of Data
   Manipulation
-- [magrittr](https://CRAN.R-project.org/package=magrittr): A
-  Forward-Pipe Operator for R
 - [visNetwork](https://CRAN.R-project.org/package=visNetwork): Network
   Visualization using ‘vis.js’ Library
 - [readr](https://CRAN.R-project.org/package=readr): Read Rectangular
@@ -355,7 +353,7 @@ format_confrontation_report_md(
   confrontation_report,
   title="Example: Confrontation with original data",
   level=1, numbered=FALSE
-) %>%
+) |>
   cat()
 ```
 
@@ -391,14 +389,14 @@ other.
 
 ``` r
 
-hpo_tables$HPO_diseases <- hpo_tables$HPO_diseases %>% slice(1:100)
+hpo_tables$HPO_diseases <- hpo_tables$HPO_diseases |> slice(1:100)
 hpo_tables$HPO_synonyms[1:10, "synonym"] <- NA
-hpo_tables$HPO_hp <- hpo_tables$HPO_hp %>% mutate(level=as.character(level))
-confront_data(hpo_model, hpo_tables, verbose=FALSE) %>%
+hpo_tables$HPO_hp <- hpo_tables$HPO_hp |> mutate(level=as.character(level))
+confront_data(hpo_model, hpo_tables, verbose=FALSE) |>
   format_confrontation_report_md(
     title="Example: Confrontation with altered data",
     level=1, numbered=FALSE
-  ) %>%
+  ) |>
     cat()
 ```
 
@@ -469,11 +467,11 @@ new_model <- df_to_model(
    list=names(hpo_tables), envir=as.environment(hpo_tables)
 )
 ## Guess constraints and auto layout ----
-new_model <- guess_constraints(new_model, data = hpo_tables) %>%
+new_model <- guess_constraints(new_model, data = hpo_tables) |>
    auto_layout(lengthMultiplier=250)
 
 ## Plot the model ----
-new_model %>%
+new_model |>
    plot()
 ```
 

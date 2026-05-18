@@ -49,7 +49,7 @@ df_to_model <- function(
   if (length(names) == 0) {
     names <- character()
   }
-  list <- c(list, names) %>% unique()
+  list <- c(list, names) |> unique()
   ## Get and check object values ----
   values <- lapply(list, get, envir = envir, mode = "any", inherits = TRUE)
   names(values) <- list
@@ -57,7 +57,7 @@ df_to_model <- function(
     values,
     inherits,
     c("data.frame", "matrix", "Matrix")
-  ) %>%
+  ) |>
     unlist()
   if (any(!isdf)) {
     stop(
@@ -93,7 +93,7 @@ df_to_model <- function(
     } else {
       types <- character()
       for (cn in colnames(df)) {
-        ct <- df %>% dplyr::pull(!!cn) %>% class() %>% `[`(1)
+        ct <- (df |> dplyr::pull(!!cn) |> class())[1]
         if (!ct %in% SUPPTYPES) {
           stop(
             sprintf(
@@ -159,7 +159,7 @@ guess_constraints <- function(
 ) {
   dml <- unclass(x)
   if (is.null(data)) {
-    data <- lapply(names(x), get, envir = env) %>%
+    data <- lapply(names(x), get, envir = env) |>
       stats::setNames(names(x))
   }
   stopifnot(all(names(x) %in% names(data)))
@@ -173,7 +173,7 @@ guess_constraints <- function(
         nullable <- lapply(
           d,
           function(x) any(is.na(x))
-        ) %>%
+        ) |>
           unlist()
         dml[[n]]$fields$nullable <- nullable
       }
@@ -181,7 +181,7 @@ guess_constraints <- function(
         uni <- lapply(
           d,
           function(x) !is.numeric(x) && !any(duplicated(x))
-        ) %>%
+        ) |>
           unlist()
         dml[[n]]$fields$unique <- uni
       }
@@ -198,23 +198,23 @@ guess_constraints <- function(
   if ("foreign keys" %in% constraints) {
     dbm <- toDBM(dm)
     pfk <- dplyr::inner_join(
-      dbm$fields %>%
-        dplyr::filter(!.data$nullable & .data$unique) %>%
+      dbm$fields |>
+        dplyr::filter(!.data$nullable & .data$unique) |>
         select(-"nullable", -"unique", -"comment", -"fieldOrder"),
-      dbm$fields %>%
+      dbm$fields |>
         select(-"comment", -"fieldOrder"),
       by = c("name", "type"),
       suffix = c(".p", ".f"),
       relationship = "many-to-many"
-    ) %>%
+    ) |>
       dplyr::filter(.data$table.p != .data$table.f)
     if (nrow(pfk) > 0) {
-      drows <- lapply(data, nrow) %>% unlist()
-      pfk <- pfk %>%
+      drows <- lapply(data, nrow) |> unlist()
+      pfk <- pfk |>
         dplyr::mutate(
           nrow.p = drows[.data$table.p],
           nrow.f = drows[.data$table.f]
-        ) %>%
+        ) |>
         dplyr::filter(
           !.data$unique | .data$nrow.f <= .data$nrow.p
         )

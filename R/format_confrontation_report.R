@@ -168,7 +168,7 @@ format_confrontation_report <- function(
               cr$model[[tn]]$foreignKey[[i]]$key$from,
               cr$model[[tn]]$foreignKey[[i]]$key$to,
               sep = "->"
-            ) %>%
+            ) |>
               paste(collapse = " + ")
             fk <- paste0(
               cr$model[[tn]]$foreignKey[[i]]$refTable,
@@ -444,7 +444,7 @@ format_confrontation_report_md <- function(
               cr$model[[tn]]$foreignKey[[i]]$key$from,
               cr$model[[tn]]$foreignKey[[i]]$key$to,
               sep = "->"
-            ) %>%
+            ) |>
               paste(collapse = " + ")
             fk <- paste0(
               cr$model[[tn]]$foreignKey[[i]]$refTable,

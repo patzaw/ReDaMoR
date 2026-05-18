@@ -13,6 +13,6 @@ confrontation_report <- confront_data(
   returnData = TRUE
 )
 ## Show the report in console ----
-format_confrontation_report(confrontation_report) %>% cat()
+format_confrontation_report(confrontation_report) |> cat()
 ## Format the report using markdown ----
-format_confrontation_report_md(confrontation_report) %>% cat()
+format_confrontation_report_md(confrontation_report) |> cat()
