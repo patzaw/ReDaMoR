@@ -98,7 +98,7 @@ difficult to remember what these tables represent and how they are
 connected. Fortunately, because they are tables, a set of data frames
 can be directly documented using a relational data model.</p>
 <p>The <a href="https://github.com/bergant/datamodelr" class="external-link">datamodelr</a> R
-package provides tools to document relational data. The generate data
+package provides tools to document relational data. The generated data
 models are leveraged by the <a href="https://github.com/cynkra/dm" class="external-link">dm</a> R package to interact more
 easily with relational data.</p>
 <p>Here we present the ReDaMoR package which also allows the
@@ -178,7 +178,10 @@ Render Markdown with ‘commonmark’</li>
 Safely Access the RStudio API</li>
 <li>
 <a href="https://CRAN.R-project.org/package=crayon" class="external-link">crayon</a>:
-Colored Terminal Output
+Colored Terminal Output</li>
+<li>
+<a href="https://CRAN.R-project.org/package=Matrix" class="external-link">Matrix</a>:
+Sparse and Dense Matrix Classes and Methods
 <!-- - utils: [R](https://www.r-project.org/) core package -->
 <!-- - graphics: [R](https://www.r-project.org/) core package -->
 <!-- - stats: [R](https://www.r-project.org/) core package -->
@@ -371,14 +374,14 @@ menu. This help tour is contextual: its content depends on the state of
 the app.</p>
 </div>
 <div class="section level4">
-<h4 id="keyboard-shortcuts">keyboard shortcuts<a class="anchor" aria-label="anchor" href="#keyboard-shortcuts"></a>
+<h4 id="keyboard-shortcuts">Keyboard shortcuts<a class="anchor" aria-label="anchor" href="#keyboard-shortcuts"></a>
 </h4>
 <!------------------->
 <p>Some <em>common</em> keyboard shortcuts are implemented:</p>
 <ul>
 <li>
-<strong>Ctrl+Z</strong> / <strong>Ctrl+Shift+Z </strong> for undo
-and redo</li>
+<strong>Ctrl+Z</strong> / <strong>Ctrl+Shift+Z</strong> for undo and
+redo</li>
 <li>
 <strong>Enter</strong> for validating a new name</li>
 <li>
@@ -458,7 +461,7 @@ indexes</strong>.</li>
 </li>
 <li>
 <strong>Foreign keys</strong> are tested according to their
-cardinality: all values in on table should be available in the other
+cardinality: all values in one table should be available in the other
 table if the corresponding minimum cardinality is greater than 0.</li>
 </ul>
 <p>A <strong>subset</strong> (500 phenotypes among more than 14 000 in
@@ -655,7 +658,9 @@ function <code><a href="../reference/guess_constraints.html">guess_constraints()
 non-nullable fields, along with potential foreign keys, based on the
 provided or existing tables. The guessed constraints should be carefully
 reviewed, especially the foreign keys. This can be easily done with
-<code><a href="../reference/model_relational_data.html">model_relational_data()</a></code>.</p>
+<code><a href="../reference/model_relational_data.html">model_relational_data()</a></code>. The <code><a href="../reference/auto_layout.html">auto_layout()</a></code>
+function used below requires the suggested package <a href="https://CRAN.R-project.org/package=igraph" class="external-link">igraph</a>: Network
+Analysis and Visualization.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hpo_tables</span> <span class="op">&lt;-</span> <span class="va">confrontation_report</span><span class="op">$</span><span class="va">data</span></span>
 <span></span>

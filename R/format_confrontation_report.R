@@ -49,7 +49,7 @@ format_confrontation_report <- function(
       toRet,
       crayon::bold('Missing tables'),
       'The following tables are missing:',
-      paste("   -", cr$missingTable),
+      paste("   -", cr$missingTables),
       ''
     )
   }
@@ -165,21 +165,18 @@ format_confrontation_report <- function(
           1:length(tcr$foreignKey),
           function(i) {
             fk <- paste(
-              cr$model[[tn]]$foreignKey[[i]]$key$from,
-              cr$model[[tn]]$foreignKey[[i]]$key$to,
+              cr$model[[tn]]$foreignKeys[[i]]$key$from,
+              cr$model[[tn]]$foreignKeys[[i]]$key$to,
               sep = "->"
             ) |>
               paste(collapse = " + ")
             fk <- paste0(
-              cr$model[[tn]]$foreignKey[[i]]$refTable,
+              cr$model[[tn]]$foreignKeys[[i]]$refTable,
               ' [',
               fk,
               ']'
             )
             s <- tcr$foreignKey[[i]]$success
-            if (is.null(s)) {
-              print(tcr)
-            }
             m <- tcr$foreignKey[[i]]$message
             if (!s || (!is.null(m) && !is.na(m) && m != "")) {
               return(paste0(
@@ -313,7 +310,7 @@ format_confrontation_report_md <- function(
       '',
       'The following tables are missing:',
       '',
-      paste("-", cr$missingTable),
+      paste("-", cr$missingTables),
       ''
     )
   }
@@ -441,21 +438,18 @@ format_confrontation_report_md <- function(
           1:length(tcr$foreignKey),
           function(i) {
             fk <- paste(
-              cr$model[[tn]]$foreignKey[[i]]$key$from,
-              cr$model[[tn]]$foreignKey[[i]]$key$to,
+              cr$model[[tn]]$foreignKeys[[i]]$key$from,
+              cr$model[[tn]]$foreignKeys[[i]]$key$to,
               sep = "->"
             ) |>
               paste(collapse = " + ")
             fk <- paste0(
-              cr$model[[tn]]$foreignKey[[i]]$refTable,
+              cr$model[[tn]]$foreignKeys[[i]]$refTable,
               ' [',
               fk,
               ']'
             )
             s <- tcr$foreignKey[[i]]$success
-            if (is.null(s)) {
-              print(tcr)
-            }
             m <- tcr$foreignKey[[i]]$message
             if (!s || (!is.null(m) && !is.na(m) && m != "")) {
               return(paste0(

@@ -20,8 +20,8 @@ connected. Fortunately, because they are tables, a set of data frames
 can be directly documented using a relational data model.
 
 The [datamodelr](https://github.com/bergant/datamodelr) R package
-provides tools to document relational data. The generate data models are
-leveraged by the [dm](https://github.com/cynkra/dm) R package to
+provides tools to document relational data. The generated data models
+are leveraged by the [dm](https://github.com/cynkra/dm) R package to
 interact more easily with relational data.
 
 Here we present the ReDaMoR package which also allows the manipulation
@@ -84,6 +84,8 @@ The following R packages available on CRAN are required:
   Access the RStudio API
 - [crayon](https://CRAN.R-project.org/package=crayon): Colored Terminal
   Output
+- [Matrix](https://CRAN.R-project.org/package=Matrix): Sparse and Dense
+  Matrix Classes and Methods
 
 ### From github
 
@@ -235,7 +237,7 @@ An help tour can be launched when clicking on the ![help
 icon](img/bhelp.png) button in the main menu. This help tour is
 contextual: its content depends on the state of the app.
 
-#### keyboard shortcuts
+#### Keyboard shortcuts
 
 Some *common* keyboard shortcuts are implemented:
 
@@ -301,7 +303,7 @@ function. During this process the following checks are performed:
   - There is no duplicated value in **unique** columns.
   - There is no duplicated value in **unique indexes**.
 - **Foreign keys** are tested according to their cardinality: all values
-  in on table should be available in the other table if the
+  in one table should be available in the other table if the
   corresponding minimum cardinality is greater than 0.
 
 A **subset** (500 phenotypes among more than 14 000 in the original
@@ -457,6 +459,11 @@ keys, based on the provided or existing tables. The guessed constraints
 should be carefully reviewed, especially the foreign keys. This can be
 easily done with
 [`model_relational_data()`](https://patzaw.github.io/ReDaMoR/reference/model_relational_data.md).
+The
+[`auto_layout()`](https://patzaw.github.io/ReDaMoR/reference/auto_layout.md)
+function used below requires the suggested package
+[igraph](https://CRAN.R-project.org/package=igraph): Network Analysis
+and Visualization.
 
 ``` r
 

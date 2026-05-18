@@ -40,13 +40,13 @@ RelDataModel <- function(l, checkFK = TRUE, createFKIndex = FALSE) {
   ## Correct constraints ----
   for (ft in names(toRet)) {
     x <- toRet[[ft]]
-    if (length(x$foreignKey) > 0) {
-      for (i in 1:length(x$foreignKey)) {
-        fk <- x$foreignKey[[i]]
+    if (length(x$foreignKeys) > 0) {
+      for (i in 1:length(x$foreignKeys)) {
+        fk <- x$foreignKeys[[i]]
         if (
           fk$cardinality["fmin"] > 0 &&
             nrow(fk$key) == 1 &&
-            fk$refTable %in% names(fk)
+            fk$refTable %in% names(toRet)
         ) {
           toRet[[fk$refTable]]$fields[
             which(toRet[[fk$refTable]]$fields$name == fk$key$from),

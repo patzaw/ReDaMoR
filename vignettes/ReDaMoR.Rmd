@@ -56,7 +56,7 @@ These tables are often related to each other by some variables.
 Depending on the diversity of the concepts, it can be difficult to remember what these tables represent and how they are connected.
 Fortunately, because they are tables, a set of data frames can be directly documented using a relational data model.
 
-The [datamodelr](https://github.com/bergant/datamodelr) R package provides tools to document relational data. The generate data models are leveraged by the [dm](https://github.com/cynkra/dm) R package to interact more easily with relational data.
+The [datamodelr](https://github.com/bergant/datamodelr) R package provides tools to document relational data. The generated data models are leveraged by the [dm](https://github.com/cynkra/dm) R package to interact more easily with relational data.
 
 Here we present the ReDaMoR package which also allows the manipulation of relational data models in R but with an approach quite different from the one implemented in datamodelr.
 It provides functions to create, import and save relational data models.
@@ -246,12 +246,12 @@ In the edition view the user can:
 An help tour can be launched when clicking on the ![help icon](img/bhelp.png){width=40px} button in the main menu.
 This help tour is contextual: its content depends on the state of the app.
   
-### keyboard shortcuts
+### Keyboard shortcuts
 <!------------------->
 
 Some *common* keyboard shortcuts are implemented:
 
-- **Ctrl+Z** / **Ctrl+Shift+Z ** for undo and redo
+- **Ctrl+Z** / **Ctrl+Shift+Z** for undo and redo
 - **Enter** for validating a new name
 - **del** for deleting tables or foreign keys
 - **F2** for renaming tables or editing foreign key cardinalities
@@ -312,7 +312,7 @@ During this process the following checks are performed:
   - Not any *NA* values are found in **non-nullable** columns.
   - There is no duplicated value in **unique** columns.
   - There is no duplicated value in **unique indexes**.
-- **Foreign keys** are tested according to their cardinality: all values in on table should be available in the other table if the corresponding minimum cardinality is greater than 0. 
+- **Foreign keys** are tested according to their cardinality: all values in one table should be available in the other table if the corresponding minimum cardinality is greater than 0. 
 
 A **subset** (500 phenotypes among more than 14&nbsp;000 in the original resource) of the [HPO](https://hpo.jax.org/)<sup>([1](#hpoRef))</sup> is provided within the package and can be directly confronted to the data model.
 The function prints a report with messages about the global success of the data model confrontation and additional failure or warning messages for relevant tables.
