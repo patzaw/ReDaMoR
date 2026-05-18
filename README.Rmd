@@ -31,9 +31,6 @@ provides functions to create, import and save relational data models. These
 functions are accessible through a graphical user interface made with
 [Shiny](https://shiny.posit.co/).
 
-A public instance of the Shiny app is available
-[here](https://pgodard.shinyapps.io/ReDaMoR).
-
 The main features of ReDaMoR are the following:
 
 -   Create data model from scratch with a graphical user interface
@@ -50,9 +47,6 @@ The main features of ReDaMoR are the following:
 The [TKCat](https://patzaw.github.io/TKCat/) package relies on ReDaMoR to
 facilitate the management of data from knowledge resources which are manipulated
 as modeled database (MDB) objects.
-
-The package can also be tested in [Rstudio
-Cloud](https://rstudio.cloud/project/1033803).
 
 ```{r, eval=FALSE}
 library(ReDaMoR)

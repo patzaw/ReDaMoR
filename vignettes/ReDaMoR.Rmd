@@ -256,19 +256,6 @@ Some *common* keyboard shortcuts are implemented:
 - **del** for deleting tables or foreign keys
 - **F2** for renaming tables or editing foreign key cardinalities
 
-<!---->
-## Public instance of the app
-<!-------------------------->
-
-A public instance of the app is available [here](https://pgodard.shinyapps.io/ReDaMoR).
-
-You can easily deploy your own instance by copying these two lines in an *app.R* file:
-
-```{r, eval=FALSE}
-library(ReDaMoR)
-model_relational_data()
-```
-  
 ## Adding foreign keys {-}
 
 In the interface, when you select one or two tables (holding down the ctrl key)
