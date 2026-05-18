@@ -51,8 +51,7 @@ Imports:
 Suggests:
    knitr,
    rmarkdown,
-   igraph,
-   base64enc
+   igraph
 License: GPL-3
 Encoding: UTF-8
 VignetteBuilder: knitr
