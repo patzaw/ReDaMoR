@@ -78,33 +78,45 @@ import(readr)
 import(rintrojs)
 import(shiny)
 import(visNetwork)
-importFrom(DT,DTOutput)
-importFrom(DT,dataTableProxy)
-importFrom(DT,datatable)
-importFrom(DT,formatStyle)
-importFrom(DT,renderDT)
-importFrom(DT,replaceData)
+importFrom(DT,
+  DTOutput,
+  dataTableProxy,
+  datatable,
+  formatStyle,
+  renderDT,
+  replaceData
+)
 importFrom(Matrix,sparseMatrix)
 importFrom(colourpicker,colourInput)
-importFrom(crayon,bgGreen)
-importFrom(crayon,bgMagenta)
-importFrom(crayon,bgRed)
-importFrom(crayon,bold)
-importFrom(crayon,green)
-importFrom(crayon,underline)
-importFrom(crayon,white)
-importFrom(crayon,yellow)
+importFrom(crayon,
+  bgGreen,
+  bgMagenta,
+  bgRed,
+  bold,
+  green,
+  underline,
+  white,
+  yellow
+)
 importFrom(graphics,plot)
-importFrom(jsonlite,fromJSON)
-importFrom(jsonlite,write_json)
+importFrom(jsonlite,
+  fromJSON,
+  write_json
+)
 importFrom(markdown,renderMarkdown)
 importFrom(rstudioapi,viewer)
-importFrom(shinyjs,disable)
-importFrom(shinyjs,enable)
-importFrom(shinyjs,useShinyjs)
-importFrom(stats,complete.cases)
-importFrom(stats,rbeta)
-importFrom(stats,runif)
-importFrom(stats,setNames)
-importFrom(utils,object.size)
-importFrom(utils,packageName)
+importFrom(shinyjs,
+  disable,
+  enable,
+  useShinyjs
+)
+importFrom(stats,
+  complete.cases,
+  rbeta,
+  runif,
+  setNames
+)
+importFrom(utils,
+  object.size,
+  packageName
+)

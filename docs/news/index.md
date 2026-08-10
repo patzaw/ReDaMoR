@@ -2,6 +2,8 @@
 
 ## Version 1.0.0
 
+CRAN release: 2026-05-19
+
 - Replaced `magrittr` pipe `%>%` with the native R pipe `|>` throughout
   the package
 - Removed dependency on the `magrittr` package
