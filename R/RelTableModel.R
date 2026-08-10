@@ -504,7 +504,7 @@ col_types <- function(x) {
           )
         }
       ),
-      .Names = x$fields$name
+      names = x$fields$name
     )
   )
 }

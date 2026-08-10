@@ -1862,7 +1862,7 @@ confront_data <- function(
                 "POSIXct" = readr::col_datetime()
               )
             ),
-            .Names = c("___ROWNAMES___", ".default")
+            names = c("___ROWNAMES___", ".default")
           )
         )
         td <- readr::read_delim(

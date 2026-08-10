@@ -767,8 +767,8 @@ buildServer <- function(
           function(n) {
             i <- which(tin$nodes$id == n$tableName)
             if (length(i) == 1) {
-              n$display$x = tin$nodes$x[i]
-              n$display$y = tin$nodes$y[i]
+              n$display$x <- tin$nodes$x[i]
+              n$display$y <- tin$nodes$y[i]
             }
             return(n)
           }
@@ -2222,7 +2222,7 @@ buildServer <- function(
         unlist()
       tval <- tval[selTables] |> unique()
       if (length(tval) > 1 || is.na(tval)) {
-        tval = ""
+        tval <- ""
       }
       colourpicker::colourInput(
         "tableColor",
@@ -2360,7 +2360,7 @@ buildServer <- function(
       m <- shiny::isolate(model$x)
       foreignKey$fromTable <- foreignKey$toTable <-
         foreignKey$fromFields <- foreignKey$toFields <- NULL
-      foreignKey$triggered = shiny::isolate(foreignKey$triggered) + 1
+      foreignKey$triggered <- shiny::isolate(foreignKey$triggered) + 1
       if (length(tns) > 0 && all(tns != "") && all(tns %in% names(m))) {
         shiny::showModal(shiny::modalDialog(
           title = "Add foreign key",
@@ -2874,7 +2874,7 @@ buildServer <- function(
       foreignKey$toTable <- mne$to[i]
       foreignKey$fromFields <- mne$ff[[i]]
       foreignKey$toFields <- mne$tf[[i]]
-      foreignKey$triggered = shiny::isolate(foreignKey$triggered) + 1
+      foreignKey$triggered <- shiny::isolate(foreignKey$triggered) + 1
       shiny::showModal(shiny::modalDialog(
         title = "Edit foreign key",
         shiny::uiOutput("editForeignKey"),
@@ -3008,8 +3008,8 @@ buildServer <- function(
           m,
           function(n) {
             if (n$tableName %in% names(dispNodes)) {
-              n$display$x = dispNodes[[n$tableName]]$x
-              n$display$y = dispNodes[[n$tableName]]$y
+              n$display$x <- dispNodes[[n$tableName]]$x
+              n$display$y <- dispNodes[[n$tableName]]$y
             }
             return(n)
           }
