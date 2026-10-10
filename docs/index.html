@@ -60,12 +60,8 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="readme">README<a class="anchor" aria-label="anchor" href="#readme"></a>
+<div class="page-header"><h1 id="relational-data-modeler-">Relational Data Modeler <img src="reference/figures/ReDaMoR.png" align="right" alt="logo" width="120"><a class="anchor" aria-label="anchor" href="#relational-data-modeler-"></a>
 </h1></div>
-</div>
-<div class="section level1">
-<h1 id="relational-data-modeler-">Relational Data Modeler <img src="reference/figures/ReDaMoR.png" align="right" alt="logo" width="120"><a class="anchor" aria-label="anchor" href="#relational-data-modeler-"></a>
-</h1>
 <p><a href="https://cran.r-project.org/package=ReDaMoR" class="external-link"><img src="https://www.r-pkg.org/badges/version/ReDaMoR" alt="CRAN_Status_Badge"></a> <a href="https://cran.r-project.org/package=ReDaMoR" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/ReDaMoR"></a></p>
 <p>The <a href="https://patzaw.github.io/ReDaMoR/">ReDaMoR</a> package allows the manipulation of relational data models in R. It provides functions to create, import and save relational data models. These functions are accessible through a graphical user interface made with <a href="https://shiny.posit.co/" class="external-link">Shiny</a>.</p>
 <p>The main features of ReDaMoR are the following:</p>
@@ -85,10 +81,9 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patzaw.github.io/ReDaMoR/">ReDaMoR</a></span><span class="op">)</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/model_relational_data.html">model_relational_data</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>You can also run the code documented in the <a href="https://patzaw.github.io/ReDaMoR/articles/ReDaMoR.html">package vignette</a>.</p>
-</div>
-<div class="section level1">
-<h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h1>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>In R, data are often stored in data frames which are tables in which each row represents a record and each column a variable. Because data frames are highly used they have been improved in different objects such as <a href="https://tibble.tidyverse.org/" class="external-link">tibble</a>, <a href="https://rdatatable.gitlab.io/data.table/" class="external-link">data.table</a> or <a href="https://bioconductor.org/packages/release/bioc/html/Biobase.html" class="external-link">AnnotatedDataFrame</a>.</p>
 <p>However, in many projects, the data do not fit in only one table but they are organized in different data frames, each of them dealing with a specific concept. These tables are often related to each other by some variables. Depending on the diversity of the concepts, it can be difficult to remember what these tables represent and how they are connected. Fortunately, because they are tables, a set of data frames can be directly documented using a relational data model.</p>
 <p>The <a href="https://github.com/bergant/datamodelr" class="external-link">datamodelr</a> R package provides tools to document relational data. The generate data models are leveraged by the <a href="https://github.com/cynkra/dm" class="external-link">dm</a> R package to interact more easily with relational data.</p>
@@ -107,18 +102,18 @@
 </ul>
 <p>The <a href="https://patzaw.github.io/TKCat/" class="external-link">TKCat</a> package relies on ReDaMoR to facilitate the management of data from knowledge resources which are manipulated as modeled database (MDB) objects.</p>
 </div>
-<div class="section level1">
-<h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h1>
 <div class="section level2">
-<h2 id="from-cran">From CRAN<a class="anchor" aria-label="anchor" href="#from-cran"></a>
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
+<div class="section level3">
+<h3 id="from-cran">From CRAN<a class="anchor" aria-label="anchor" href="#from-cran"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ReDaMoR"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
-</h2>
+<div class="section level3">
+<h3 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
+</h3>
 <p>The following R packages available on CRAN are required:</p>
 <ul>
 <li>
@@ -164,24 +159,24 @@
 <a href="https://CRAN.R-project.org/package=igraph" class="external-link">igraph</a>: Network Analysis and Visualization</li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="from-github">From github<a class="anchor" aria-label="anchor" href="#from-github"></a>
-</h2>
+<div class="section level3">
+<h3 id="from-github">From github<a class="anchor" aria-label="anchor" href="#from-github"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"patzaw/ReDaMoR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level1">
-<h1 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
-</h1>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
 <p>Documentation is available in <a href="https://patzaw.github.io/ReDaMoR/articles/ReDaMoR.html">this vignette</a>.</p>
 </div>
-<div class="section level1">
-<h1 id="tkcat-tailored-knowledge-catalog">TKCat: Tailored Knowledge Catalog<a class="anchor" aria-label="anchor" href="#tkcat-tailored-knowledge-catalog"></a>
-</h1>
+<div class="section level2">
+<h2 id="tkcat-tailored-knowledge-catalog">TKCat: Tailored Knowledge Catalog<a class="anchor" aria-label="anchor" href="#tkcat-tailored-knowledge-catalog"></a>
+</h2>
 <p>The aim of <a href="https://patzaw.github.io/TKCat/" class="external-link">TKCat</a> (Tailored Knowledge Catalog) is to facilitate the management of data from knowledge resources that are frequently used alone or together in research environments. In TKCat, knowledge resources are manipulated as modeled database (MDB) objects. These objects provide access to the data tables along with a general description of the resource and a detail data model generated with ReDaMoR documenting the tables, their fields and their relationships. These MDB are then gathered in catalogs that can be easily explored an shared. TKCat provides tools to easily subset, filter and combine MDBs and create new catalogs suited for specific needs.</p>
 </div>
-
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">

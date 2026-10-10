@@ -1,5 +1,3 @@
-README
-================
 
 # Relational Data Modeler <img src="man/figures/ReDaMoR.png" align="right" alt="logo" width="120" />
 
@@ -37,7 +35,7 @@ m <- model_relational_data()
 You can also run the code documented in the [package
 vignette](https://patzaw.github.io/ReDaMoR/articles/ReDaMoR.html).
 
-# Introduction
+## Introduction
 
 In R, data are often stored in data frames which are tables in which
 each row represents a record and each column a variable. Because data
@@ -83,15 +81,15 @@ The [TKCat](https://patzaw.github.io/TKCat/) package relies on ReDaMoR
 to facilitate the management of data from knowledge resources which are
 manipulated as modeled database (MDB) objects.
 
-# Installation
+## Installation
 
-## From CRAN
+### From CRAN
 
 ``` r
 install.packages("ReDaMoR")
 ```
 
-## Dependencies
+### Dependencies
 
 The following R packages available on CRAN are required:
 
@@ -135,18 +133,18 @@ And those are suggested:
 - [igraph](https://CRAN.R-project.org/package=igraph): Network Analysis
   and Visualization
 
-## From github
+### From github
 
 ``` r
 devtools::install_github("patzaw/ReDaMoR")
 ```
 
-# Documentation
+## Documentation
 
 Documentation is available in [this
 vignette](https://patzaw.github.io/ReDaMoR/articles/ReDaMoR.html).
 
-# TKCat: Tailored Knowledge Catalog
+## TKCat: Tailored Knowledge Catalog
 
 The aim of [TKCat](https://patzaw.github.io/TKCat/) (Tailored Knowledge
 Catalog) is to facilitate the management of data from knowledge

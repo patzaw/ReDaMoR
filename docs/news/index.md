@@ -2,6 +2,8 @@
 
 ## Version 1.0.1
 
+CRAN release: 2026-08-21
+
 - Correcting NOTE: Found calls to structure() using deprecated special
   names
 
